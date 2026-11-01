@@ -1,3 +1,4 @@
+% PARKED 31 Oct 2026. Before posting: email Schrottenloher/Bonnetain and/or May to ask whether consistency filtering on the BBSS tree was already computed.
 % Target: IACR Cryptology ePrint Archive (https://eprint.iacr.org), category "Attacks and cryptanalysis".
 % Build: pdflatex draft.tex (twice).
 \documentclass[11pt]{article}
@@ -387,6 +388,18 @@ grows ($0.010$ for HGJ, $0.0045$ for BCJ, $0.0036$ for BBSS), which suggests tha
 attack the same waste. Representation trees in decoding and in ternary-LWE key search have richer digit patterns,
 and the gain may be larger there.
 
+\paragraph{The Fourier checksum in the average case.} One might hope to use the other main idea of~\cite{OAI26},
+estimating a phase-weighted modular bin sum and subtracting the aliases instead of finding the solution, for random
+instances, where it would avoid the survival losses of representation trees. It does not help. With checksum modulus
+$P=2^{\eta n}$, a frequency profile $\pi$ (the empirical law of the phases $\phi_i+kb_i$) contributes about
+$2^{(n/2)(g(\pi)-\eta)}$, where $g(\pi)=\mathbb{E}_\pi\log_2 M^2-D(\pi\,\|\,U)$ and $M^2=2+2\cos$. Every profile with
+$g(\pi)\ge\eta$ must therefore be handled to absolute accuracy $O(1)$, at cost at least its size
+$2^{(\eta-D(\pi\|U))n}$, while the $2^{(1-\eta)n}$ aliases must also be accounted for. Minimising over $\eta$ gives a
+floor of about $2^{0.480n}$, at $\eta\approx0.520$, for any estimator that handles frequencies and aliases term by
+term. This is essentially the worst-case operating point of~\cite{OAI26} ($\eta=0.5177$, $\tau=0.48996$). So the
+checksum approach is close to optimal there, and gives nothing in the average case.
+\status{numerical; script checksum\_floor.py; model restricted to term-by-term estimators}
+
 \section{What remains to be done}\label{sec:open}
 \begin{enumerate}
 \item \textbf{Filter lookup.} Proposition~\ref{prop:cost} counts the entries, but each vector must also find the
@@ -422,13 +435,18 @@ predicted fraction of valid pairs found; filtering slightly \emph{reduces} the s
 ($0.30$--$0.39$ of used summands appear in two or more outputs, against $0.32$--$0.42$ unfiltered). Still untested is
 the BBSS digit set, whose optimal digit fractions are too small to realise at these sizes.
 \status{numerical; scripts sim\_merge.py and sim\_two\_level.py}
+\item \textbf{Optimality of the filters.} Re-optimising the filters at the best point with free label laws and
+$K=3$ or $4$ labels, and with $5$ labels from the three-label optimum, gives no improvement over the three-label filters
+($T=0.279266$). This is consistent with the filters already attaining Dubiner's bucketing-information
+bound~\cite{Dub10} at the binding merges; we have not proved this.
+\status{numerical; lsf\_klabel\_check.py}
 \item \textbf{Depth and search.} Only $k=3$ and local search have been tried. A fourth level (also with the
 digits $\pm2$) or a global search may lower the exponent further.
 \status{open}
-\item \textbf{Novelty.} Table~1 of~\cite{BBSS20} lists a $0.287$ entry for $\{-1,0,1\}$ from another source. We
-must check that it is not already merge filtering, and search post-2020 work for nearest-neighbour or filtered
-merges in representation trees.
-\status{open; BM18 and KM21 checked}
+\item \textbf{Novelty.} The $0.287$ entry for $\{-1,0,1\}$ in Table~1 of~\cite{BBSS20} is resolved: it is the
+consistency filtering of~\cite{Oze16}, now cited. Post-2020 work on nearest-neighbour or filtered merges in
+representation trees remains to be searched.
+\status{0.287 entry resolved; post-2020 search open}
 \item \textbf{Other representation problems.} Meet-LWE merges for ternary keys also generate pairs with the wrong
 split pattern (the counts of $\pm1$ in the two summands). Our coordinate filter could be used there together with
 the value-side hashing of~\cite{KM21}, since the two act on different parts of the pair.

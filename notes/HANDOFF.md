@@ -97,7 +97,13 @@ is the working state.
 - The OAI26-specific ingredients (Fourier checksum and alias extraction) were checked for the average case:
   `checksum_floor.py` gives a floor of 0.4799 (at η = 0.52, matching OAI's own η = 0.5177). Web Claude's 0.2787 floor
   only counted the profile π*. So the checksum route is closed. Reply: `notes/checksum_floor_reply_for_web_claude.md`.
-- Optimality probe: K = 3 and 4 labels with free laws give no gain (0.279266).
+- Optimality probe: K = 3 and 4 labels with free laws give no gain (0.279266); K = 5 from the 3-label start likewise
+  (its random restarts were still running at parking).
+- Web Claude's final_handoff_before_parking.md has been applied: the checksum paragraph in the Outlook, the
+  filter-optimality item, the Novelty item marked resolved (0.287 = Oze16), and a PARKED header comment in draft.tex.
+  Web Claude withdrew its 0.2787 floor; checksum_dual_floor_for_cc.md was removed (it remains in git history).
+- **Before posting (if ever):** email Schrottenloher/Bonnetain and/or May to ask whether consistency filtering on the
+  BBSS tree was already computed.
 
 ## Open issues (from the note)
 1. The cost of looking up which filters a vector passes (structured filters) isn't argued yet.
