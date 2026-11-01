@@ -68,6 +68,28 @@ is the working state.
   against OAI26's bibliography), and an acknowledgement line saying that experiments and much of the drafting were
   done with Claude.
 
+## PRIOR ART FOUND (31 Oct, ~20:40): May–Ozerov consistency filtering
+- BBSS's "0.287 CF" row cites Ozerov's PhD thesis (RUB 2016; https://d-nb.info/1089007094/34). Its §2.2
+  ConsistencySieve is a type-class filter at merges: random half-blocks J, prescribed weight distributions h1/h2 on J.
+- It gives HGJ → 0.329 and BCJ → 0.287 ([MO], unpublished). Ozerov explicitly asks whether the digits ±2 would help.
+- So our contribution narrows to: Ozerov's filter on the BBSS tree (0.2793), the general label/MI criterion, and the
+  simulations. Details: `notes/ozerov_prior_art_for_web_claude.md`.
+- **Reframe applied** (Web Claude's reframe_after_ozerov_for_cc.md; the title is kept):
+  - May–Ozerov credited in the abstract, in "Our contribution" and in related work (Ozerov first);
+  - "Origin of the idea" now says we arrived via OAI26 and found Oze16 afterwards;
+  - the ladder caption disclaims any improvement over Oze16 for HGJ/BCJ (different accounting);
+  - Böhme 2011 (0.2871 with ±2, from BBSS fn. 5) is cited;
+  - bib entries Oze16 and Boh11.
+- Two-level simulation results (all 9 runs) are in open item 3.
+- **Dubiner lineage** (Nick's addendum, `reframe_after_ozerov_for_cc (1).md`): Dub10 is credited as the origin, in
+  the order Dubiner → May–Ozerov → BBSS → this note: in the abstract, the first related-work paragraph, the "Origin
+  of the idea" paragraph, and after the filter Definition. No criticism of anyone's citations.
+- Optimality probe `lsf_klabel_check.py` (K = 3, 4, 5 labels, free label laws, digits fixed) is running; logs in
+  runs/klabel_K.log. The full Dubiner Thm 10.1 bound check (dubiner_note_for_cc.md) is not done.
+- **Recommendation (Web Claude, endorsed by CC):** Nick emails Alexander May before posting, since the note builds
+  on the unpublished MO work. Also Ozerov, if an address can be found.
+- Web Claude's review_note_for_cc_2.md small fixes (B1–B6, B8) are applied. B7 (date) waits for the posting date.
+
 ## Open issues (from the note)
 1. The cost of looking up which filters a vector passes (structured filters) isn't argued yet.
 2. Only pairs of exactly split type σ are found. The accounting is consistent with this, but
