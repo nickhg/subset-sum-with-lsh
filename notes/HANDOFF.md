@@ -105,6 +105,12 @@ is the working state.
 - **Before posting (if ever):** email Schrottenloher/Bonnetain and/or May to ask whether consistency filtering on the
   BBSS tree was already computed.
 
+## 31 Oct, late: Nick emailed Dan Roberts (OpenAI)
+- Asked for Dubiner [Dub10] to be cited in a new version of OAI26 as the origin of the §4 asymmetric filtering
+  mechanism, noting the optimality theory, Christiani's credit for tensoring, and May–Ozerov's use of it.
+- CC checked the Christiani claim: arXiv 1605.02687 says "the tensoring technique, a variant of which was introduced
+  by Dubiner [22]". Accurate.
+
 ## Open issues (from the note)
 1. The cost of looking up which filters a vector passes (structured filters) isn't argued yet.
 2. Only pairs of exactly split type σ are found. The accounting is consistent with this, but
