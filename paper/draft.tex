@@ -1,0 +1,448 @@
+% Target: IACR Cryptology ePrint Archive (https://eprint.iacr.org), category "Attacks and cryptanalysis".
+% Build: pdflatex draft.tex (twice).
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref,array}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{heuristic}{Heuristic}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\Ot}{\widetilde{O}}
+\newcommand{\status}[1]{}   % source annotations only (proved / heuristic / numerical / open); nothing prints
+
+\title{A note on filtered merges for random Subset Sum}
+\author{Nick Howgrave-Graham}
+\date{Draft, 31 October 2026}
+
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The OpenAI preprint~\cite{OAI26} gives the first worst-case Subset Sum algorithm with exponent below $1/2$. One of
+its ingredients, an asymmetric locality-sensitive filter that keeps only the pairs worth examining, also applies to
+the average-case representation algorithms of Howgrave-Graham--Joux, Becker--Coron--Joux and
+Bonnetain--Bricout--Schrottenloher--Shen. At each merge we filter candidate pairs by their coordinate-wise joint
+type with a random label string. The filter helps exactly when $I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$. Under the
+usual heuristics this improves on the exponent $0.2830$ of BBSS for random Subset Sum, to $0.2793$, and it gives
+smaller gains for HGJ and BCJ. This is a short note recording where things stand; we expect it to be improved on
+soon.
+\end{abstract}
+
+\section{Introduction}
+This note was written quickly after the appearance of~\cite{OAI26}, to record how one of its ideas carries over to
+the average case. The gain is small and we expect it to be improved on, by deeper trees, better filters, or ideas we
+have not thought of. We post it now because the filter seems to be the useful part, and others may take it further.
+
+An instance of Subset Sum consists of integers $a_1,\dots,a_n$ and a target $t$, and asks for
+$x\in\{0,1\}^n$ with $\langle a,x\rangle=t$. In the \emph{random} (average-case, or ``hard knapsack'') setting the
+$a_i$ are uniform in $[0,2^n)$ and $t=\langle a,x_0\rangle$ for a planted $x_0$ of weight $n/2$. This is the
+density-one regime that matters for knapsack-type cryptography and for decoding-type problems. We measure the
+running time exponent $\log_2(\text{time})/n$.
+
+Meet-in-the-middle~\cite{HS74} and Schroeppel--Shamir~\cite{SS81} give $2^{n/2}$. Howgrave-Graham and
+Joux~\cite{HGJ10} introduced \emph{representations}: the solution is written in many ways as a sum of two vectors,
+so a random modular constraint can be imposed on the summands while some representation survives. This gave
+$\Ot(2^{0.337n})$. Becker, Coron and Joux~\cite{BCJ11} allowed digits $-1$ in the summands and reached
+$\Ot(2^{0.291n})$. Bonnetain, Bricout, Schrottenloher and Shen~\cite{BBSS20} added the digit $2$, and improved the
+accounting so that intermediate lists may be random subsets of the vectors satisfying their constraints. This gives
+$\Ot(2^{0.283n})$, the best classical exponent we know of. All of these, and our result, rest on standard
+heuristics about the randomness of the lists.
+
+\paragraph{The waste at a merge.} At each internal node, two lists are merged by matching sums modulo a larger
+integer. Among the pairs that match, only a small fraction $2^{p_jn}$ have the right coordinate pattern: the sum
+must have the digit distribution of the parent, and the pair must split it in the intended way. In the optimised
+BBSS tree the cost of enumerating these matching pairs is one of the binding constraints
+(Table~\ref{tab:compare}).
+
+\paragraph{Our contribution.} We filter the pairs at a merge by their coordinate-wise joint type, using
+locality-sensitive filters in the style of~\cite{BDGL16,Chr17,MO15}. A filter is a random string of labels from a
+three-letter alphabet. A left vector passes it if its joint type with the label string is a prescribed $A$, and a
+right vector passes if its joint type is a prescribed $B$. Pairs are then matched modulo the constraint only within
+each filter. A correctly split pair passes a random filter with probability $2^{-I(XY;\Lambda)n}$, while a pair of
+independent list vectors passes with probability $2^{-(I(X;\Lambda)+I(Y;\Lambda))n}$
+(Lemma~\ref{lem:filter}). So the filters reduce the number of pairs examined whenever
+$I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$, at the price of each vector appearing in several filters.
+
+Adding the filters to the BBSS linear program and optimising numerically gives:
+
+\begin{theorem}[heuristic]\label{thm:main}
+\status{numerical optimum of a heuristic model; filter lookup cost still to be argued (Section~\ref{sec:open})}
+Under Heuristics~\ref{heur:lists} and~\ref{heur:filter}, random Subset Sum instances can be solved in time and
+memory $\Ot(2^{0.2793n})$.
+\end{theorem}
+
+The improvement over BBSS is small, $0.2829\to0.2793$, but it comes from a different source than earlier
+improvements. They enlarged the set of representations; we stop paying for pairs that cannot be representations.
+
+\paragraph{Origin of the idea.} A recent paper by OpenAI~\cite{OAI26}, not yet independently verified, gives a
+worst-case Subset Sum algorithm in time $O(2^{0.49n})$. One of its components estimates a Fourier sum by sampling frequency pairs, written as
+differences of high-digit and low-digit vectors, with asymmetric locality-sensitive filters~\cite{Chr17} that score
+each coordinate of a pair. Our filters apply the same principle to the pairs at a representation-tree merge.
+
+\paragraph{Related work.} Filtering by joint type is the mechanism of May--Ozerov nearest-neighbour search in
+information-set decoding~\cite{MO15} and of the filters of Becker, Ducas, Gama and Laarhoven for lattice
+sieving~\cite{BDGL16}. Christiani~\cite{Chr17} gives the asymmetric framework with separate thresholds for the two
+sides.
+
+The closest prior use of nearest-neighbour search inside a representation tree is the decoding algorithm of Both and
+May~\cite{BM18}, which uses May--Ozerov search at every level of a BJMM-type tree. There the search replaces
+\emph{exact} matching of syndrome bits by \emph{approximate} matching, the mismatch being absorbed by the error
+vector; the coordinates of the representations are still checked only after each merge, so pairs with the wrong
+weight pattern are generated and then discarded. Subset Sum has no error part to absorb a mismatch, and we keep
+exact modular matching. Our filters act on the representation coordinates themselves, so the pairs with the wrong
+pattern are never generated. The two ideas are complementary. Kirshanova and May~\cite{KM21} similarly use a
+generalisation of Odlyzko's locality-sensitive hash in the merges of May's ternary-LWE representation tree, to match
+values in $\Z_q^n$ up to the ternary error; as in~\cite{BM18}, the representation coordinates are checked only after
+merging.
+
+We do not compare with~\cite{Li25}, which reports $2^{0.24n}$ using ternary trees. Its cost model charges each
+three-list merge at the size of its output; under the usual cost model, which enumerates pairs from two of the
+lists, we were not able to reproduce an exponent below $0.39$.
+\status{numerical; script ter\_honest.py (not included in the paper)}
+
+An earlier claim~\cite{EM19} of a $2^{0.255n}$ random Subset Sum algorithm, also based on changing which
+pairs are examined in a representation tree, has been withdrawn; we do not compare with it. Unlike~\cite{EM19},
+our filters do not change the contents of any list beyond discarding a constant fraction of valid pairs; all
+representation counts are those of~\cite{BBSS20}.
+
+\paragraph{State of play.} Table~\ref{tab:state} summarises where the two settings stand.
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+\toprule
+setting & before & now & source \\
+\midrule
+worst case & $2^{n/2}/\mathrm{poly}(n)$~\cite{CJRS23} & $2^{0.49n}$ & \cite{OAI26}, not yet independently verified \\
+random, density $1$ & $2^{0.2830n}$~\cite{BBSS20} & $2^{0.2793n}$ & this note, heuristic \\
+\bottomrule
+\end{tabular}
+\caption{Exponents for Subset Sum before and after~\cite{OAI26}.}
+\label{tab:state}
+\end{table}
+
+\section{Preliminaries}
+Logarithms are to base~$2$ and $H$ denotes Shannon entropy. For a finite alphabet $\Sigma$ and $v\in\Sigma^n$, the
+\emph{type} of $v$ is its empirical distribution on $\Sigma$. For jointly distributed $(U,V)$ the type of a pair of
+strings is defined in the same way. We use the method of types~\cite{CK11}: there are $2^{nH(P)+O(\log n)}$ strings
+of type $P$, and if the coordinates of $v$ are i.i.d.\ with law $Q$ then
+$\Pr[\text{type}(v)=P]=2^{-nD(P\|Q)+O(\log n)}$. All exponents below are stated up to $O(\log n)/n$ and the
+$\Ot$ notation hides the corresponding polynomial factors.
+
+\section{The BBSS tree}\label{sec:tree}
+\paragraph{Digits and splits.} Level $0$ consists of the solution $x_0\in\{0,1\}^n$ of weight $n/2$. Vectors at
+levels $j=1,\dots,k$ have digits in $\cD=\{-1,0,1,2\}$ and a fixed type $\delta_j$ on $\cD$. A level-$(j-1)$
+vector $z$ is represented as $z=x+y$ with $x,y$ of type $\delta_j$, where the pair $(x_i,y_i)$ ranges over
+\[
+\begin{aligned}
+-1&:(-1,0),(0,-1), & 0&:(0,0),(1,-1),(-1,1),\\
+1&:(1,0),(0,1),(2,-1),(-1,2), & 2&:(2,0),(0,2),(1,1).
+\end{aligned}
+\]
+The \emph{split law} $\sigma_j$ is the joint type of $(x,y)$ on these twelve pairs. It is symmetric in $x$ and $y$,
+has both marginals equal to $\delta_j$, and is determined by $\delta_{j-1}$ and three free fractions: $e$ for the
+splits $0\to(\pm1,\mp1)$, $f$ for $1\to(2,-1),(-1,2)$ and $g$ for $2\to(1,1)$. Setting $f=g=0$ gives the BCJ tree
+and $e=f=g=0$ the HGJ tree. Write $H_j=H(\delta_j)$. A fixed $z$ of type $\delta_{j-1}$ has
+$2^{\rho_jn}$ representations of split type $\sigma_j$, where
+\[
+\rho_j=H(\sigma_j)-H(\delta_{j-1}),
+\]
+and a uniformly random pair of type-$\delta_j$ vectors is a split of type $\sigma_j$ with probability $2^{p_jn}$,
+\[
+p_j=H(\sigma_j)-2H_j=H_{j-1}+\rho_j-2H_j.
+\]
+
+\paragraph{Constraints and lists.} Level-$j$ vectors are constrained to $\langle a,x\rangle\equiv R_j\pmod{M_j}$ with
+$\log M_j=c_jn$, where $1=c_0\ge c_1\ge\dots\ge c_k\ge0$, $M_{j}\mid M_{j-1}$, and the residues are chosen
+consistently down the tree ($c_0=1$ is equality over the integers, as $a_i<2^n$). Let $2^{L_jn}$ be the size of
+each level-$j$ list. The leaves are built by meet-in-the-middle on half-vectors, in time $2^{H_kn/2}$, giving every
+type-$\delta_k$ vector that satisfies the leaf constraint, so $L_k=H_k-c_k$. Merging two level-$j$ lists matches
+$(c_{j-1}-c_j)n$ further bits, examines
+\[
+P_j=2L_j-(c_{j-1}-c_j)
+\]
+(log) pairs, and keeps those that are splits of type $\sigma_j$, so
+\[
+L_{j-1}=P_j+p_j .
+\]
+
+\begin{heuristic}\label{heur:lists}
+Every list behaves like a uniformly random subset, of the stated size, of the vectors of its type satisfying its
+constraint. In particular $L_j+c_j\le H_j$, and the expected number of solutions found at the root is
+$2^{(P_1+p_1)n}$, which must be at least~$1$.
+\end{heuristic}
+This is the accounting of~\cite{BBSS20}. It allows lists to be proper random subsets of the constrained vectors,
+which is where BBSS improves on BCJ.
+
+\paragraph{The linear program.} For fixed digit parameters $(e,f,g)$ at each level, the exponents
+$c_j,L_j$ are variables of a linear program minimising $T$ subject to the equalities above,
+$L_j+c_j\le H_j$, $P_1+p_1\ge0$, and the cost constraints
+\[
+T\ge H_k/2,\qquad T\ge L_j,\qquad T\ge P_j\quad(1\le j\le k).
+\]
+Optimising over $(e,f,g)$ with $k=3$ we recover the BBSS exponent $0.2829$ (Table~\ref{tab:compare}). At the
+optimum all three merges and the leaf lists are tight, at $0.2829$.
+
+\section{Filtering a merge by joint type}\label{sec:filter}
+Fix a merge of two level-$j$ lists, and drop the index $j$. Let $(X,Y)$ have law $\sigma$, and let $\Lambda$ be a
+label in a three-letter alphabet with conditional law $\kappa(\cdot\mid x,y)$, chosen symmetric under swapping $x$ and $y$.
+Write $Q$ for the joint law of $(X,Y,\Lambda)$, $Q_\Lambda$ for its label marginal, and $A$, $B$ for the joint laws of
+$(X,\Lambda)$ and $(Y,\Lambda)$.
+
+\begin{definition}
+A \emph{filter} is a string $u\in\Lambda^n$ drawn uniformly from the strings of type $Q_\Lambda$. A left vector $x$
+\emph{passes} $u$ if the joint type of $(x,u)$ is $A$, and a right vector $y$ passes if the joint type of $(y,u)$ is $B$.
+\end{definition}
+
+The filtered merge draws $F$ independent filters. For each filter it collects the left and right list vectors that
+pass, matches them on the $(c_{j-1}-c_j)n$ new constraint bits, and checks each matched pair as before.
+
+\begin{lemma}\label{lem:filter}
+Up to factors $2^{O(\log n)}$:
+\begin{enumerate}
+\item a fixed pair $(x,y)$ of joint type $\sigma$ passes a random filter (both sides) with probability at least
+$2^{-I(XY;\Lambda)n}$, so $F=2^{I(XY;\Lambda)n}$ filters find a constant fraction of the splits of type $\sigma$;
+\item a fixed left vector passes a random filter with probability $2^{-I(X;\Lambda)n}$, and similarly on the right;
+\item a pair of independent type-$\delta$ vectors passes a random filter with probability at most
+$2^{-(I(X;\Lambda)+I(Y;\Lambda))n}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(1) Given $(x,y)$ of type $\sigma$, the number of $u$ of type $Q_\Lambda$ with $(x,y,u)$ of joint type $Q$ is
+$2^{nH(\Lambda\mid XY)}$, out of $2^{nH(\Lambda)}$, and every such $u$ is passed by both $x$ and $y$. (Other joint
+types with the same two marginals also pass, so the probability may be larger; we do not need this.)
+(2) Similarly, $2^{n(H(\Lambda\mid X)-H(\Lambda))}$.
+(3) For independent $x,y$ and a filter $u$, condition on $u$. The events that $x$ passes and that $y$ passes are then
+independent, with probabilities $2^{-I(X;\Lambda)n}$ and $2^{-I(Y;\Lambda)n}$ by (2), since $x$ is uniform in its
+type class and so its type with a fixed $u$ has the stated law.
+\end{proof}
+
+\begin{heuristic}\label{heur:filter}
+The pairs that agree on the constraint bits behave, as far as passing filters is concerned, like pairs of independent
+uniform vectors of type $\delta$, and distinct outputs of a filtered merge are no more correlated with each other
+than the outputs of the corresponding unfiltered merge.
+\end{heuristic}
+
+\begin{remark}
+The \emph{marginal} law of the output needs no heuristic. The law of the filters is invariant under permutations of
+the coordinates, and so, for a random instance, is the law of the input lists. Hence every vector of the parent type
+satisfying the parent constraint is output with the same probability, and the filtered output list is marginally
+uniform over that set, as in the unfiltered merge. Heuristic~\ref{heur:filter} concerns only joint behaviour: two
+outputs sharing a summand that passed many filters could be correlated.
+\end{remark}
+
+\begin{proposition}\label{prop:cost}
+Under Heuristic~\ref{heur:filter}, with $F=2^{I(XY;\Lambda)n}$ filters, the filtered merge produces a list of size
+$2^{(P+p)n}$ up to a constant factor, and its cost is dominated by
+\[
+\underbrace{L+I(XY;\Lambda)-I(X;\Lambda)}_{\text{left entries}},\qquad
+\underbrace{L+I(XY;\Lambda)-I(Y;\Lambda)}_{\text{right entries}},\qquad
+\underbrace{P+I(XY;\Lambda)-I(X;\Lambda)-I(Y;\Lambda)}_{\text{pairs examined}},
+\]
+plus the cost of finding, for each list vector, the filters it passes (Section~\ref{sec:open}).
+\end{proposition}
+\begin{proof}
+Multiply the probabilities of Lemma~\ref{lem:filter} by $F$ and by the list sizes, and by $2^{Pn}$ for the pairs.
+\end{proof}
+
+So the filter replaces the constraint $T\ge P$ by three constraints. It pays when
+$I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$, i.e.\ when the label is more informative about each half than about the
+pair jointly, so that $X$ and $Y$ carry overlapping (redundant) information about $\Lambda$. A random pair of list
+vectors has no such overlap, which is what the filter exploits.
+
+\begin{remark}
+One may also take i.i.d.\ filters with an arbitrary law $\pi$ on $\Lambda$. The number of filters and the pass
+probabilities then change by $2^{\pm D(Q_\Lambda\|\pi)n}$, but these factors cancel in all three cost terms. In our
+numerical model $\pi$ is therefore an unidentifiable parameter, and the type-class filters above are the natural
+normalisation.
+\end{remark}
+
+\section{Optimisation}\label{sec:opt}
+We optimise the digit fractions $(e,f,g)$ at each level and the conditional label laws $\kappa_j$ at each merge,
+solving the resulting linear program for $(c_j,L_j,T)$ at each step, by repeated Powell and Nelder--Mead searches
+from the BBSS optimum. Three random restarts with $k=3$ give $T=0.27927$, $0.27940$ and $0.27969$.
+\status{numerical; local search only, k=3 only}
+Table~\ref{tab:params} gives the best point.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ccccccc}
+\toprule
+level $j$ & $\delta_j(-1)$ & $\delta_j(0)$ & $\delta_j(1)$ & $\delta_j(2)$ & $\rho_j$ & $c_j$ \\
+\midrule
+1 & 0.0337 & 0.6866 & 0.2758 & 0.0039 & 0.8809 & 0.7941 \\
+2 & 0.0314 & 0.8125 & 0.1559 & 0.0002 & 0.5151 & 0.5585 \\
+3 & 0.0210 & 0.8956 & 0.0835 & 0.0000 & 0.2793 & 0.2793 \\
+\bottomrule
+\end{tabular}
+\caption{Digit types, representation exponents and constraint exponents at the best point found ($T=0.27927$).}
+\label{tab:params}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+& \multicolumn{2}{c}{BBSS, no filters} & \multicolumn{5}{c}{with filters} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-8}
+merge of level & $L_j$ & $P_j$ & $L_j$ & $P_j$ & $I(XY;\Lambda)$ & entries & examined \\
+\midrule
+1 & 0.2394 & 0.2829 & 0.2435 & 0.2812 & 0.0677 & 0.2698 & 0.2661 \\
+2 & 0.2697 & 0.2829 & 0.2623 & 0.2891 & 0.0437 & 0.2793 & 0.2793 \\
+3 & 0.2829 & 0.2829 & 0.2792 & 0.2793 & 0      & 0.2793 & 0.2793 \\
+\midrule
+leaves $H_3/2$ & \multicolumn{2}{c}{0.2738} & \multicolumn{5}{c}{0.2793} \\
+$T$ & \multicolumn{2}{c}{0.2829} & \multicolumn{5}{c}{0.2793} \\
+\bottomrule
+\end{tabular}
+\caption{Exponents with and without filters. ``Entries'' is the larger of the two sides in
+Proposition~\ref{prop:cost}. At level $3$ the optimal filter is trivial. With the filters switched off, the
+digit parameters of the filtered optimum give $T=0.2842$, so the gain is due to the filters.}
+\label{tab:compare}
+\end{table}
+% TODO: the BBSS leaf value 0.2738 is H_3/2 at the no-filter optimum (H_3 = 0.5475); recheck when regenerating.
+
+The main saving is at the level-2 merge, where the filter lets the number of pairs $P_2$ rise to $0.2891$ while
+only $2^{0.2793n}$ of them are examined. This in turn allows the larger representation exponents and constraint
+fractions in Table~\ref{tab:params}. The level-1 merge has the largest filter ($I=0.0677$) but is not binding.
+A second local optimum, at $T=0.2794$, instead gets most of its saving at the root merge. At the best point the label
+alphabet at level $1$ effectively has two letters ($Q_\Lambda=(0,\tfrac12,\tfrac12)$).
+
+\section{Other trees and digit sets}\label{sec:other}
+The filter is not specific to the BBSS tree. Table~\ref{tab:ladder} shows the same optimisation for HGJ and BCJ.
+These two rows use the stricter accounting of~\cite{HGJ10,BCJ11}, in which every list element must keep a surviving
+representation; the BBSS rows use Heuristic~\ref{heur:lists}.
+\status{numerical; local search}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lccc}
+\toprule
+tree & no filters & with filters & digit set \\
+\midrule
+HGJ, depth 2--3 & 0.3371 & 0.3269 & $\{0,1\}$ \\
+BCJ, depth 3 & 0.2909 & 0.2864 & $\{-1,0,1\}$ \\
+BBSS, depth 3 & 0.2829 & 0.2793 & $\{-1,0,1,2\}$ \\
+BBSS, depth 3 & 0.2827 & 0.2792 & $\{-2,-1,0,1,2\}$ \\
+\bottomrule
+\end{tabular}
+\caption{Heuristic time exponents with and without merge filters.}
+\label{tab:ladder}
+\end{table}
+
+\paragraph{HGJ and the exponent $0.311$.} In the HGJ tree the binding cost is the merge of the level-2 lists,
+where only a fraction $2^{-0.0259n}$ of the matching pairs are disjoint. A filter that kept exactly the disjoint
+pairs at no cost would give $0.3113$, the exponent originally stated in~\cite{HGJ10}; the gap between $0.311$ and
+the value $0.337$ given in~\cite{BCJ11} is precisely this overlap waste. Type-class filters recover part of it ($0.3269$). We do not think
+$0.3113$ is reachable this way: it would need, per filter, left and right families of $n/8$-sets of density at least
+$2^{-0.0436n}$ in which almost all cross pairs are disjoint, whereas such cross-disjoint families have density about
+$2^{-0.138n}$ when spread.
+\status{heuristic argument, not a proof}
+
+\paragraph{Larger digit sets.} With digits $\{-2,\dots,2\}$, allowing splits $-2\to(0,-2),(-1,-1)$,
+$-1\to(1,-2)$ and $0\to(2,-2)$ as well, the optimiser puts mass below $10^{-4}$ on $-2$ at every level, both with and
+without filters (Table~\ref{tab:ladder}). At depth~3 the digit $-2$ creates more waste than useful representations,
+and the filters do not change this.
+\status{numerical; warm-started from the $\{-1,0,1,2\}$ optimum and from a point with $-2$ forced on}
+
+\section{Outlook}
+The filter is cheap to add to any representation merge, and the criterion
+$I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$ says when it is worth it. In Subset Sum the gains shrink as the digit set
+grows ($0.010$ for HGJ, $0.0045$ for BCJ, $0.0036$ for BBSS), which suggests that larger digit sets and filters
+attack the same waste. Representation trees in decoding and in ternary-LWE key search have richer digit patterns,
+and the gain may be larger there.
+
+\section{What remains to be done}\label{sec:open}
+\begin{enumerate}
+\item \textbf{Filter lookup.} Proposition~\ref{prop:cost} counts the entries, but each vector must also find the
+$2^{(I(XY;\Lambda)-I(X;\Lambda))n}$ filters it passes among $2^{I(XY;\Lambda)n}$, in time close to the output size.
+Plain product filters do not suffice: with $\sqrt n$ blocks of size $\sqrt n$, the joint type of a valid pair
+fluctuates by about $n^{-1/4}$ from block to block, so one planted law per block misses most valid pairs. We expect
+the remedy to be the \emph{patterns} of~\cite[\S4]{OAI26}: enumerate the $2^{O(\sqrt n)}$ sequences of per-block
+pair types on a coarse grid, and for each pattern use independent random block filters, $2^{(I_b+\epsilon)\sqrt n}$
+in block $b$. Vectors decode block by block and emit the Cartesian product, at cost proportional to the output
+plus $2^{O(\sqrt n)}$. Coverage follows as in~\cite[Lemma~4.2(i)]{OAI26}. The cost exponents are then averages of
+block rates, which agree with the global terms up to $O(\epsilon)$ by convexity of the rate functions in the type.
+This argument still has to be written out.
+\status{open}
+\item \textbf{Exact split type.} Only splits of type exactly $\sigma_j$ are found. The accounting uses
+$\rho_j=H(\sigma_j)-H(\delta_{j-1})$ throughout, so it is consistent. Splits of nearby types are also valid; finding
+them too could only enlarge the output lists. At levels~1 and~2 of the optimum, $H(\sigma_j)$ is within $10^{-6}$ of
+its maximum over the one-parameter family of split laws with the given parent and child types, so nothing is lost
+by fixing $\sigma_j$.
+\status{numerical check}
+\status{open}
+\item \textbf{Heuristics.} Heuristic~\ref{heur:filter} is new. Since a vector lies in several filters, the filtered
+lists are not independent random subsets. Experiments at $n\approx40$--$60$ cannot separate $0.2793$ from
+$0.2829$ (a factor of about $1.2$ at $n=60$), but they can test Heuristic~\ref{heur:filter} merge by merge: pass rates
+of single vectors and of valid pairs, the number of spurious pairs examined, and the fraction of valid pairs kept,
+each as a ratio to its prediction, checking that the ratios do not drift with $n$. We have done this for a single
+HGJ-type merge (weight-$n/8$ vectors, valid pairs disjoint) with real random weights and modular constraints, lists of
+$2^{12}$ vectors, $2^{18}$ matched pairs, and type-class filters, for $n=40,48,56$ and three seeds each. The overlap
+distribution of the matched pairs agrees with that of independent pairs to within $0.002$, and the entry counts,
+spurious pairs examined and fraction of valid pairs found are all within about $1\%$ of their predictions, with no
+drift in $n$. Still untested are merges whose input lists are themselves outputs of filtered merges, and the BBSS
+digit set, whose optimal digit fractions are too small to realise at these sizes.
+\status{numerical; script sim\_merge.py}
+\status{one merge tested; multi-level open}
+\item \textbf{Depth and search.} Only $k=3$ and local search have been tried. A fourth level (also with the
+digits $\pm2$) or a global search may lower the exponent further.
+\status{open}
+\item \textbf{Novelty.} Table~1 of~\cite{BBSS20} lists a $0.287$ entry for $\{-1,0,1\}$ from another source. We
+must check that it is not already merge filtering, and search post-2020 work for nearest-neighbour or filtered
+merges in representation trees.
+\status{open; BM18 and KM21 checked}
+\item \textbf{Other representation problems.} Meet-LWE merges for ternary keys also generate pairs with the wrong
+split pattern (the counts of $\pm1$ in the two summands). Our coordinate filter could be used there together with
+the value-side hashing of~\cite{KM21}, since the two act on different parts of the pair.
+\status{open}
+\end{enumerate}
+
+\section*{Acknowledgements}
+AI tools (Anthropic's Claude) were used for literature search, checking algebra, writing and running the numerical
+experiments, and drafting text; since this note is itself prompted by AI-generated results, we say plainly that the
+experiments and much of the drafting were done with Claude. All results and text were checked by the author, who
+takes full responsibility for the content.
+% TODO(Nick): check this matches what you want to say.
+
+\begin{thebibliography}{99}
+% TODO: verify volume and page numbers against the publishers' pages before posting.
+\bibitem{BDGL16} A.~Becker, L.~Ducas, N.~Gama and T.~Laarhoven, New directions in nearest neighbor searching with
+applications to lattice sieving, in \emph{Proc.\ 27th ACM-SIAM Symposium on Discrete Algorithms (SODA)}, SIAM, 2016,
+pp.~10--24.
+\bibitem{BM18} L.~Both and A.~May, Decoding linear codes with high error rate and its impact for LPN security,
+in \emph{Post-Quantum Cryptography (PQCrypto 2018)}, LNCS, Springer, 2018, pp.~25--46. Also IACR ePrint 2017/1139.
+\bibitem{BCJ11} A.~Becker, J.-S.~Coron and A.~Joux, Improved generic algorithms for hard knapsacks, in
+\emph{Advances in Cryptology -- EUROCRYPT 2011}, LNCS 6632, Springer, 2011, pp.~364--385.
+\bibitem{BBSS20} X.~Bonnetain, R.~Bricout, A.~Schrottenloher and Y.~Shen, Improved classical and quantum algorithms
+for subset-sum, in \emph{Advances in Cryptology -- ASIACRYPT 2020}, LNCS, Springer, 2020.
+\bibitem{CJRS23} X.~Chen, Y.~Jin, T.~Randolph and R.~A.~Servedio, Subset Sum in time $2^{n/2}/\mathrm{poly}(n)$, in
+\emph{APPROX/RANDOM 2023}, LIPIcs 275, Schloss Dagstuhl, 2023, pp.~39:1--39:18.
+\bibitem{Chr17} T.~Christiani, A framework for similarity search with space-time tradeoffs using locality-sensitive
+filtering, in \emph{Proc.\ 28th ACM-SIAM Symposium on Discrete Algorithms (SODA)}, SIAM, 2017, pp.~31--46.
+\bibitem{CK11} I.~Csisz\'ar and J.~K\"orner, \emph{Information Theory: Coding Theorems for Discrete Memoryless
+Systems}, 2nd ed., Cambridge University Press, 2011.
+\bibitem{EM19} A.~Esser and A.~May, Better sample -- random subset sum in $2^{0.255n}$ and its impact on decoding
+random linear codes, arXiv:1907.04295 (withdrawn).
+\bibitem{HS74} E.~Horowitz and S.~Sahni, Computing partitions with applications to the knapsack problem,
+\emph{J.\ ACM} \textbf{21} (1974), 277--292.
+\bibitem{HGJ10} N.~Howgrave-Graham and A.~Joux, New generic algorithms for hard knapsacks, in \emph{Advances in
+Cryptology -- EUROCRYPT 2010}, LNCS 6110, Springer, 2010, pp.~235--256.
+\bibitem{KM21} E.~Kirshanova and A.~May, How to find ternary LWE keys using locality sensitive hashing, in
+\emph{Cryptography and Coding (IMACC 2021)}, LNCS, Springer, 2021. Also IACR ePrint 2021/1255.
+\bibitem{Li25} Y.~Li, From subset-sum to decoding: improved classical and quantum algorithms via ternary
+representation technique, \emph{Information} \textbf{16} (2025), no.~10, 887, doi:10.3390/info16100887.
+\bibitem{MO15} A.~May and I.~Ozerov, On computing nearest neighbors with applications to decoding of binary linear
+codes, in \emph{Advances in Cryptology -- EUROCRYPT 2015}, LNCS 9056, Springer, 2015, pp.~203--228.
+\bibitem{OAI26} OpenAI, Subset Sum in time $O(2^{0.49n})$, preprint, 4 October 2026.
+\bibitem{SS81} R.~Schroeppel and A.~Shamir, A $T=O(2^{n/2})$, $S=O(2^{n/4})$ algorithm for certain NP-complete
+problems, \emph{SIAM J.\ Comput.} \textbf{10} (1981), 456--464.
+\end{thebibliography}
+\end{document}

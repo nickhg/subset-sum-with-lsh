@@ -1,0 +1,6 @@
+HGJ  depth 2: plain 0.33713  with LSF 0.32693   (check vs IPF model: 0.32694)
+BCJ  depth 3: plain 0.29093  with LSF 0.29098   eps=[0.0267 0.0169 0.0029]
+   level 1: list 0.2172 merge_out 0.2332 useful 0.0000 LSF entries 0.2174 passing 0.2333
+   level 2: list 0.2789 merge_out 0.2909 useful 0.2172 LSF entries 0.2790 passing 0.2910
+   level 3: list 0.2909 merge_out 0.2910 useful 0.2789 LSF entries 0.2910 passing 0.2910
+   base 0.266

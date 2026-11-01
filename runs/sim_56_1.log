@@ -1,0 +1,7 @@
+n=56 w=7 seed=1: filter a=3 m=24  p1=0.3138 p2=0.09949  F=21  pred. spurious pass/valid pass=0.620  (unfiltered: 1.700)
+  lists 2^12 each, matched pairs 261940, valid (disjoint) 97298
+  overlap law of matched pairs vs independent pairs: 0:0.371/0.370 1:0.421/0.422 2:0.173/0.173 3:0.032/0.032 4:0.003/0.003
+  (a) entries left 0.998  right 0.993   (measured/predicted)
+  (b) spurious examined 335236: / exact-overlap prediction 0.990, / independent-pair heuristic 0.990
+  (c) valid found 86294/97298 = 0.887, predicted 0.889
+  work: unfiltered pairs 261940, filtered entries 53731 + examined 536380

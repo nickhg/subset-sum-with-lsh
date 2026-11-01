@@ -1,0 +1,9 @@
+n=48 seed=0: w2=6 w1=12  M0=2^10 M1=2^21 M2=2^27  level-1 filter (a,m,F)=(3,24,18)  top filter (6,24,28)
+  [unfiltered level 1] |L1|=3234 |L2|=3328  top matched 168065 valid 3029  filtered top finds 0.874 (pred 0.875)
+     (i)  top overlap law vs independent: 0:0.018/0.018 1:0.104/0.103 2:0.241/0.241 3:0.296/0.297 4:0.215/0.215 5:0.095/0.095 6:0.026/0.026
+     (iii) overlap inside L1 vs independent: 0:0.018/0.018 1:0.103/0.103 2:0.240/0.241 3:0.299/0.297 4:0.213/0.215 5:0.095/0.095 6:0.026/0.026
+     (iii) outputs per used A-summand: mean 1.470  max 5  share with >=2: 0.361
+  [filtered level 1] |L1|=2840 |L2|=2940  top matched 130311 valid 2332  filtered top finds 0.886 (pred 0.875)
+     (i)  top overlap law vs independent: 0:0.018/0.018 1:0.104/0.103 2:0.241/0.241 3:0.296/0.297 4:0.216/0.215 5:0.095/0.095 6:0.026/0.026
+     (iii) overlap inside L1 vs independent: 0:0.018/0.018 1:0.104/0.103 2:0.240/0.241 3:0.297/0.297 4:0.216/0.215 5:0.095/0.095 6:0.026/0.026
+     (iii) outputs per used A-summand: mean 1.407  max 5  share with >=2: 0.320

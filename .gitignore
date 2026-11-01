@@ -1,0 +1,9 @@
+__pycache__/
+runs/*.log
+!runs/sim_*_*.log
+!runs/two_*_*.log
+!runs/bcj_ladder.log
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.pdf
