@@ -7,3 +7,4 @@ paper/*.aux
 paper/*.log
 paper/*.out
 paper/*.pdf
+!runs/klabel_*.log

@@ -90,6 +90,15 @@ is the working state.
   on the unpublished MO work. Also Ozerov, if an address can be found.
 - Web Claude's review_note_for_cc_2.md small fixes (B1–B6, B8) are applied. B7 (date) waits for the posting date.
 
+## Status 31 Oct, ~21:15: Nick considers the paper a non-result (parked)
+- Nick: the only part of OAI26 we used is Dubiner's idea; BBSS surely know, and the community probably knows
+  0.283 can be improved by ~0.004 but hasn't written it down. **The paper is parked, not to be posted** unless Nick
+  changes his mind (e.g. after asking May).
+- The OAI26-specific ingredients (Fourier checksum and alias extraction) were checked for the average case:
+  `checksum_floor.py` gives a floor of 0.4799 (at η = 0.52, matching OAI's own η = 0.5177). Web Claude's 0.2787 floor
+  only counted the profile π*. So the checksum route is closed. Reply: `notes/checksum_floor_reply_for_web_claude.md`.
+- Optimality probe: K = 3 and 4 labels with free laws give no gain (0.279266).
+
 ## Open issues (from the note)
 1. The cost of looking up which filters a vector passes (structured filters) isn't argued yet.
 2. Only pairs of exactly split type σ are found. The accounting is consistent with this, but
