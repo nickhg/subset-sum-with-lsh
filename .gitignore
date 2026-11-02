@@ -8,3 +8,4 @@ paper/*.log
 paper/*.out
 paper/*.pdf
 !runs/klabel_*.log
+!floor/runs/*.log
