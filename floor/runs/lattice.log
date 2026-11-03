@@ -1,0 +1,30 @@
+n=50 inst=0: BKZ-30 0.6s, enum 2.3s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=1: BKZ-30 0.5s, enum 8.2s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=2: BKZ-30 0.5s, enum 3.2s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=3: BKZ-30 0.6s, enum 7.2s  short vectors (up to sign) 5 {'even(lam=0,+-2,..)': 1, 'odd(lam=+-1,..)': 4}  solution found: True
+n=50 inst=4: BKZ-30 0.5s, enum 3.5s  short vectors (up to sign) 2 {'odd(lam=+-1,..)': 2}  solution found: True
+n=50 inst=5: BKZ-30 0.3s, enum 2.0s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=6: BKZ-30 0.5s, enum 9.0s  short vectors (up to sign) 4 {'even(lam=0,+-2,..)': 2, 'odd(lam=+-1,..)': 2}  solution found: True
+n=50 inst=7: BKZ-30 0.4s, enum 3.7s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=8: BKZ-30 0.6s, enum 1.9s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=50 inst=9: BKZ-30 0.5s, enum 2.3s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=55 inst=0: BKZ-30 0.5s, enum 221.6s  short vectors (up to sign) 7 {'even(lam=0,+-2,..)': 4, 'odd(lam=+-1,..)': 3}  solution found: True
+n=55 inst=1: BKZ-30 0.4s, enum 104.3s  short vectors (up to sign) 7 {'odd(lam=+-1,..)': 7}  solution found: True
+n=55 inst=2: BKZ-30 0.4s, enum 36.2s  short vectors (up to sign) 3 {'odd(lam=+-1,..)': 3}  solution found: True
+n=55 inst=3: BKZ-30 0.3s, enum 62.1s  short vectors (up to sign) 3 {'odd(lam=+-1,..)': 3}  solution found: True
+n=55 inst=4: BKZ-30 0.3s, enum 41.6s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=55 inst=5: BKZ-30 0.4s, enum 30.7s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=55 inst=6: BKZ-30 0.3s, enum 18.2s  short vectors (up to sign) 2 {'even(lam=0,+-2,..)': 1, 'odd(lam=+-1,..)': 1}  solution found: True
+n=55 inst=7: BKZ-30 0.4s, enum 58.2s  short vectors (up to sign) 2 {'odd(lam=+-1,..)': 2}  solution found: True
+n=55 inst=8: BKZ-30 0.3s, enum 36.7s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=55 inst=9: BKZ-30 0.3s, enum 29.2s  short vectors (up to sign) 2 {'even(lam=0,+-2,..)': 1, 'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=0: BKZ-30 0.4s, enum 845.5s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=1: BKZ-30 0.5s, enum 559.5s  short vectors (up to sign) 3 {'even(lam=0,+-2,..)': 1, 'odd(lam=+-1,..)': 2}  solution found: True
+n=60 inst=2: BKZ-30 0.5s, enum 463.2s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=3: BKZ-30 0.5s, enum 357.7s  short vectors (up to sign) 2 {'odd(lam=+-1,..)': 2}  solution found: True
+n=60 inst=4: BKZ-30 0.3s, enum 547.2s  short vectors (up to sign) 2 {'odd(lam=+-1,..)': 1, 'even(lam=0,+-2,..)': 1}  solution found: True
+n=60 inst=5: BKZ-30 0.2s, enum 414.1s  short vectors (up to sign) 1 {'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=6: BKZ-30 0.3s, enum 420.5s  short vectors (up to sign) 2 {'odd(lam=+-1,..)': 2}  solution found: True
+n=60 inst=7: BKZ-30 0.3s, enum 328.7s  short vectors (up to sign) 2 {'even(lam=0,+-2,..)': 1, 'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=8: BKZ-30 0.2s, enum 381.3s  short vectors (up to sign) 3 {'even(lam=0,+-2,..)': 2, 'odd(lam=+-1,..)': 1}  solution found: True
+n=60 inst=9: BKZ-30 0.2s, enum 540.1s  short vectors (up to sign) 8 {'even(lam=0,+-2,..)': 4, 'odd(lam=+-1,..)': 4}  solution found: True

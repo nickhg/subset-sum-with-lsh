@@ -1,0 +1,12 @@
+n=64 c_int=1.0: weights [32, 16, 8, 4]  M1=601080480 M2=12870 M3=18  N~2^56.00  actual c (root, lvl1, lvl2) = 1.000, 1.000, 3.889
+  sigma leaf 1.000 | level 2 0.963 (Poisson 0.980) | level 1 0.602 (Poisson 0.617) | S found 0.300 (Poisson 0.317) any solution 1.000
+  work (log2, mean over draws): 23.51   draws 10
+n=64 c_int=2.0: weights [32, 16, 8, 4]  M1=300541716 M2=6444 M3=18  N~2^56.00  actual c (root, lvl1, lvl2) = 2.000, 1.997, 3.889
+  sigma leaf 1.000 | level 2 0.967 (Poisson 0.980) | level 1 0.841 (Poisson 0.853) | S found 0.500 (Poisson 0.767) any solution 1.000
+  work (log2, mean over draws): 24.98   draws 10
+n=64 c_int=3.0: weights [32, 16, 8, 4]  M1=200358396 M2=4284 M3=18  N~2^56.00  actual c (root, lvl1, lvl2) = 3.000, 3.004, 3.889
+  sigma leaf 1.000 | level 2 0.953 (Poisson 0.980) | level 1 0.928 (Poisson 0.944) | S found 0.900 (Poisson 0.931) any solution 1.000
+  work (log2, mean over draws): 25.90   draws 10
+n=64 c_int=4.0: weights [32, 16, 8, 4]  M1=150270858 M2=3222 M3=18  N~2^56.00  actual c (root, lvl1, lvl2) = 4.000, 3.994, 3.889
+  sigma leaf 1.000 | level 2 0.964 (Poisson 0.980) | level 1 0.972 (Poisson 0.978) | S found 1.000 (Poisson 0.978) any solution 1.000
+  work (log2, mean over draws): 26.62   draws 10

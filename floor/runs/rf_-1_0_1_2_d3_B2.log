@@ -1,0 +1,12 @@
+D=-1,0,1,2 d=3 B2: best T = 9.00000
+Traceback (most recent call last):
+  File "/home/nickhg/git/subset-sum-with-lsh/floor/recursive_floor.py", line 116, in <module>
+    print(describe(M, z, d, variant), flush=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nickhg/git/subset-sum-with-lsh/floor/recursive_floor.py", line 92, in describe
+    T, x, lev, P, F = evaluate(M, z, d, variant)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nickhg/git/subset-sum-with-lsh/floor/recursive_floor.py", line 62, in evaluate
+    P = z[:d * ns].reshape(d, ns) if ns else np.zeros((d, 0))
+        ~^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable

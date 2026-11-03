@@ -1,0 +1,9 @@
+D=0,1 d=6 F0L: best T = 0.31128
+T = 0.31128
+  level 1: [0:0.7500 1:0.2500]  H 0.8113 rho 0.5000 c 0.5000 list 0.3113 merge-pairs 0.1226
+  level 2: [0:0.8750 1:0.1250]  H 0.5436 rho 0.2500 c 0.2500 list 0.2936 merge-pairs 0.3371
+  level 3: [0:0.9375 1:0.0625]  H 0.3373 rho 0.1250 c 0.1250 list 0.2123 merge-pairs 0.2996
+  level 4: [0:0.9688 1:0.0312]  H 0.2006 rho 0.0625 c 0.0625 list 0.1381 merge-pairs 0.2137
+  level 5: [0:0.9844 1:0.0156]  H 0.1161 rho 0.0312 c 0.0000 list 0.1161 merge-pairs 0.1697
+  level 6: [0:0.9922 1:0.0078]  H 0.0659 rho 0.0156 c 0.0000 list 0.0659 merge-pairs 0.1318
+  leaf H_d/2 0.0330

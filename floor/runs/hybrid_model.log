@@ -1,0 +1,13 @@
+     p    h(p)  lattice exp  decoy excess   cost(b) = max(0.292, latt - m) for m = 0.3 .. 0.7
+0.5000  1.0000       1.0471        0.0471   m=0.3:0.747  m=0.4:0.647  m=0.5:0.547  m=0.6:0.447  m=0.7:0.347
+0.2500  0.8113       0.8396        0.0283   m=0.3:0.540  m=0.4:0.440  m=0.5:0.340  m=0.6:0.292  m=0.7:0.292
+0.2000  0.7219       0.7552        0.0333   m=0.3:0.455  m=0.4:0.355  m=0.5:0.292  m=0.6:0.292  m=0.7:0.292
+0.1250  0.5436       0.5807        0.0371   m=0.3:0.292  m=0.4:0.292  m=0.5:0.292  m=0.6:0.292  m=0.7:0.292
+0.0625  0.3373       0.3685        0.0312   m=0.3:0.292  m=0.4:0.292  m=0.5:0.292  m=0.6:0.292  m=0.7:0.292
+
+Every option-(b) cost is >= 0.292 > 0.2793 (BBSS + filters) and > 0.2909 (BCJ): a full-dimension lattice step cannot appear in a tree that beats the current best, whatever level or modulus.
+A gain would need a lattice step in dimension beta*n < n (a block hybrid): sieve cost 0.292*beta.
+  beta = 0.5: sieve cost 0.1460 n
+  beta = 0.75: sieve cost 0.2190 n
+  beta = 0.9: sieve cost 0.2628 n
+  beta = 0.95: sieve cost 0.2774 n

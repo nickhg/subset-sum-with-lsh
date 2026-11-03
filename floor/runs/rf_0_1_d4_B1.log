@@ -1,0 +1,7 @@
+D=0,1 d=4 B1: best T = 0.33713
+T = 0.33713
+  level 1: [0:0.7500 1:0.2500]  H 0.8113 rho 0.5000 c 0.5000 list 0.3113 merge-pairs 0.1226
+  level 2: [0:0.8750 1:0.1250]  H 0.5436 rho 0.2500 c 0.2500 list 0.2936 merge-pairs 0.3371
+  level 3: [0:0.9375 1:0.0625]  H 0.3373 rho 0.1250 c 0.0833 list 0.2331 merge-pairs 0.2996
+  level 4: [0:0.9688 1:0.0312]  H 0.2006 rho 0.0625 c 0.0833 list 0.1173 merge-pairs 0.2346
+  leaf H_d/2 0.1003
