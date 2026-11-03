@@ -127,8 +127,7 @@ filters act on the representation coordinates and keep exact modular matching. A
 $2^{0.255n}$~\cite{EM19} has been withdrawn (``issue with counting duplicate representations''); unlike~\cite{EM19} we
 never sample or modify list contents, and all representation counts are those of~\cite{BBSS20}.
 Li~\cite{Li25} claims $2^{0.24n}$ using a ternary-tree representation structure; we were not able to reproduce this
-exponent within the heuristics used here. Charging each three-list merge for the pairs it enumerates from two of its
-lists, rather than for its output size, we obtain $0.39$.
+exponent within the heuristics used here.
 
 \section{Preliminaries}\label{sec:prelim}
 Logarithms are to base $2$ and $H$ is Shannon entropy. For a finite set $\Sigma$ and $v\in\Sigma^n$ the \emph{type} of
@@ -471,7 +470,8 @@ converges to about $0.272$. What remains is merge cost, so going substantially l
 as a non-binary root with a fast join, non-modular information, or a top level that is not enumerated, rather than
 more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\cite{BBSS20}; non-binary roots and non-enumerative
 top levels; wider digit sets, which add at most about $0.0004$ at fixed depth; and transferring the
-observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
+observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern; for
+Meet-LWE we found no gain at the published optima, where the binding merges have little split-pattern waste.
 Lattice-based hybrids, such as guessing combined with batch-CVP, may be competitive at density one; whether they can be combined with filtered representation trees is open.
 
 \appendix

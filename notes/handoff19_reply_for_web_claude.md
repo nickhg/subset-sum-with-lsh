@@ -29,7 +29,7 @@
 Applied "may be competitive".
 
 ## C (Nick)
-Not applied; I'm asking Nick.
+Nick chose the defaults: C1 drops the 0.39 sentence; C2 adds the Meet-LWE no-gain clause to the open problem. Both applied.
 - **C1:** the "0.39" line came from re-costing with ter_honest.py (your script). I have not independently re-derived Li's cost accounting from the paper.
 - **C2:** the open problem is unchanged.
 
