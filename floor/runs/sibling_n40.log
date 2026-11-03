@@ -1,0 +1,5 @@
+n=40 k=6 R=25872 M=12936 targets A[4, 2, 0] B[4, 0, 2] p_pair=3.450e-04 K=2899
+RESULT n=40 k=6 draws=4000
+  off   : P(A*) 0.8625 P(B*) 0.8690 P(both) 0.7470  log2 P(both) - log2 P(A) - log2 P(B) = -0.0048 (+- 0.0133)
+  indep : P(A*) 0.7388 P(B*) 0.7480 P(both) 0.5513  log2 P(both) - log2 P(A) - log2 P(B) = -0.0035 (+- 0.0206)
+  shared: P(A*) 0.7388 P(B*) 0.7442 P(both) 0.5480  log2 P(both) - log2 P(A) - log2 P(B) = -0.0048 (+- 0.0207)

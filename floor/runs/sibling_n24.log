@@ -1,0 +1,5 @@
+n=24 k=4 R=1120 M=560 targets A[2, 2, 0] B[2, 0, 2] p_pair=4.319e-04 K=2315
+RESULT n=24 k=4 draws=4000
+  off   : P(A*) 0.8582 P(B*) 0.8618 P(both) 0.7368  log2 P(both) - log2 P(A) - log2 P(B) = -0.0056 (+- 0.0136)
+  indep : P(A*) 0.7348 P(B*) 0.7398 P(both) 0.5450  log2 P(both) - log2 P(A) - log2 P(B) = +0.0039 (+- 0.0208)
+  shared: P(A*) 0.7348 P(B*) 0.7472 P(both) 0.5493  log2 P(both) - log2 P(A) - log2 P(B) = +0.0005 (+- 0.0207)

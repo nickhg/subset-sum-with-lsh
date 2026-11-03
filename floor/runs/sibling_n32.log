@@ -1,0 +1,5 @@
+n=32 k=5 R=5544 M=2772 targets A[3, 2, 0] B[3, 0, 2] p_pair=5.300e-04 K=1887
+RESULT n=32 k=5 draws=4000
+  off   : P(A*) 0.8542 P(B*) 0.8608 P(both) 0.7358  log2 P(both) - log2 P(A) - log2 P(B) = +0.0009 (+- 0.0137)
+  indep : P(A*) 0.6777 P(B*) 0.6913 P(both) 0.4640  log2 P(both) - log2 P(A) - log2 P(B) = -0.0139 (+- 0.0245)
+  shared: P(A*) 0.6777 P(B*) 0.6943 P(both) 0.4735  log2 P(both) - log2 P(A) - log2 P(B) = +0.0091 (+- 0.0241)

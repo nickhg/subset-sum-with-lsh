@@ -5,3 +5,18 @@ n=32 R=5544 M=2772 E|V_parent|/M=232728  p_pair=4.807e-04 -> K=2080 codewords
   80 draws: unfiltered sigma 0.866 planted 0.875 | filtered sigma 0.717 planted 0.688
   100 draws: unfiltered sigma 0.865 planted 0.850 | filtered sigma 0.716 planted 0.700
   120 draws: unfiltered sigma 0.865 planted 0.850 | filtered sigma 0.716 planted 0.717
+  140 draws: unfiltered sigma 0.865 planted 0.850 | filtered sigma 0.716 planted 0.700
+  160 draws: unfiltered sigma 0.865 planted 0.856 | filtered sigma 0.716 planted 0.719
+  180 draws: unfiltered sigma 0.865 planted 0.856 | filtered sigma 0.716 planted 0.706
+  200 draws: unfiltered sigma 0.865 planted 0.860 | filtered sigma 0.716 planted 0.725
+  220 draws: unfiltered sigma 0.864 planted 0.859 | filtered sigma 0.716 planted 0.718
+  240 draws: unfiltered sigma 0.864 planted 0.854 | filtered sigma 0.715 planted 0.717
+  260 draws: unfiltered sigma 0.864 planted 0.862 | filtered sigma 0.715 planted 0.719
+  280 draws: unfiltered sigma 0.864 planted 0.857 | filtered sigma 0.716 planted 0.714
+  300 draws: unfiltered sigma 0.864 planted 0.863 | filtered sigma 0.715 planted 0.720
+
+RESULT (300 draws, |L_A|~1921, K=2080)
+  filter off: mean sigma 0.8638   P(planted survives) 0.8633 +- 0.0198
+  filter on : mean sigma 0.7150   P(planted survives) 0.7200 +- 0.0259
+  filtered/unfiltered output ratio 0.8278
+  pair class 'A carries cancellation +1': unfiltered 0.5000  passing 0.5000
