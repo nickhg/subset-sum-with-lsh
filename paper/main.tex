@@ -60,6 +60,7 @@ $0.337$ & HGJ~\cite{HGJ10} (as corrected in~\cite{BCJ11}) & $\{0,1\}$ & 3 & plai
 $0.329$ & May--Ozerov~\cite{Oze16} & $\{0,1\}$ & 2 & consistency filtered \\
 $0.291$ & BCJ~\cite{BCJ11} & $\{-1,0,1\}$ & 3 & plain \\
 $0.287$ & May--Ozerov~\cite{Oze16} & $\{-1,0,1\}$ & 3 & consistency filtered \\
+$\TBCJFthree$, $\TBCJFfour$ & this work$^\dagger$ & $\{-1,0,1\}$ & 3, 4 & type-class filtered \\
 $0.2830$ & BBSS~\cite{BBSS20} & $\{-1,0,1,2\}$ & 3 & plain \\
 \midrule
 $\TBBSSFthree$ & this work & $\{-1,0,1,2\}$ & 3 & type-class filtered \\
@@ -71,7 +72,9 @@ $\TFiveFfive$ & this work & $\{-2,\dots,2\}$ & 5 & type-class filtered$^*$ \\
 \end{tabular}
 \caption{Heuristic time exponents for random density-one Subset Sum. Depth is the number of levels of
 representation lists below the root ($d$ in Section~\ref{sec:prelim}); BBSS's ``five levels, numbered 4 down to
-0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves. $^*$\todo{final value; run in progress}}
+0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves. $^*$\todo{final value; run in progress} $^\dagger$BBSS accounting (Heuristic~\ref{heur:lists}); under the strict
+accounting of~\cite{BCJ11}, which~\cite{Oze16} also uses, our filtered depth-3 value is $0.2864$ \todo{strict depth 4 value; run in progress}, and
+Ozerov's accounting gives HGJ $0.340$ rather than $0.337$, so the rows are not directly comparable.}
 \label{tab:history}
 \end{table}
 
@@ -87,6 +90,10 @@ pay, and at the optimum the costs of all merges tie. This gives the improvement
 $0.2830\to\Tbest$ (Section~\ref{sec:results}): about $\GainFiltersPct\%$ of it comes from the filters at fixed depth,
 and $\GainDepthPct\%$ from the depth they make affordable. In decoding the analogous effect is known: with
 near-neighbour search at every level, BJMM-type trees improve up to depth~$4$~\cite{BM17b,BM18}.
+
+\paragraph{What is new.} Filtering of representation trees is due to May and Ozerov~\cite{Oze16}, for the HGJ and BCJ
+digit sets at depth at most $3$. Filters combined with depth are known in decoding, from Both and May~\cite{BM17b,BM18}.
+New here are filters on the BBSS digit set $\{-1,0,1,2\}$, trees of depth $d\ge4$, and the soundness analysis.
 
 \paragraph{Contributions.}
 \begin{enumerate}
@@ -192,22 +199,47 @@ constant factor, at cost dominated by
 \]
 plus the cost of decoding, for each vector, the filters it enters.
 \end{proposition}
-A filter pays when $I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$; we call $I(X;\Lambda)+I(Y;\Lambda)-I(XY;\Lambda)$ the
+With $F=2^{I(XY;\Lambda)n}$ filters a valid pair shares $\Theta(1)$ filters in expectation, so a constant
+fraction of valid pairs could be missed; we use $nF$ filters, which makes the miss probability $e^{-\Omega(n)}$ per
+pair at a polynomial cost. A filter pays when $I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$; we call $I(X;\Lambda)+I(Y;\Lambda)-I(XY;\Lambda)$ the
 \emph{saving} of the merge.
 
 \begin{remark}[Only the label type matters]\label{rem:piQ}
 One may draw filters i.i.d.\ from any law $\pi$ on the label set; the number of filters and the entry probabilities
 then change by factors $2^{\pm D(Q_\Lambda\|\pi)n}$ that cancel in all three cost terms, since only filters of type
-$Q_\Lambda$ ever contain a valid pair. We therefore normalise $\pi=Q_\Lambda$. (In our numerical model $\pi$ is a free
-parameter; at one optimum it had drifted to $\pi_N\approx0$, giving formal code rates $34n$ and $128n$ at two levels,
-while all costs were unchanged by resetting $\pi=Q_\Lambda$; the true rates are those in Table~\ref{tab:params4}.)
+$Q_\Lambda$ ever contain a valid pair. We therefore normalise $\pi=Q_\Lambda$ (see also Appendix~\ref{app:repro}).
 \end{remark}
 
 \paragraph{Decoding the filters.} Each vector must find the $2^{(I(XY;\Lambda)-I(X;\Lambda))n}$ filters it enters,
-among $2^{I(XY;\Lambda)n}$, in time close to that number. This needs list-decodable structured codes (Dubiner's
-product construction~\cite{Dub10}, or the tensored filters of~\cite{BDGL16,Chr17}); at the reported optima
-$I(XY;\Lambda)\le0.17$ (Table~\ref{tab:params4}), so the codes are small. \todo{write out the block/pattern argument
-(cf.\ the parked note, open item~1)}
+among $2^{I(XY;\Lambda)n}$, in time close to that number. Random codes do not allow this, so we use a product
+construction, as in Dubiner's bucketing codes~\cite{Dub10} and the tensored filters of~\cite{BDGL16}. At the reported
+optima $I(XY;\Lambda)\le0.17$ (Table~\ref{tab:params4}).
+
+\begin{proposition}\label{prop:decode}
+The filtered $\tau$-merge can be implemented so that each cost term of Proposition~\ref{prop:cost} is achieved up to
+a factor $2^{o(n)}$, including the time to decode the filters, while each valid pair of type $\sigma$ is still found
+with probability $1-o(1)$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Apply a uniformly random permutation to the coordinates (the instance is exchangeable) and cut them into
+$b=\lceil\sqrt n\rceil$ blocks of size about $\sqrt n$. For a valid pair, the vector of its per-block joint types, its
+\emph{pattern}, is a sequence $(\sigma_1,\dots,\sigma_b)$ averaging to $\sigma$. By concentration of sampling without
+replacement, with probability $1-o(1)$ every $\sigma_i$ is within $\epsilon_n=n^{-1/4}\log n$ of $\sigma$ in total
+variation. The number of such patterns is at most $(\sqrt n+1)^{O(b)}=2^{O(\sqrt n\log n)}$.
+
+For each pattern we build an independent filter family: in block $i$, a random code $C_i$ of
+$2^{\sqrt n\, I_{\sigma_i}(XY;\Lambda)}$ label strings of type $Q_{\Lambda,i}$ (the label marginal of
+$\sigma_i\times\kappa$), and a filter is a tuple $(u_1,\dots,u_b)\in C_1\times\dots\times C_b$. A left vector enters the
+tuple if it enters every $u_i$ in the sense of Section~\ref{sec:filter}, with block-$i$ marginals; similarly on the
+right. A vector decodes its filters by testing, in each block, all of $C_i$ (time $2^{O(\sqrt n)}$) and then
+enumerating the product of the per-block lists, in time proportional to the output plus $b\,2^{O(\sqrt n)}$.
+
+Lemma~\ref{lem:filter} applies in each block. The probabilities multiply, so a valid pair with this pattern shares
+$\Theta(1)$ filters in expectation (amplified as above), and the entry and passing exponents are block averages of the
+single-block terms. Those terms are continuous functions of the pair type for fixed $\kappa$, so each average differs
+from the global term of Proposition~\ref{prop:cost} by $O(\epsilon_n)$, i.e.\ by $o(n)$ in the exponent. Summing over
+the $2^{o(n)}$ patterns multiplies all costs by $2^{o(n)}$.
+\end{proof}
 
 \section{Accounting and soundness}\label{sec:sound}
 \paragraph{The program.} For fixed split laws and filter laws, the exponents $(c_j,\ell_j,T)$ are the variables of a
@@ -236,8 +268,9 @@ excess $\rho_1-c_1=\RootExcessfour=-2s_1$ (Table~\ref{tab:params4}).
 not disadvantaged.
 
 \begin{lemma}\label{lem:sym}
-Fix a node, its exact type, and the randomness: the instance $a$ with i.i.d.\ uniform coordinates, the node residues
-(independent of $a$), and i.i.d.\ filters (independent of both). Let $O$ be the output list and $V_\tau$ the parents
+Fix a node (per node), its exact type, and the randomness: the instance $a$ with i.i.d.\ uniform coordinates, the
+node's residue $\tau$, marginally uniform and independent of $a$, the residues below it (functions of $\tau$ and fresh
+independent randomness), and i.i.d.\ filters independent of all of these. Let $O$ be the output list and $V_\tau$ the parents
 of the exact type in the node's residue class. Then for every parent $P$ of that type,
 \[
 \Pr[P\in O\mid P\in V_\tau]=\mathbb{E}|O|\,/\,\mathbb{E}|V_\tau| ,
@@ -251,9 +284,15 @@ $O(g a,\tau,g u)=g\,O(a,\tau,u)$. The law of $(a,\tau,u)$ is $g$-invariant and $
 $\Pr[P\in O\wedge P\in V_\tau]$ is the same for all $P$ of the type, on which the permutations act transitively.
 Summing over $P$ and dividing by $\Pr[P\in V_\tau]=1/M$ gives the claim; child lists are outputs of equivariant steps,
 so induction over levels applies.
+
+The hypothesis on residues holds in the planted model. The root target $t=\langle a,x_0\rangle$ depends on $a$, but at
+every node the residue is $\tau$ or $t-\tau$ (reduced modulo the node's modulus) for a $\tau$ that is uniform and
+independent of $(a,x_0)$, so each node residue is marginally uniform and independent of $a$. The planted parent $P^*$
+at a node is a function of $x_0$ and of the split choices, so it is independent of $a$, and the lemma applies to it.
 \end{proof}
 The lemma concerns the ratio of expectations, which is the quantity the accounting uses; it says nothing about joint
-survival of two nodes, which we test in Section~\ref{sec:exp}.
+survival of two nodes. In particular sibling residues $\tau$ and $t-\tau$ are dependent through $t$; this joint
+dependence is what the sibling-independence experiment of Section~\ref{sec:exp} tests.
 
 \section{Results}\label{sec:results}
 \begin{table}[ht]
@@ -266,9 +305,9 @@ $0.3371$ and $0.2891$; the strict accounting of~\cite{HGJ10,BCJ11} gives $0.3371
 \end{table}
 
 \begin{theorem}[heuristic]\label{thm:main}
-Under Heuristics~\ref{heur:lists} and~\ref{heur:filter} and modulo filter decoding (Section~\ref{sec:filter}), random
-density-one Subset Sum can be solved in time $\Ot(2^{\Tbest n})$, with a filtered $\{-1,0,1,2\}$ tree of depth
-$\Tbestdepth$.
+Under Heuristics~\ref{heur:lists} and~\ref{heur:filter}, random density-one Subset Sum can be solved in time
+$2^{(\Tbest+o(1))n}$ with a filtered $\{-1,0,1,2\}$ tree of depth $\Tbestdepth$, and in time
+$2^{(\TBBSSFfour+o(1))n}$ with depth $4$. The $o(1)$ comes from filter decoding (Proposition~\ref{prop:decode}).
 \end{theorem}
 
 \paragraph{Structure of the optimum.} Table~\ref{tab:params4} gives the depth-4 point. The filtered passing costs of
@@ -280,10 +319,18 @@ $\GainTotal$, splits into $\GainFilters$ from filters at depth $3$ and $\GainDep
 \begin{table}[ht]
 \centering\small
 \resizebox{\textwidth}{!}{\input{params_d4}}
-\caption{The depth-4 optimum. $\delta_j$: digit type; $\rho_j$: representation exponent; $c_j$: constraint bits;
-$s_j$: survival exponent; $\ell_j$: list size; ``pairs'': $P_j$ (unfiltered pairs); $I(T;\Lambda)$: code rate at
-$\pi=Q_\Lambda$; ``entries gap'' $I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$; ``saving'': as in
-Section~\ref{sec:filter}, negative is a reduction; ``passing'' = pairs + saving.}
+\caption{The depth-4 optimum; row $j$ describes level $j$ and the merge of the level-$j$ lists. Columns:
+$\delta_j(\cdot)$, the digit type of level $j$;
+$\rho_j$, the representation exponent of a level-$(j-1)$ vector into level-$j$ pairs;
+$c_j$, the constraint bits ($M_j=2^{c_jn}$);
+$s_j$, the survival exponent of Section~\ref{sec:sound};
+$\ell_j$, the list size;
+\emph{pairs}, $P_j=2\ell_j-(c_{j-1}-c_j)$, the pairs an unfiltered merge would examine;
+$I(T;\Lambda)$, the code rate $I(XY;\Lambda)$ at $\pi=Q_\Lambda$;
+\emph{entries gap}, $I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, the log number of filters per vector;
+\emph{saving}, $I(XY;\Lambda)-I(X;\Lambda)-I(Y;\Lambda)$ (negative means fewer pairs);
+\emph{passing}, pairs $+$ saving, the pairs the filtered merge examines.
+All exponents are per $n$.}
 \label{tab:params4}
 \end{table}
 
@@ -300,11 +347,31 @@ mass. \todo{does re-optimisation keep $-2$ mass positive?}
 $3$-symbol optima, gives \todo{K = 4, 5 results}.
 
 \section{Experimental validation}\label{sec:exp}
-\paragraph{Survival.} In a depth-3 HGJ tree with complete leaves and internal constraint ratio $c\in\{1,2,3,4\}$
-($n=48$, $40$ draws; $n=64$, $10$ draws), the level-$1$ survival is $0.59/0.82/0.91/0.96$ at $n=48$, against
-Poisson predictions $0.62/0.86/0.94/0.98$, and the work per success is flat in $c$ to within about one bit
-(conservation). The Poisson model is slightly optimistic but $c=3$ does not decay with depth.
-\todo{table; floor/runs/survival\_*.log}
+\paragraph{Survival.} Table~\ref{tab:survival}: a depth-3 HGJ tree (weights $n/2\to n/4\to n/8\to n/16$) with complete
+leaves (leaf ratio $c\approx3.9$) and internal ratio $c\in\{1,2,3,4\}$. The Poisson model
+$\sigma=1-e^{-c\sigma_A\sigma_B}$ is slightly optimistic at every level, but survival at $c=3$ does not decay, and the
+work per success is flat in $c$ to within about one bit (conservation: raising $c$ buys nothing).
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{cccccccc}
+\toprule
+$n$ (draws) & $c$ & $\sigma_2$ & Poisson & $\sigma_1$ & Poisson & $\Pr[x_0\text{ found}]$ (Poisson) & $\log_2$ work/success \\
+\midrule
+48 (40) & 1 & 0.953 & 0.982 & 0.593 & 0.618 & 0.15 (0.32) & 21.3 \\
+ & 2 & 0.954 & 0.982 & 0.823 & 0.856 & 0.65 (0.77) & 20.5 \\
+ & 3 & 0.943 & 0.982 & 0.906 & 0.943 & 0.98 (0.93) & 20.8 \\
+ & 4 & 0.957 & 0.982 & 0.957 & 0.979 & 1.00 (0.98) & 21.4 \\
+\midrule
+64 (10) & 1 & 0.963 & 0.980 & 0.602 & 0.617 & 0.30 (0.32) & 25.3 \\
+ & 2 & 0.967 & 0.980 & 0.841 & 0.853 & 0.50 (0.77) & 26.0 \\
+ & 3 & 0.953 & 0.980 & 0.928 & 0.944 & 0.90 (0.93) & 26.1 \\
+ & 4 & 0.964 & 0.980 & 0.972 & 0.978 & 1.00 (0.98) & 26.6 \\
+\bottomrule
+\end{tabular}
+\caption{Survival by level in a real HGJ tree (\texttt{floor/survival.py}). $\sigma_j=|L_j|/\mathbb{E}|V_j|$. At $n=64$
+the modulus is capped at $2^{56}$ (density $1.14$).}
+\label{tab:survival}
+\end{table}
 
 \paragraph{Filter bias.} A filtered merge at $n=32$ shaped like the level-2 merge of the optimum (complete coset
 lists of about $1900$ elements, a $3$-symbol label set from the optimum's conditionals, $300$ draws): the planted
@@ -341,7 +408,11 @@ top levels; whether wider digit sets add more than $\approx0.0005$ \todo{update}
 observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
 
 \appendix
-\section{Parameters and reproduction}
+\section{Parameters and reproduction}\label{app:repro}
+In the numerical model the filter law $\pi$ is a free parameter; at one optimum it drifted to $\pi_N\approx0$, giving
+formal code rates of $34n$ and $128n$ at two levels, while all costs were unchanged on resetting $\pi=Q_\Lambda$
+(Remark~\ref{rem:piQ}). The rates in the tables are at $\pi=Q_\Lambda$.
+
 Tables~\ref{tab:params5} and~\ref{tab:params6} give the depth-5 and depth-6 points (columns as in
 Table~\ref{tab:params4}). Points: \texttt{\Srcfive}, \texttt{\Srcsix}. All numbers in this draft are generated by
 \texttt{floor/make\_numbers.py}; the model is \texttt{gen\_lsf.py}, the optimiser \texttt{gen\_opt.py}, and the
@@ -395,6 +466,7 @@ representation technique, \emph{Information} \textbf{16} (2025), no.~10, 887.
 \bibitem{MO15} A.~May and I.~Ozerov, On computing nearest neighbors with applications to decoding of binary linear
 codes, in \emph{EUROCRYPT 2015}, LNCS 9056, Springer, pp.~203--228.
 \bibitem{OAI26} OpenAI, Subset Sum in time $O(2^{0.49n})$, preprint, 4 October 2026.
+\url{https://github.com/openai/math}, directory \texttt{preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026}.
 \bibitem{Oze16} I.~Ozerov, \emph{Combinatorial Algorithms for Subset Sum Problems}, PhD thesis, Ruhr-Universit\"at
 Bochum, 2016.
 \bibitem{SS81} R.~Schroeppel and A.~Shamir, A $T=O(2^{n/2})$, $S=O(2^{n/4})$ algorithm for certain NP-complete
