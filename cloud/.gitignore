@@ -1,3 +1,4 @@
 INSTANCE_*
 results/
 poll_*.log
+dead_INSTANCE_*
