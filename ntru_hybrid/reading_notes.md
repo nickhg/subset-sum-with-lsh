@@ -1,6 +1,6 @@
 # Reading notes for handoff16 (filtered, deeper Meet-LWE inside the Hhan–Kim–Lee–Son hybrid). STARTED 2 Nov, night
 
-Status: Part 1. HKLS has now been read (Nick saved 2022-1473.pdf). Still needed: 2021/216, 2022/1330, 2025/1910. Originally **blocked on PDFs**: ePrint blocks automated download (curl and WebFetch both get an HTML challenge page). Nick, please save these into Downloads:
+Status: Part 1. HKLS has now been read (Nick saved 2022-1473.pdf). All four papers now read (3 Nov). Originally **blocked on PDFs**: ePrint blocks automated download (curl and WebFetch both get an HTML challenge page). Nick, please save these into Downloads:
 - Hhan–Kim–Lee–Son, ePrint **2022/1473**. The current ePrint title is "A Hybrid of Lattice-reduction and Meet-LWE via Near-Collision on Babai's Plane"; it was earlier titled "Let's Meet Ternary Keys on Babai's Plane". The journal version is *Designs, Codes and Cryptography* 94(4), 2026, article 83.
 - May, "How to meet ternary LWE keys", CRYPTO 2021, ePrint **2021/216**.
 - Bi et al., hybrid dual + Meet-LWE, ePrint **2022/1330** (for the literature check).
@@ -65,3 +65,15 @@ Status: Part 1. HKLS has now been read (Nick saved 2022-1473.pdf). Still needed:
 - Here the information budget is the cliff: Σ over the projected coordinates of log₂(||b_i*||/(2ℓ)), set by BKZ-β on the m-dimensional lattice. That is wc's handoff15 Part C budget.
 - So Parts 2–3 need the GSA profile and the ℓ/σ trade-off of the NCF. The floor is *not* a fixed n-bit cap; it depends on β (BKZ cost) and d.
 - Plan: model (d, w) with a budget function C(β, d); the F0 floor = max list exponent subject to Σ c_j ≤ C; then add NCF costs.
+
+## Literature check (May 2021/216, Bi et al. 2022/1330, KKMN 2025/1910; read 3 Nov)
+
+- **May, Meet-LWE (CRYPTO 2021), ePrint 2021/216.**
+  - Representations Rep-0/1/2; trees of depth 3–4 (Fig. 4: Rep-1 at depth 4). §7.3 "Match-and-Filter": "We filter out all vector sums that do not have exactly w^(j−1) of each (−1)- and 1-coordinates". That is a **check after matching** (BBSS-style), not filtering on representation coordinates.
+  - Depth: "We optimized every instance with depth-3 and depth-4 search trees. Increasing to depth 5 did not give any further improvements, as predicted by our asymptotic analysis that was also optimal for depth-4 trees."
+  - Open problems: "whether list construction-type algorithms can improve lattice hybrid attacks" (answered by HKLS), and "whether we can omit key guessing in our Meet-LWE by using Nearest Neighbor techniques as in [Laa15, MO15]". That NN is on values, to avoid guessing e, not on representation coordinates.
+- **Bi–Lu–Luo–Wang, Hybrid Dual and Meet-LWE, ePrint 2022/1330.** Generalises Meet-LWE inside a hybrid dual attack. No consistency or coordinate filters, no depth > 4 discussion.
+- **Karenin–Kirshanova–May–Nowakowski, ePrint 2025/1910.** A batch-CVP slicer making the guess-based hybrid practical. Guessing, not representation trees. Nothing on filters.
+- **HKLS 2022/1473:** optimum at top level 2; no coordinate filters; flags the KM21 analysis as flawed.
+
+**Verdict.** Nobody in the Meet-LWE line puts consistency/type-class filters on the representation coordinates. All of them check the ternary pattern after a value match (May's "Match-and-Filter"). Unfiltered depth tops out at 4 (May) or 2 (HKLS, hybrid). So handoff16's idea is untested in the literature. Whether it pays inside HKLS depends on the NCF overheads (Part 3).
