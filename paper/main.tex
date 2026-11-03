@@ -33,8 +33,8 @@ Schrottenloher and Shen (BBSS), using representations with digit set $\{-1,0,1,2
 (consistency) filters, in the line of Dubiner and of May and Ozerov, to the merges of the BBSS tree. At the BBSS depth
 the gain is small ($0.2830\to\TBBSSFthree$). However, the filters remove the reason why deeper trees did not help: in
 the unfiltered tree the upper merges stay the most expensive whatever the depth, whereas filtered upper merges are
-cheap enough for extra levels to pay. With depth $4$, $5$ and $6$ we obtain $\TBBSSFfour$, $\TBBSSFfive$ and
-$\TBBSSFsix$, under the standard heuristics. We check the accounting against a survival recursion that every
+cheap enough for extra levels to pay. Depth $4$ already gives $\TBBSSFfour$; the best point we computed is $\Tbest$, at depth
+$\Tbestdepth$, and the exponent converges to about $0.272$ as the depth grows, under the standard heuristics. We check the accounting against a survival recursion that every
 reported optimum satisfies, prove that the filters cannot bias the survival of the planted solution, and test the
 remaining independence assumptions by simulation.
 \end{abstract}
@@ -65,8 +65,7 @@ $0.2830$ & BBSS~\cite{BBSS20} & $\{-1,0,1,2\}$ & 3 & plain \\
 \midrule
 $\TBBSSFthree$ & this work & $\{-1,0,1,2\}$ & 3 & type-class filtered \\
 $\TBBSSFfour$ & this work & $\{-1,0,1,2\}$ & 4 & type-class filtered \\
-$\TBBSSFfive$ & this work & $\{-1,0,1,2\}$ & 5 & type-class filtered \\
-$\TBBSSFsix$ & this work & $\{-1,0,1,2\}$ & 6 & type-class filtered \\
+$\Tbest$ & this work & $\{-1,0,1,2\}$ & $\Tbestdepth$ & type-class filtered \\
 \bottomrule
 \end{tabular}
 \caption{Heuristic time exponents for random density-one Subset Sum. Depth is the number of levels of
@@ -99,8 +98,8 @@ New here are filters on the BBSS digit set $\{-1,0,1,2\}$, trees of depth $d\ge4
 \begin{enumerate}
 \item Type-class filtered $\tau$-merges on representation trees with general digit sets, with cost terms in closed
 form and the observation that the filter law only matters through its label type (Section~\ref{sec:filter}).
-\item An optimisation of the BBSS tree with filters at every merge, for depths $d\le6$: $\TBBSSFfour$, $\TBBSSFfive$,
-$\TBBSSFsix$ (Section~\ref{sec:results}).
+\item An optimisation of the BBSS tree with filters at every merge, for depths $d\le8$: $\TBBSSFfour$ at depth $4$
+and $\Tbest$ at depth $\Tbestdepth$, with the exponent converging to about $0.272$ (Section~\ref{sec:results}).
 \item Soundness of the accounting: a survival recursion that is satisfied with equality by every reported optimum,
 and a symmetry lemma showing that the planted solution survives each filtered merge with exactly the average
 probability (Section~\ref{sec:sound}).
@@ -249,7 +248,9 @@ the $2^{o(n)}$ patterns multiplies all costs by $2^{o(n)}$.
 linear program: minimise $T$ subject to Heuristic~\ref{heur:lists} ($\ell_{j-1}=P_j+p_j$, $\ell_j+c_j\le H_j$, root
 yield $\ge1$), nesting $c_j\le c_{j-1}$, and $T$ at least the leaf build $H_d/2$, every list size, and, at every merge,
 the three terms of Proposition~\ref{prop:cost} (or $P_j$ if unfiltered). The split and filter laws are optimised by
-repeated Powell and Nelder--Mead searches, warm-started from shallower optima.
+repeated Powell and Nelder--Mead searches, warm-started from shallower optima, from deeper ones, and from optima
+for wider digit sets with the extra digits projected out; each reported value is the best over all these starts.
+The depth is fixed, with per-level constants; trees whose depth grows with $n$ are outside the model.
 
 \paragraph{Survival recursion.} Heuristic~\ref{heur:lists} allows $c_j>\rho_j$ at a level (fewer representations
 than the constraint removes), which is not obviously sound: a level-$(j-1)$ element then survives only with
@@ -317,10 +318,10 @@ $2^{(\TBBSSFfour+o(1))n}$ with depth $4$. The $o(1)$ comes from filter decoding 
 all four merges tie at $T$. At this point filtering is active only at the dense levels $1$--$2$, with savings
 $0.076$ and $0.048$; at levels $3$--$4$ the optimal filter is essentially trivial ($I(XY;\Lambda)\le0.022$). The
 deficit at level $2$ is paid by the root excess, and the survival recursion is tight. The deeper optima
-(Tables~\ref{tab:params5} and~\ref{tab:params6}) filter at the dense top levels \emph{and} at the sparse bottom level
-($I(XY;\Lambda)=0.21$ and $0.28$ at the last merge for $d=5,6$). There the lists are mostly zeros, and at $d=6$ the
-bottom level has $\delta_6(1)=0.0003$ against $\delta_6(2)=0.0137$ and $\delta_6(-1)=0.0199$: it consists of $2$s and
-$-1$s split from the level-$5$ ones by $1\to(2,-1)$. Lemma~\ref{lem:sym} holds at every level, sparse ones included,
+(Tables~\ref{tab:params5}--\ref{tab:params7}) filter at the dense top levels \emph{and} at the sparse level near the
+bottom where $1\to(2,-1)$ splits dominate ($I(XY;\Lambda)=0.21$, $0.27$, $0.28$ at $d=5,6,7$). There the lists are
+mostly zeros: at $d=6$ the bottom level has $\delta_6(1)=0.0049$ against $\delta_6(2)=0.0112$ and
+$\delta_6(-1)=0.0194$, so it consists mainly of $2$s and $-1$s split from the level-$5$ ones. Lemma~\ref{lem:sym} holds at every level, sparse ones included,
 so these merges need no separate bias argument (see also Section~\ref{sec:exp}). The gain over BBSS,
 $\GainTotal$, splits into $\GainFilters$ from filters at depth $3$ and $\GainDepth$ from the extra depth.
 
@@ -343,7 +344,11 @@ All exponents are per $n$.}
 \end{table}
 
 \paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$,
-$\TBBSSFsix$ for $d=3,\dots,6$. \todo{d=6 polish still running; d=7?}
+$\TBBSSFsix$, $\TBBSSFseven$ for $d=3,\dots,7$ (Table~\ref{tab:depth}); the depth-$8$ search has not improved on
+depth~$7$. The gains shrink roughly geometrically, by a factor of about $0.3$--$0.45$ per level in the fits. Fits of
+$T_d=T_\infty+Ar^d$ to subsets of these values give $T_\infty$ between $0.2718$ and $0.2721$; the fit is sensitive to
+the last digits, which depend on the starting point of the search, so we only claim that the exponent converges to
+about $0.272$. Deeper trees alone therefore do not lead to subexponential time within this accounting.
 
 \paragraph{Wider digit sets.} Adding the digit $-2$ gains at most $0.0004$ at fixed depth ($0.2744\to0.2740$ at
 $d=4$, $0.2730\to0.2727$ at $d=5$, and $0.0001$ at $d=6$ against a $\{-1,0,1,2\}$ re-optimisation from the same start);
@@ -403,8 +408,10 @@ So the exactly tight root condition needs no extra excess.
 \fi
 
 \section{Conclusion and open problems}
-Filters and depth attack the same waste from two sides, and together they give $\Tbest$. The exponent appears to
-saturate near $0.272$. Open: a full proof of the concentration step in Proposition~\ref{prop:decode}; non-binary roots and non-enumerative
+Filters and depth attack the same waste from two sides, and together they give $\Tbest$; with depth the exponent
+converges to about $0.272$. What remains is merge cost, so going substantially lower needs a structural change, such
+as a non-binary root with a fast join, non-modular information, or a top level that is not enumerated, rather than
+more depth. Open: a full proof of the concentration step in Proposition~\ref{prop:decode}; non-binary roots and non-enumerative
 top levels; wider digit sets, which add at most about $0.0004$ at fixed depth; and transferring the
 observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
 Lattice-based hybrids, such as guessing combined with batch-CVP, are competitive at density one; whether they can be combined with filtered representation trees is open.
@@ -415,10 +422,13 @@ In the numerical model the filter law $\pi$ is a free parameter; at one optimum 
 formal code rates of $34n$ and $128n$ at two levels, while all costs were unchanged on resetting $\pi=Q_\Lambda$
 (Remark~\ref{rem:piQ}). The rates in the tables are at $\pi=Q_\Lambda$.
 
-Tables~\ref{tab:params5} and~\ref{tab:params6} give the depth-5 and depth-6 points (columns as in
-Table~\ref{tab:params4}). Points: \texttt{\Srcfive}, \texttt{\Srcsix}. All numbers in this draft are generated by
+Tables~\ref{tab:params5}--\ref{tab:params7} give the depth-5, 6 and 7 points (columns as in
+Table~\ref{tab:params4}). The points are stored as
+\begin{center}\small\texttt{\Srcfour}\quad(depth 4)\\ \texttt{\Srcfive}\quad(depth 5)\\ \texttt{\Srcsix}\quad(depth 6)\\
+\texttt{\Srcseven}\quad(depth 7)\end{center}
+All numbers in this paper are generated by
 \texttt{floor/make\_numbers.py}; the model is \texttt{gen\_lsf.py}, the optimiser \texttt{gen\_opt.py}, and the
-survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2). Commit: \todo{hash}.
+survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2).
 \begin{table}[ht]
 \centering\small
 \input{params_d5}
@@ -428,6 +438,11 @@ survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2
 \centering\small
 \input{params_d6}
 \caption{The depth-6 point.}\label{tab:params6}
+\end{table}
+\begin{table}[ht]
+\centering\small
+\input{params_d7}
+\caption{The depth-7 point.}\label{tab:params7}
 \end{table}
 
 \begin{thebibliography}{99}
