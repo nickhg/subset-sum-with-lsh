@@ -4,6 +4,7 @@
 #   launch.sh deploy HOURS           copy the committed code + cloud/seed, start the workers (worker split: SPLIT)
 #   launch.sh pull                   rsync results and logs into cloud/results/ (run from poll.sh every 15 min)
 #   launch.sh stop                   terminate the instance
+# SPLIT depth:workers, JIT jitter scales (env), passed to the workers.
 # NAME (default a) names the instance: cloud/INSTANCE_$NAME, cloud/results/$NAME; SEEDOFF offsets worker seeds.
 # The instance shuts itself down (and so terminates) after HOURS + 1 h whatever happens.
 set -u
@@ -39,11 +40,13 @@ deploy)
     scp $SSHOPT "$ROOT/cloud/polish_worker.py" ubuntu@$ip:ss/cloud/
     scp $SSHOPT "$ROOT"/cloud/seed/*.npy ubuntu@$ip:ss/res/
     git -C "$ROOT" rev-parse HEAD | ssh $SSHOPT ubuntu@$ip 'cat > ss/VERSION'
-    w=0; cmds=""
+    RS=$(mktemp); w=0; echo "cd ~/ss; pkill -f polish_worker; export JIT=${JIT:-0.1,0.3,0.6,1.0,2.0}" > "$RS"
     for p in $SPLIT; do d=${p%:*}; k=${p#*:}
-        for i in $(seq 1 $k); do w=$((w+1)); cmds="$cmds nohup python3 cloud/polish_worker.py res $d $w $HOURS $((1000+SEEDOFF+w)) > logs/w$w.log 2>&1 &"; done
+        for i in $(seq 1 $k); do w=$((w+1))
+            echo "nohup python3 cloud/polish_worker.py res $d $NAME$w $HOURS $((1000+SEEDOFF+w)) > logs/w$w.log 2>&1 &" >> "$RS"; done
     done
-    ssh -n $SSHOPT ubuntu@$ip "cd ss && $cmds sleep 1; pgrep -fc polish_worker"
+    scp $SSHOPT "$RS" ubuntu@$ip:ss/run.sh; rm -f "$RS"
+    ssh -n $SSHOPT ubuntu@$ip "bash ss/run.sh; sleep 2; pgrep -fc polish_worker"
     echo "started $w workers on $ip" ;;
 pull)
     read -r id ip _ < "$INST"; mkdir -p "$ROOT/cloud/results/$NAME"

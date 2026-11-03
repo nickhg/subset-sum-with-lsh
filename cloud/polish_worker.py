@@ -6,7 +6,8 @@ Many workers share one results directory.  Each worker owns one depth d and loop
   start is canonicalised (logits re-expressed with bounded magnitude, same probabilities up to 1e-12) and jittered
   with a scale drawn from JIT; then Powell + Nelder-Mead as in gen_opt.py.
 A strict improvement on the worker's own best is saved as  RES/d{d}_T{T:.6f}_w{worker}.npy  (T in the name, so the
-best for a depth is found by listing files).  Seed points can be dropped into RES with the same naming.
+best for a depth is found by listing files).  Seed points can be dropped into RES with the same naming
+(cloud/poll_all.sh copies each depth's best between machines).  JIT (env) overrides the jitter scales.
 usage: polish_worker.py RES depth worker_id hours [seed]
 """
 import sys, os, glob, time
@@ -17,7 +18,8 @@ from gen_lsf import Model
 warnings.filterwarnings("ignore")
 
 D = [-1, 0, 1, 2]; M = Model(D); NS, NF = M.nsplit, M.nfilt
-GRAFT = 0.25; JIT = (0.1, 0.3, 0.6, 1.0, 2.0); CLIP = 1e-12
+GRAFT = 0.25; CLIP = 1e-12
+JIT = tuple(float(x) for x in os.environ.get("JIT", "0.1,0.3,0.6,1.0,2.0").split(","))   # jitter scales
 
 
 def T_of(z, d):
