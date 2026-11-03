@@ -316,15 +316,15 @@ $\GainTotal$, splits into $\GainFilters$ from filters at depth $3$ and $\GainDep
 
 \begin{table}[ht]
 \centering\small
-\resizebox{\textwidth}{!}{\input{params_d4}}
-\caption{The depth-4 optimum; row $j$ describes level $j$ and the merge of the level-$j$ lists. Columns:
+\input{params_d4}
+\caption{The depth-4 optimum: levels (top) and merges (bottom). Columns:
 $\delta_j(\cdot)$, the digit type of level $j$;
 $\rho_j$, the representation exponent of a level-$(j-1)$ vector into level-$j$ pairs;
 $c_j$, the constraint bits ($M_j=2^{c_jn}$);
 $s_j$, the survival exponent of Section~\ref{sec:sound};
 $\ell_j$, the list size;
 \emph{pairs}, $P_j=2\ell_j-(c_{j-1}-c_j)$, the pairs an unfiltered merge would examine;
-$I(T;\Lambda)$, the code rate $I(XY;\Lambda)$ at $\pi=Q_\Lambda$;
+$I(XY;\Lambda)$, the code rate (at $\pi=Q_\Lambda$);
 \emph{entries gap}, $I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, the log number of filters per vector;
 \emph{saving}, $I(XY;\Lambda)-I(X;\Lambda)-I(Y;\Lambda)$ (negative means fewer pairs);
 \emph{passing}, pairs $+$ saving, the pairs the filtered merge examines.
@@ -417,12 +417,12 @@ Table~\ref{tab:params4}). Points: \texttt{\Srcfive}, \texttt{\Srcsix}. All numbe
 survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2). Commit: \todo{hash}.
 \begin{table}[ht]
 \centering\small
-\resizebox{\textwidth}{!}{\input{params_d5}}
+\input{params_d5}
 \caption{The depth-5 point.}\label{tab:params5}
 \end{table}
 \begin{table}[ht]
 \centering\small
-\resizebox{\textwidth}{!}{\input{params_d6}}
+\input{params_d6}
 \caption{The depth-6 point.}\label{tab:params6}
 \end{table}
 
