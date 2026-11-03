@@ -1,0 +1,11 @@
+== 14_426_256_3.txt: final 121.21  lat 116.62  guess 115.73  d 2048  w [26, 20, 10, 5]
+  merge 1->0: weights 20->26  log S 93.04  log N_col 95.72  cost 105.63 -> 104.01  (filters/vector 2^0.93, pair saving 2^-3.69)
+  merge 2->1: weights 10->20  log S 88.95  log N_col 100.43  cost 110.77 -> 110.74  (filters/vector 2^4.41, pair saving 2^-0.04)
+  merge 3->2: weights 5->10  log S 49.89  log N_col 89.56  cost 95.26 -> 95.24  (filters/vector 2^4.99, pair saving 2^-0.02)
+  guess cost 115.73 (logged 115.73) -> 115.67;  final at fixed params 121.21 -> 121.21 (lattice side 116.62)
+== 14_426_256_2.txt: final 120.91  lat 116.61  guess 111.59  d 1984  w [26, 20, 10]
+  merge 1->0: weights 20->26  log S 93.76  log N_col 96.46  cost 107.38 -> 105.74  (filters/vector 2^0.94, pair saving 2^-3.69)
+  merge 2->1: weights 10->20  log S 89.76  log N_col 94.50  cost 110.33 -> 110.33  (filters/vector 2^-0.00, pair saving 2^-0.00)
+  guess cost 111.59 (logged 111.59) -> 111.48;  final at fixed params 120.91 -> 120.91 (lattice side 116.61)
+
+[exited with code 0]
