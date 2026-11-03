@@ -1,1 +1,16 @@
 D=[-1, 0, 1] d=3 omega=0.5 acc=may filters=False: T = 0.35482
+D=[-1, 0, 1] d=3 omega=0.5 acc=surv filters=False: T = 0.35482
+D=[-1, 0, 1] d=3 omega=0.5 acc=surv filters=True: T = 0.35194
+D=[-1, 0, 1] d=4 omega=0.5 acc=may filters=False: T = 0.35110
+D=[-1, 0, 1] d=4 omega=0.5 acc=may filters=True: T = 0.34278
+D=[-1, 0, 1] d=4 omega=0.5 acc=surv filters=False: T = 0.35108
+D=[-1, 0, 1] d=5 omega=0.5 acc=may filters=False: T = 0.35108
+D=[-1, 0, 1] d=5 omega=0.5 acc=may filters=True: T = 0.36097
+D=[-1, 0, 1] d=5 omega=0.5 acc=surv filters=False: T = 0.35108
+D=[-1, 0, 1] d=6 omega=0.5 acc=may filters=False: T = 0.35108
+D=[-1, 0, 1] d=6 omega=0.5 acc=may filters=True: T = 0.36246
+D=[-1, 0, 1] d=6 omega=0.5 acc=surv filters=False: T = 0.35108
+D=[-2, -1, 0, 1, 2] d=3 omega=0.5 acc=may filters=False: T = 0.34777
+D=[-2, -1, 0, 1, 2] d=3 omega=0.5 acc=may filters=True: T = 0.35842
+D=[-2, -1, 0, 1, 2] d=3 omega=0.5 acc=surv filters=False: T = 0.34313
+D=[-2, -1, 0, 1, 2] d=4 omega=0.5 acc=may filters=False: T = 0.40570

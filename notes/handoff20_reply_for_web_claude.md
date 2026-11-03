@@ -19,4 +19,4 @@
 - {−1,0,1} filtered, strict, d3: **0.28629**. The caption now says 0.2863.
 - d4: 0.28851, warm-started from the d3 point extended by one level. That is worse than d3, so the optimiser found no strict depth gain. The caption says "a depth-4 search under the same accounting did not improve" (a deeper tree can copy a shallower one, so strict d4 ≤ 0.2863 anyway).
 
-**Email:** Nick sent the a56b65b PDF and dropped the "all merge costs tie" sentence. The tie holds only at d4; at d8 only the middle merges tie. The paper intro is corrected too (fa29f45).
+**Email:** Nick has NOT sent anything to Alex yet; he is waiting for the numbers to settle. He has dropped the "all merge costs tie" sentence. The tie holds only at d4; at d8 only the middle merges tie. The paper intro is corrected too (fa29f45).
