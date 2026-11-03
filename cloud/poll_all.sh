@@ -1,5 +1,5 @@
 #!/bin/bash
-# Every 15 min: pull every instance listed in cloud/INSTANCE_*, then copy each depth's global best point to every
+# Every 5 min: pull every instance listed in cloud/INSTANCE_*, then copy each depth's global best point to every
 # instance that lacks it (so grafts on one machine start from the other's improvements).  Stops when none is running.
 cd "$(dirname "$0")/.."; SSHOPT="-o StrictHostKeyChecking=no -o ConnectTimeout=20 -i $HOME/.ssh/subset-sum-key.pem"
 while :; do
@@ -23,5 +23,5 @@ while :; do
         done
     done
     [ $alive = 0 ] && { echo "$(date -u +%FT%TZ) no instance running: stop" >> cloud/poll.log; exit 0; }
-    sleep 900
+    sleep 300
 done
