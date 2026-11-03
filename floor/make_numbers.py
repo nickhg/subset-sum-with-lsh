@@ -86,13 +86,13 @@ mac("GainFiltersPct", f"{100 * (u3 - f3) / tot:.0f}"); mac("GainDepthPct", f"{10
 
 # ---- parameter tables for the reported {-1,0,1,2} points ------------------------------------------------
 M = Model([-1, 0, 1, 2]); ns, nf = M.nsplit, M.nfilt
-for d in (4, 5, 6, 7):
+for d in (4, 5, 6, 7, 8):
     T, z, src = best("-1_0_1_2", d, True)
     if z is None:
         continue
     P = z[:d * ns].reshape(d, ns); F = [z[d * ns + nf * j:d * ns + nf * (j + 1)] for j in range(d)]
     TT, x, lev = M.lp(P, F); c = [1.0] + list(x[:d]); L = list(x[d:2 * d])
-    rows = []
+    rows = []; mem = lev[d]["H"] / 2                   # memory: leaves, lists, filter entries
     s = [0.0] * (d + 1)                                  # survival recursion (exponent), s_d = 0
     for j in range(d - 1, 0, -1):
         s[j] = min(0.0, lev[j + 1]["rho"] - c[j + 1] + 2 * s[j + 1])
@@ -103,11 +103,14 @@ for d in (4, 5, 6, 7):
         from gen_lsf import kl
         I_T = sum(lev[j]["tau"][t] * kl(cond[t], Ql) for t in range(M.T) if lev[j]["tau"][t] > 0)
         pairs = 2 * L[j - 1] - (c[j - 1] - c[j])
+        from gen_lsf import Hv
+        pj = Hv(lev[j]["tau"]) - 2 * lev[j]["H"]          # log-prob. that a random matched pair is a valid split
+        mem = max(mem, L[j - 1], L[j - 1] + max(0.0, r12 - min(r1, r2)))
         s = [0.0 if abs(v) < 5e-5 else v for v in s]; ex = 0.0 if abs(ex) < 5e-5 else ex
         exs = f"{ex:+.4f}" if ex else "0.0000"
         rows.append((f"{j} & {ch[-1]:.4f} & {ch[0]:.4f} & {ch[1]:.4f} & {ch[2]:.4f} & {lev[j]['rho']:.4f} & "
                      f"{c[j]:.4f} & {s[j]:.4f} & {L[j-1]:.4f} \\\\",
-                     f"{j} & {pairs:.4f} & {I_T:.4f} & {r12 - min(r1, r2):.4f} & {exs} & {pairs + ex:.4f} \\\\"))
+                     f"{j} & {pairs:.4f} & {pj:.4f} & {I_T:.4f} & {r12 - min(r1, r2):.4f} & {exs} & {pairs + ex:.4f} \\\\"))
     rel = os.path.relpath(src, ROOT)
     with open(os.path.join(PAPER, f"params_d{d}.tex"), "w") as fh:
         # two stacked tabulars (levels, then merges) so the table fits the text width at normal size
@@ -116,11 +119,13 @@ for d in (4, 5, 6, 7):
         fh.write("$j$ & $\\delta_j(-1)$ & $\\delta_j(0)$ & $\\delta_j(1)$ & $\\delta_j(2)$ & $\\rho_j$ & $c_j$ & $s_j$ & "
                  "$\\ell_j$ \\\\\n\\midrule\n")
         fh.write("\n".join(r[0] for r in rows) + "\n\\bottomrule\n\\end{tabular}\n\n\\medskip\n\n")
-        fh.write("\\begin{tabular}{rccccc}\n\\toprule\n")
-        fh.write("merge of level $j$ & pairs & $I(XY;\\Lambda)$ & entries gap & saving & passing \\\\\n\\midrule\n")
+        fh.write("\\begin{tabular}{rcccccc}\n\\toprule\n")
+        fh.write("merge of level $j$ & pairs & $p_j$ & $I(XY;\\Lambda)$ & entries gap & saving & passing \\\\\n\\midrule\n")
         fh.write("\n".join(r[1] for r in rows) + "\n\\bottomrule\n\\end{tabular}\n\n\\smallskip\n")
         fh.write(f"{{\\footnotesize leaves $H_{d}/2 = {lev[d]['H'] / 2:.4f}$;\\quad root excess "
-                 f"$\\rho_1-c_1 = {lev[1]['rho'] - c[1]:+.4f}$, $2s_1 = {2 * s[1]:+.4f}$;\\quad $T = {TT:.5f}$}}\n")
+                 f"$\\rho_1-c_1 = {lev[1]['rho'] - c[1]:+.4f}$, $2s_1 = {2 * s[1]:+.4f}$;\\quad memory ${mem:.4f}$;"
+                 f"\\quad $T = {TT:.5f}$}}\n")
+    mac(f"Mem{roman[d]}", f"{mem:.4f}")
     mac(f"Src{roman[d]}", rel.replace("_", "\\_"))
     mac(f"RootExcess{roman[d]}", f"{lev[1]['rho'] - c[1]:.3f}"); mac(f"Sone{roman[d]}", f"{s[1]:.3f}")
 

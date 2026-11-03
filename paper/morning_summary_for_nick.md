@@ -41,7 +41,7 @@
 | filtered, BBSS accounting | {−2,…,2} | **6** | **0.27215** (start a; start b 0.27267) | S2 ok |
 | filtered, BBSS accounting | {−2,…,2} | 7 | running | |
 | control: {−1,0,1,2} re-optimised from the {−2,…,2} d=6 point with −2 removed | {−1,0,1,2} | 6 | running (start 0.27261) | |
-| filtered, strict accounting (c_j ≤ ρ_j per level) | {−1,0,1} | 3 / 4 | 0.2893 / 0.2890 | n/a |
+| filtered, strict accounting (c_j ≤ ρ_j per level) | {−1,0,1} | 3 / 4 | 0.2865 / (rerun) | n/a |
 | filtered, strict accounting | {−1,0,1,2} | 3 / 4 | 0.2888 / 0.2842 | n/a |
 
 **Abstract wording (handoff6 item 1).**
