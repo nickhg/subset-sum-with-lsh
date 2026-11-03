@@ -111,6 +111,7 @@ for d in (4, 5, 6, 7, 8):
         rows.append((f"{j} & {ch[-1]:.4f} & {ch[0]:.4f} & {ch[1]:.4f} & {ch[2]:.4f} & {lev[j]['rho']:.4f} & "
                      f"{c[j]:.4f} & {s[j]:.4f} & {L[j-1]:.4f} \\\\",
                      f"{j} & {pairs:.4f} & {pj:.4f} & {I_T:.4f} & {r12 - min(r1, r2):.4f} & {exs} & {pairs + ex:.4f} \\\\"))
+    rows = [tuple(re.sub(r"-0\.0000(?!\d)", "0.0000", r) for r in row) for row in rows]   # no signed zeros
     rel = os.path.relpath(src, ROOT)
     with open(os.path.join(PAPER, f"params_d{d}.tex"), "w") as fh:
         # two stacked tabulars (levels, then merges) so the table fits the text width at normal size

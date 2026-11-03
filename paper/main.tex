@@ -17,11 +17,12 @@
 \newcommand{\Ot}{\widetilde{O}}
 \hypersetup{hidelinks}
 \newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
+\newif\ifanonymous \anonymousfalse    % double-blind submission build: \anonymoustrue (also anonymise any repository link)
 \newif\ifincludefloor \includefloorfalse     % Section: list-size floor   -- Nick to decide
 \input{numbers}
 
 \title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
-\author{Nick Howgrave-Graham}
+\ifanonymous\author{Anonymous submission}\else\author{Nick Howgrave-Graham}\fi
 \date{November 2026}
 \setlength{\emergencystretch}{2em}
 \begin{document}
@@ -74,7 +75,7 @@ $\Tbest$ & this work & $\{-1,0,1,2\}$ & $\Tbestdepth$ & type-class filtered \\
 representation lists below the root ($d$ in Section~\ref{sec:prelim}); BBSS's ``five levels, numbered 4 down to
 0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves; our recomputation of~\cite{BBSS20} gives $0.2831$
 (Table~\ref{tab:depth}). $^\dagger$BBSS accounting (Heuristic~\ref{heur:lists}); under the strict
-accounting of~\cite{BCJ11}, which~\cite{Oze16} also uses, our filtered depth-3 value is $0.2864$, and
+accounting of~\cite{BCJ11}, which~\cite{Oze16} also uses, our filtered depth-3 value is $0.2863$, which a depth-4 search under the same accounting did not improve, and
 Ozerov's accounting gives HGJ $0.340$ rather than $0.337$, so the rows are not directly comparable.}
 \label{tab:history}
 \end{table}
@@ -263,7 +264,7 @@ types, its \emph{pattern}, is a sequence $(\sigma_1,\dots,\sigma_b)$ averaging t
 permutation, each block is a sample of $s$ coordinates drawn without replacement from its $n$ coordinates, so for each
 joint digit type $t$ of the pair, Hoeffding's inequality for sampling without replacement~\cite[\S6]{Hoe63} gives
 \[
-\Pr\bigl[|\sigma_i(t)-\sigma(t)|>\epsilon_n\bigr]\le2e^{-2s\epsilon_n^2}=2e^{-2(1-o(1))\log^2n}=n^{-\Theta(\log n)} .
+\Pr\bigl[|\sigma_i(t)-\sigma(t)|>\epsilon_n\bigr]\le2e^{-2s\epsilon_n^2}=2e^{-2(1-o(1))\log^2 n}=n^{-\Theta(\log n)} .
 \]
 A union bound over the $b$ blocks and the $O(1)$ joint types shows that the pattern is typical with probability
 $1-O(\sqrt n)\,n^{-\Theta(\log n)}=1-o(1)$. The block types of $x$ and of $y$ are marginals of the pair's block
@@ -274,10 +275,13 @@ For each pattern we build an independent filter family: in block $i$, a random c
 $2^{\sqrt n\, I_{\sigma_i}(XY;\Lambda)}$ label strings of type $Q_{\Lambda,i}$ (the label marginal of
 $\sigma_i\times\kappa$), and a filter is a tuple $(u_1,\dots,u_b)\in C_1\times\dots\times C_b$. A left vector enters the
 tuple if it enters every $u_i$ in the sense of Section~\ref{sec:filter}, with block-$i$ marginals; similarly on the
-right. A vector can only enter a tuple whose block marginals equal its own block types, so it enters only the
-family of its own pattern, and a vector with an atypical pattern enters no family at all: atypical vectors add
-nothing to the entry cost. Concentration is therefore needed only for valid pairs, and by the bound above a valid
-pair is lost in this way with probability $o(1)$. A vector decodes its filters by testing, in each block, all of $C_i$ (time $2^{O(\sqrt n)}$) and then
+right. A vector determines only its own sequence of block types, not the joint pattern of a pair, so it enters the
+filters of every family whose block marginals on its side equal its own block types, and of no other family. In
+particular, a vector with atypical block types enters no family at all, since families are built only for typical
+joint patterns. There are at most $2^{O(\sqrt n\log n)}=2^{o(n)}$ families, so the entry and decoding costs of a
+vector, summed over all families compatible with it, exceed the single-family cost by at most a factor $2^{o(n)}$;
+passing pairs are counted per family, with the same factor. A valid pair has a typical joint pattern with
+probability $1-o(1)$ by the bound above, and is then found in the family of its pattern. A vector decodes its filters by testing, in each block, all of $C_i$ (time $2^{O(\sqrt n)}$) and then
 enumerating the product of the per-block lists, in time proportional to the output plus $b\,2^{O(\sqrt n)}$.
 
 Lemma~\ref{lem:filter} applies in each block. The probabilities multiply, so a valid pair with this pattern shares
