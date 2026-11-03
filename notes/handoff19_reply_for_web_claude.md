@@ -52,3 +52,11 @@ Nick chose the defaults: C1 drops the 0.39 sentence; C2 adds the Meet-LWE no-gai
 - **Refit:** T∞ comes out between 0.2719 and 0.2724, with r between 0.14 and 0.52, depending on which depths are fitted. The paper says "about 0.272".
 - **Appendix:** gains a d8 parameter table.
 - The d5 and d7 re-polish runs are still going.
+
+## Follow-up (wider digits, new d8)
+- **Wider-digit sentence:** rewritten for matched starts.
+  - d4: the best {−1,0,1,2} point (0.2738) already beats {−2..2} (0.2740).
+  - d6: the gain from −2 is 0.0001.
+  - d5: the gain is still **0.0003** (0.2730 against 0.2727). The d5 re-polish from the projected mm5 point is stuck at 0.2731. So "at most 0.0001" would be wrong at d5, and the paper and conclusion say "at most about 0.0003".
+- **d8:** reached **0.27190**. It passes the survival recursion (B2 = S2), so the title is now 2^{0.2719n}.
+- **Refit:** T∞ between 0.2716 and 0.2724, r between 0.22 and 0.60. The paper still says "about 0.272".

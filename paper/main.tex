@@ -403,13 +403,13 @@ All exponents are per $n$.}
 \paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$,
 $\TBBSSFsix$, $\TBBSSFseven$, $\TBBSSFeight$ for $d=3,\dots,8$ (Table~\ref{tab:depth}). Each is a computed point, the
 best found over all starts, not a proven optimum of the model, so $\Tbest$ is not a lower bound for it. The gains
-shrink roughly geometrically. Fits of $T_d=T_\infty+Ar^d$ to subsets of these values give $T_\infty$ between $0.2719$
-and $0.2724$ and $r$ between $0.14$ and $0.52$; the fit is sensitive to the last digits, which depend on the starting
+shrink roughly geometrically. Fits of $T_d=T_\infty+Ar^d$ to subsets of these values give $T_\infty$ between $0.2716$
+and $0.2724$ and $r$ between $0.22$ and $0.60$; the fit is sensitive to the last digits, which depend on the starting
 point of the search, so we only claim that the exponent converges to about $0.272$. Deeper trees alone therefore do not lead to subexponential time within this accounting.
 
-\paragraph{Wider digit sets.} Adding the digit $-2$ gains at most $0.0004$ at fixed depth ($0.2744\to0.2740$ at
-$d=4$, $0.2730\to0.2727$ at $d=5$, and $0.0001$ at $d=6$ against a $\{-1,0,1,2\}$ re-optimisation from the same start);
-the optimiser keeps a small positive $-2$ mass. The digit $3$ has zero marginal value, since it can only arise from
+\paragraph{Wider digit sets.} Once both digit sets are optimised from the same starting points, adding the digit
+$-2$ gains little: at depth $4$ the best $\{-1,0,1,2\}$ point, $\TBBSSFfour$, already beats $\{-2,\dots,2\}$'s
+$0.2740$, at depth $6$ the gain is $0.0001$, and at depth $5$ it is $0.0003$ ($\TBBSSFfive$ against $0.2727$). The digit $3$ has zero marginal value, since it can only arise from
 splitting a $2$, and an optimisation over $\{-4,\dots,4\}$ did not converge and was stopped. We therefore keep the BBSS
 digit set $\{-1,0,1,2\}$ throughout.
 
@@ -469,7 +469,7 @@ Filters and depth attack the same waste from two sides, and together they give $
 converges to about $0.272$. What remains is merge cost, so going substantially lower needs a structural change, such
 as a non-binary root with a fast join, non-modular information, or a top level that is not enumerated, rather than
 more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\cite{BBSS20}; non-binary roots and non-enumerative
-top levels; wider digit sets, which add at most about $0.0004$ at fixed depth; and transferring the
+top levels; wider digit sets, which add at most about $0.0003$ at fixed depth; and transferring the
 observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern; for
 Meet-LWE we found no gain at the published optima, where the binding merges have little split-pattern waste.
 Lattice-based hybrids, such as guessing combined with batch-CVP, may be competitive at density one; whether they can be combined with filtered representation trees is open.
