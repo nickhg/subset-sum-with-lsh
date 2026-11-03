@@ -1,6 +1,31 @@
 # Morning summary for Nick (overnight 2–3 Nov 2026)
 
-Status: DRAFT, updated through the night. The final version replaces this line.
+## Meet-LWE (dense ternary, May 2021): NO-GO
+
+- **Confidence:** checked at May's own optimum with fixed parameters; the full re-optimisation is preliminary (still running).
+- Filters change nothing at May's ω = 0.5 optimum (Rep-1, his depth 4): **0.35482 → 0.35482**.
+- **Why:** in Meet-LWE the root matching gets a fresh bit per coordinate (Odlyzko), so the top merge is nowhere near binding. The binding costs are the leaf build and the deep merges, which have almost no pattern waste (≤ 2^{−0.06}). In subset sum it is the reverse: the n-bit root makes the wasteful top merges bind.
+- So I did **not** draft `paper/meetlwe_section.tex`.
+- **Recommendation:** don't hold the email for Meet-LWE.
+- Details: `ntru_hybrid/dense_meetlwe_reply.md`.
+- Side flag: unfiltered, my model finds a small depth-5 gain (0.3548 → 0.3511) that May reports as absent. It is unrelated to filters, but worth a check before anyone cites it.
+
+## Subset sum: recommended headline
+
+- **Best computed point: 0.27215**, digit set {−2,…,2}, depth 6. It passes the survival recursion. A control run is still checking whether the 0.0004 over {−1,0,1,2} is due to −2 or to a better starting point.
+- **{−1,0,1,2}:**
+
+  | depth | 4 | 5 | 6 | 7 | 8 |
+  |---|---|---|---|---|---|
+  | T | 0.27440 | 0.27305 | 0.27257 | 0.27249 | ≤ 0.27249 |
+
+  Every point passes the survival recursion.
+- **Depth limit:** a geometric fit on d = 4–6 (ratio ≈ 0.36) gives T_∞ ≈ **0.2723 ± 0.0002** for {−1,0,1,2}. The d = 7 and 8 values (0.27249) sit slightly above the fit's 0.2724, consistent with them being under-converged.
+- **Suggested wording**, pending the control run:
+  - if −2 survives the control: "2^{0.2722n} (depth 6, digits {−2,…,2}); the exponent converges to about 0.272 with depth";
+  - otherwise: "2^{0.2725n} … converges to about 0.2723".
+- **±2 balance:** −2 appears only at the bottom two levels and is about half as frequent as 2. "Balanced digit set" would overstate it.
+
 
 ## Run results (one line each; "S2 ok" = passes the survival-recursion check exactly, i.e. same T under S2 as B2)
 

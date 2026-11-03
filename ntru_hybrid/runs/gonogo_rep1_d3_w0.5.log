@@ -1,0 +1,5 @@
+ml_-1_0_1_d3_w0.5_may_p.npy  D=[-1, 0, 1] d=3 omega=0.5: unfiltered T = 0.35482, filters only (split laws fixed) T = 0.35482
+  leaves H_d/2 = 0.3548
+  merge of level-1 lists: waste 2^-0.1297  list 0.2974  pairs -0.4052   | filtered: pairs passing -0.4052 (list 0.2974)
+  merge of level-2 lists: waste 2^-0.0574  list 0.3400  pairs 0.3548   | filtered: pairs passing 0.3548 (list 0.3400)
+  merge of level-3 lists: waste 2^-0.0148  list 0.3548  pairs 0.3548   | filtered: pairs passing 0.3548 (list 0.3548)
