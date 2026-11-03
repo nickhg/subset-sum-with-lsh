@@ -1,3 +1,9 @@
 n=64 k=24 beta=0.375 BKZ-20: log2 GS_min   3.19  log2 GS_mean   3.74  Babai success 20/20  reduction 2.18s
 n=64 k=32 beta=0.500 BKZ-20: log2 GS_min   2.35  log2 GS_mean   3.09  Babai success 19/20  reduction 2.76s
 n=64 k=40 beta=0.625 BKZ-20: log2 GS_min   1.77  log2 GS_mean   2.69  Babai success 11/20  reduction 1.51s
+n=64 k=48 beta=0.750 BKZ-20: log2 GS_min   1.30  log2 GS_mean   2.42  Babai success 0/20  reduction 4.01s
+n=64 k=56 beta=0.875 BKZ-20: log2 GS_min   0.99  log2 GS_mean   2.22  Babai success 0/20  reduction 3.30s
+n=128 k=32 beta=0.250 BKZ-20: log2 GS_min   4.34  log2 GS_mean   5.03  Babai success 20/20  reduction 1.98s
+n=128 k=48 beta=0.375 BKZ-20: log2 GS_min   2.67  log2 GS_mean   3.73  Babai success 20/20  reduction 5.03s
+n=128 k=64 beta=0.500 BKZ-20: log2 GS_min   1.60  log2 GS_mean   3.06  Babai success 6/20  reduction 5.96s
+n=128 k=80 beta=0.625 BKZ-20: log2 GS_min   0.97  log2 GS_mean   2.66  Babai success 0/20  reduction 6.28s
