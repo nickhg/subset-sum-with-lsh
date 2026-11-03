@@ -130,17 +130,16 @@ stated up to $O(\log n)/n$.
 \paragraph{Digit sets, sets and merges.} A \emph{digit set} is a finite $\cD\subset\Z$ containing $0$ and $1$; we use
 $\{-1,0,1,2\}$ unless stated otherwise. For a modulus $m$, residue $\tau\in\Z_m$ and type $w$ on $\cD$, the
 \emph{$(m,\tau,w)$-set} is $\{x\in\cD^n:\ \mathrm{type}(x)=w,\ \langle a,x\rangle\equiv\tau\pmod m\}$.
-\todo{check against Nick's definition of $(m,\tau,w)$-set}
 A \emph{$\tau$-merge} of lists $L_A\subseteq$ an $(m',\tau_A,w')$-set and $L_B\subseteq$ an $(m',\tau-\tau_A,w')$-set, with
 $m'\mid m$, outputs the $x+y$ ($x\in L_A$, $y\in L_B$) with $\langle a,x+y\rangle\equiv\tau\pmod m$ and
 $\mathrm{type}(x+y)=w$, i.e.\ elements of the $(m,\tau,w)$-set. Outputs are kept as a set (no duplicates).
 
-\paragraph{The $k$-tree.} Level $0$ is the solution $x_0$, of type $\delta_0=(\tfrac12,\tfrac12)$ on $\{0,1\}$.
+\paragraph{The tree of depth $d$.} Level $0$ is the solution $x_0$, of type $\delta_0=(\tfrac12,\tfrac12)$ on $\{0,1\}$.
 Levels $j=1,\dots,d$ carry $2^j$ lists of type-$\delta_j$ vectors, constrained modulo $M_j=2^{c_jn}$ with
 $1=c_0\ge c_1\ge\dots\ge c_d\ge0$, $M_j\mid M_{j-1}$, and residues chosen at random consistently down the tree (the
 $\tau$'s). Each level-$(j-1)$ list is the $\tau$-merge of two level-$j$ lists; the level-$d$ lists are built by
-meet-in-the-middle from half-vectors, in time $2^{H(\delta_d)n/2}$. Counting this last merge, the tree has $k=d+1$
-merge levels. \todo{align $d$ vs $k$ with Nick's $k$-tree convention}
+meet-in-the-middle from half-vectors, in time $2^{H(\delta_d)n/2}$. The depth $d$ is the number of
+levels of lists below the root.
 
 \paragraph{Splits.} A level-$(j-1)$ digit $z$ is written $z=x+y$ with $x,y\in\cD$; the \emph{split law} $\sigma_j$ is
 the joint type of $(x,y)$ over all coordinates. It is symmetric, has both marginals $\delta_j$, and is determined by
