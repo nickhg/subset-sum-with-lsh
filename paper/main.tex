@@ -15,13 +15,14 @@
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\cD}{\mathcal{D}}
 \newcommand{\Ot}{\widetilde{O}}
+\hypersetup{hidelinks}
 \newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
 \newif\ifincludefloor \includefloorfalse     % Section: list-size floor   -- Nick to decide
 \input{numbers}
 
 \title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
-\author{Nick Howgrave-Graham\\ \small\todo{authors / acknowledgements}}
-\date{Draft, 2 November 2026}
+\author{Nick Howgrave-Graham}
+\date{November 2026}
 \setlength{\emergencystretch}{2em}
 \begin{document}
 \maketitle
@@ -66,13 +67,13 @@ $\TBBSSFthree$ & this work & $\{-1,0,1,2\}$ & 3 & type-class filtered \\
 $\TBBSSFfour$ & this work & $\{-1,0,1,2\}$ & 4 & type-class filtered \\
 $\TBBSSFfive$ & this work & $\{-1,0,1,2\}$ & 5 & type-class filtered \\
 $\TBBSSFsix$ & this work & $\{-1,0,1,2\}$ & 6 & type-class filtered \\
-$\TFiveFfive$ & this work & $\{-2,\dots,2\}$ & 5 & type-class filtered$^*$ \\
 \bottomrule
 \end{tabular}
 \caption{Heuristic time exponents for random density-one Subset Sum. Depth is the number of levels of
 representation lists below the root ($d$ in Section~\ref{sec:prelim}); BBSS's ``five levels, numbered 4 down to
-0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves. $^*$\todo{final value; run in progress} $^\dagger$BBSS accounting (Heuristic~\ref{heur:lists}); under the strict
-accounting of~\cite{BCJ11}, which~\cite{Oze16} also uses, our filtered depth-3 value is $0.2864$ \todo{strict depth 4 value; run in progress}, and
+0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves; our recomputation of~\cite{BBSS20} gives $0.2831$
+(Table~\ref{tab:depth}). $^\dagger$BBSS accounting (Heuristic~\ref{heur:lists}); under the strict
+accounting of~\cite{BCJ11}, which~\cite{Oze16} also uses, our filtered depth-3 value is $0.2864$, which a depth-4 run under the same accounting did not improve, and
 Ozerov's accounting gives HGJ $0.340$ rather than $0.337$, so the rows are not directly comparable.}
 \label{tab:history}
 \end{table}
@@ -211,8 +212,8 @@ $Q_\Lambda$ ever contain a valid pair. We therefore normalise $\pi=Q_\Lambda$ (s
 
 \paragraph{Decoding the filters.} Each vector must find the $2^{(I(XY;\Lambda)-I(X;\Lambda))n}$ filters it enters,
 among $2^{I(XY;\Lambda)n}$, in time close to that number. Random codes do not allow this, so we use a product
-construction, as in Dubiner's bucketing codes~\cite{Dub10} and the tensored filters of~\cite{BDGL16}. At the reported
-optima $I(XY;\Lambda)\le0.17$ (Table~\ref{tab:params4}).
+construction, as in Dubiner's bucketing codes~\cite{Dub10} and the tensored filters of~\cite{BDGL16}; it does not
+need the code rates to be small.
 
 \begin{proposition}\label{prop:decode}
 The filtered $\tau$-merge can be implemented so that each cost term of Proposition~\ref{prop:cost} is achieved up to
@@ -230,7 +231,10 @@ For each pattern we build an independent filter family: in block $i$, a random c
 $2^{\sqrt n\, I_{\sigma_i}(XY;\Lambda)}$ label strings of type $Q_{\Lambda,i}$ (the label marginal of
 $\sigma_i\times\kappa$), and a filter is a tuple $(u_1,\dots,u_b)\in C_1\times\dots\times C_b$. A left vector enters the
 tuple if it enters every $u_i$ in the sense of Section~\ref{sec:filter}, with block-$i$ marginals; similarly on the
-right. A vector decodes its filters by testing, in each block, all of $C_i$ (time $2^{O(\sqrt n)}$) and then
+right. A vector can only enter a tuple whose block marginals equal its own block types, so it enters only the
+family of its own pattern, and a vector with an atypical pattern enters no family at all: atypical vectors add
+nothing to the entry cost. For a fixed vector, a Chernoff bound per block gives an atypical pattern with probability
+$2^{-\Theta(\log^2n)}$, so the valid pairs lost in this way are an $o(1)$ fraction. A vector decodes its filters by testing, in each block, all of $C_i$ (time $2^{O(\sqrt n)}$) and then
 enumerating the product of the per-block lists, in time proportional to the output plus $b\,2^{O(\sqrt n)}$.
 
 Lemma~\ref{lem:filter} applies in each block. The probabilities multiply, so a valid pair with this pattern shares
@@ -310,9 +314,14 @@ $2^{(\TBBSSFfour+o(1))n}$ with depth $4$. The $o(1)$ comes from filter decoding 
 \end{theorem}
 
 \paragraph{Structure of the optimum.} Table~\ref{tab:params4} gives the depth-4 point. The filtered passing costs of
-all four merges tie at $T$. Filtering is active only at the dense levels $1$--$2$, with savings
+all four merges tie at $T$. At this point filtering is active only at the dense levels $1$--$2$, with savings
 $0.076$ and $0.048$; at levels $3$--$4$ the optimal filter is essentially trivial ($I(XY;\Lambda)\le0.022$). The
-deficit at level $2$ is paid by the root excess, and the survival recursion is tight. The gain over BBSS,
+deficit at level $2$ is paid by the root excess, and the survival recursion is tight. The deeper optima
+(Tables~\ref{tab:params5} and~\ref{tab:params6}) filter at the dense top levels \emph{and} at the sparse bottom level
+($I(XY;\Lambda)=0.21$ and $0.28$ at the last merge for $d=5,6$). There the lists are mostly zeros, and at $d=6$ the
+bottom level has $\delta_6(1)=0.0003$ against $\delta_6(2)=0.0137$ and $\delta_6(-1)=0.0199$: it consists of $2$s and
+$-1$s split from the level-$5$ ones by $1\to(2,-1)$. Lemma~\ref{lem:sym} holds at every level, sparse ones included,
+so these merges need no separate bias argument (see also Section~\ref{sec:exp}). The gain over BBSS,
 $\GainTotal$, splits into $\GainFilters$ from filters at depth $3$ and $\GainDepth$ from the extra depth.
 
 \begin{table}[ht]
@@ -336,14 +345,15 @@ All exponents are per $n$.}
 \paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$,
 $\TBBSSFsix$ for $d=3,\dots,6$. \todo{d=6 polish still running; d=7?}
 
-\paragraph{Wider digit sets.} Warm-started from the $\{-1,0,1,2\}$ optima, $\{-2,\dots,2\}$ gives $\TFiveFfour$ and
-$\TFiveFfive$ at depths $4$ and $5$, and $\{-1,\dots,3\}$ gives $\TThreeFfour$ at depth 4. \todo{final values;
-$\{-4,\dots,4\}$ pending}. At the depth-4 optimum the digit $3$ has zero marginal value (it can arise only from
-splitting a $2$, whose mass is below $0.006$), while switching on $0\to(2,-2)$ costs $0.0005$--$0.004$ per $10^{-3}$ of
-mass. \todo{does re-optimisation keep $-2$ mass positive?}
+\paragraph{Wider digit sets.} Adding the digit $-2$ gains at most $0.0004$ at fixed depth ($0.2744\to0.2740$ at
+$d=4$, $0.2730\to0.2727$ at $d=5$, and $0.0001$ at $d=6$ against a $\{-1,0,1,2\}$ re-optimisation from the same start);
+the optimiser keeps a small positive $-2$ mass. The digit $3$ has zero marginal value, since it can only arise from
+splitting a $2$, and an optimisation over $\{-4,\dots,4\}$ did not converge and was stopped. We therefore keep the BBSS
+digit set $\{-1,0,1,2\}$ throughout.
 
-\paragraph{Label sets.} Re-optimising the filters with $4$- and $5$-symbol label sets, warm-started from the
-$3$-symbol optima, gives \todo{K = 4, 5 results}.
+\paragraph{Label sets.} Re-optimising the filters at depth $5$ with a $4$-symbol label set, warm-started from the
+$3$-symbol optimum, gives $0.273224$ against $0.273335$: a gain of $0.0001$, so $3$-symbol filters appear essentially
+optimal.
 
 \section{Experimental validation}\label{sec:exp}
 \paragraph{Survival.} Table~\ref{tab:survival}: a depth-3 HGJ tree (weights $n/2\to n/4\to n/8\to n/16$) with complete
@@ -390,8 +400,8 @@ So the exactly tight root condition needs no extra excess.
 
 \section{Conclusion and open problems}
 Filters and depth attack the same waste from two sides, and together they give $\Tbest$. The exponent appears to
-saturate near $0.272$. Open: filter decoding in full (Section~\ref{sec:filter}); non-binary roots and non-enumerative
-top levels; whether wider digit sets add more than $\approx0.0005$ \todo{update}; and transferring the
+saturate near $0.272$. Open: a full proof of the concentration step in Proposition~\ref{prop:decode}; non-binary roots and non-enumerative
+top levels; wider digit sets, which add at most about $0.0004$ at fixed depth; and transferring the
 observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
 Lattice-based hybrids, such as guessing combined with batch-CVP, are competitive at density one; whether they can be combined with filtered representation trees is open.
 
