@@ -1,6 +1,6 @@
 % Draft, 2 Nov 2026.  Build: pdflatex main.tex (twice).  Numbers: python3 ../floor/make_numbers.py regenerates
 % numbers.tex, depth_table.tex and params_d*.tex from the saved optimiser points.
-% Optional section (Nick to decide): set \includefloortrue below.
+% Optional section (Nick to decide): set \includefloorfalse below.
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,booktabs,hyperref,array,xcolor,graphicx}
@@ -16,7 +16,7 @@
 \newcommand{\cD}{\mathcal{D}}
 \newcommand{\Ot}{\widetilde{O}}
 \newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
-\newif\ifincludefloor \includefloorfalse     % Remark (b): list-size floor   -- Nick to decide
+\newif\ifincludefloor \includefloorfalse     % Section: list-size floor   -- Nick to decide
 \input{numbers}
 
 \title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
@@ -382,20 +382,8 @@ is $\SibsharedTwentyFour$, $\SibsharedThirtyTwo$, $\SibsharedForty$, $\Sibshared
 one shared code (similar with independent codes and without filters), all within $\pm0.02$ and with no trend in $n$.
 So the exactly tight root condition needs no extra excess.
 
-\section{Remarks}\label{sec:remarks}
-\paragraph{(a) Lattices with guessing.} Guessing $(1-\beta)n$ coordinates of the solution leaves a density-$\beta$
-instance on the remaining $\beta n$, whose lattice $\{y\in\Z^{\beta n}:\langle a_B,y\rangle\equiv0\bmod 2^n\}$ is
-the same for all $2^{(1-\beta)n}$ guesses. The centred solution lies at $2.066\cdot2^{-1/\beta}$ times the Gaussian
-heuristic radius. By Ducas, Laarhoven and van Woerden~\cite[Heuristic claim~4]{DLvW20}, a batch of $2^{0.058m}$ CVP
-instances in dimension $m$ costs $2^{0.292m}$ time and $2^{0.208m}$ memory in total. Matching batch and guesses,
-$(1-\beta)=0.058\beta$, gives $\beta=1/1.058\approx0.945$ and time $2^{0.276n}$, memory $2^{0.197n}$. This is the
-hybrid shape of Bernstein's LWE attack \todo{check ref}, made practical with batch-CVP by Karenin, Kirshanova, May and
-Nowakowski~\cite{KKMN25}, and of~\cite{DLdW20} for SVP; we found no statement of it for density-one Subset Sum. It
-beats~\cite{BCJ11,BBSS20} but not the filtered trees. Caveats: Gaussian heuristic for the block lattice, the slicer's
-rerandomisation heuristic, the target at $0.99$ times the Gaussian radius (exact CVP, not BDD), and the $o(m)$ terms,
-which decide the batch condition.
-
 \ifincludefloor
+\section{A list-size floor}\label{sec:floor}
 \input{floor_section}
 \fi
 
@@ -404,6 +392,7 @@ Filters and depth attack the same waste from two sides, and together they give $
 saturate near $0.272$. Open: filter decoding in full (Section~\ref{sec:filter}); non-binary roots and non-enumerative
 top levels; whether wider digit sets add more than $\approx0.0005$ \todo{update}; and transferring the
 observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
+Lattice-based hybrids, such as guessing combined with batch-CVP, are competitive at density one; whether they can be combined with filtered representation trees is open.
 
 \appendix
 \section{Parameters and reproduction}\label{app:repro}
@@ -443,10 +432,6 @@ for subset-sum, in \emph{ASIACRYPT 2020}, LNCS, Springer. IACR ePrint 2020/168, 
 filtering, in \emph{Proc.\ SODA 2017}, SIAM, pp.~31--46.
 \bibitem{CK11} I.~Csisz\'ar and J.~K\"orner, \emph{Information Theory: Coding Theorems for Discrete Memoryless
 Systems}, 2nd ed., Cambridge University Press, 2011.
-\bibitem{DLdW20} E.~Doulgerakis, T.~Laarhoven and B.~de~Weger, Sieve, enumerate, slice, and lift: hybrid lattice
-algorithms for SVP via CVPP, IACR ePrint 2020/487. \todo{check venue}
-\bibitem{DLvW20} L.~Ducas, T.~Laarhoven and W.~P.~J.~van~Woerden, The randomized slicer for CVPP: sharper, faster,
-smaller, batchier, in \emph{PKC 2020}, LNCS, Springer. IACR ePrint 2020/120.
 \bibitem{Dub10} M.~Dubiner, Bucketing coding and information theory for the statistical high-dimensional
 nearest-neighbor problem, \emph{IEEE Trans.\ Inf.\ Theory} \textbf{56} (2010), no.~8, 4166--4179.
 \bibitem{EM19} A.~Esser and A.~May, Better sample -- random subset sum in $2^{0.255n}$ and its impact on decoding
@@ -455,8 +440,6 @@ random linear codes, arXiv:1907.04295 (withdrawn).
 \emph{J.\ ACM} \textbf{21} (1974), 277--292.
 \bibitem{HGJ10} N.~Howgrave-Graham and A.~Joux, New generic algorithms for hard knapsacks, in \emph{EUROCRYPT 2010},
 LNCS 6110, Springer, pp.~235--256.
-\bibitem{KKMN25} \todo{check authors' initials} Karenin, E.~Kirshanova, A.~May and Nowakowski, Fast slicer for
-batch-CVP: making lattice hybrid attacks practical, in \emph{ASIACRYPT 2025}. IACR ePrint 2025/1910.
 \bibitem{KM21} E.~Kirshanova and A.~May, How to find ternary LWE keys using locality sensitive hashing, in
 \emph{IMACC 2021}, LNCS, Springer. IACR ePrint 2021/1255.
 \bibitem{Li25} Y.~Li, From subset-sum to decoding: improved classical and quantum algorithms via ternary
