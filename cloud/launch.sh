@@ -1,6 +1,6 @@
 #!/bin/bash
 # One spot instance running cloud/polish_worker.py on every core (pattern of isodual/cloud_instances/aws/launch_phi65.sh).
-#   launch.sh create TYPE HOURS      request the instance (spends money: needs Nick's approval); writes cloud/INSTANCE
+#   launch.sh create TYPES HOURS     request the instance (spends money: needs Nick's approval); writes cloud/INSTANCE
 #   launch.sh deploy HOURS           copy the committed code + cloud/seed, start the workers (worker split: SPLIT)
 #   launch.sh pull                   rsync results and logs into cloud/results/ (run from poll.sh every 15 min)
 #   launch.sh stop                   terminate the instance
@@ -17,12 +17,16 @@ create)
     TYPE=$2; HOURS=$3; UD=$(mktemp)
     printf '#!/bin/bash\nshutdown -h +%d\napt-get update\nDEBIAN_FRONTEND=noninteractive apt-get install -y python3-numpy python3-scipy python3-pip rsync screen\npip3 install "scipy>=1.10" "numpy<2"\ntouch /var/tmp/ready\n' \
         $(( (${HOURS%.*} + 1) * 60 )) > "$UD"
-    id=$(timeout 120 aws ec2 run-instances --image-id $AMI_ID --instance-type "$TYPE" --key-name $KEY_NAME \
-        --security-group-ids $SEC_GROUP --instance-market-options '{"MarketType":"spot"}' \
+    id=""
+    for az in ${AZS:-us-east-1b us-east-1d us-east-1a us-east-1c us-east-1f}; do for type in ${TYPE//,/ }; do
+    id=$(timeout 120 aws ec2 run-instances --image-id $AMI_ID --instance-type "$type" --key-name $KEY_NAME \
+        --security-group-ids $SEC_GROUP --instance-market-options '{"MarketType":"spot"}' --placement AvailabilityZone=$az \
         --instance-initiated-shutdown-behavior terminate \
         --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=subset-sum-polish-$NAME}]" \
         --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":20,"VolumeType":"gp3"}}]' \
-        --user-data "file://$UD" --query 'Instances[0].InstanceId' --output text) || exit 1
+        --user-data "file://$UD" --query 'Instances[0].InstanceId' --output text 2>/dev/null) && { TYPE=$type; echo "got $type in $az"; break 2; }
+    id=""; done; done
+    [ -z "$id" ] && { echo "NO CAPACITY"; rm -f "$UD"; exit 1; }
     rm -f "$UD"; timeout 600 aws ec2 wait instance-running --instance-ids $id
     ip=$(timeout 60 aws ec2 describe-instances --instance-ids $id --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
     echo "$id $ip $TYPE $(date -u +%FT%TZ)" > "$INST"; cat "$INST" ;;
