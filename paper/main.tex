@@ -1,0 +1,403 @@
+% Draft, 2 Nov 2026.  Build: pdflatex main.tex (twice).  Numbers: python3 ../floor/make_numbers.py regenerates
+% numbers.tex, depth_table.tex and params_d*.tex from the saved optimiser points.
+% Optional sections (Nick to decide): set \includefloortrue / \includeLitrue below.
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref,array,xcolor,graphicx}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{heuristic}{Heuristic}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\Ot}{\widetilde{O}}
+\newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
+\newif\ifincludefloor \includefloorfalse     % Remark (b): list-size floor   -- Nick to decide
+\newif\ifincludeLi    \includeLifalse        % Remark (c): Li's 0.24 claim  -- Nick to decide
+\input{numbers}
+
+\title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
+\author{Nick Howgrave-Graham\\ \small\todo{authors / acknowledgements}}
+\date{Draft, 2 November 2026}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For random Subset Sum at density one, the best published heuristic exponent is $0.2830$, due to Bonnetain, Bricout,
+Schrottenloher and Shen (BBSS), using representations with digit set $\{-1,0,1,2\}$. We add type-class
+(consistency) filters, in the line of Dubiner and of May and Ozerov, to the merges of the BBSS tree. At the BBSS depth
+the gain is small ($0.2830\to\TBBSSFthree$). However, the filters remove the reason why deeper trees did not help: in
+the unfiltered tree the upper merges stay the most expensive whatever the depth, whereas filtered upper merges are
+cheap enough for extra levels to pay. With depth $4$, $5$ and $6$ we obtain $\TBBSSFfour$, $\TBBSSFfive$ and
+$\TBBSSFsix$, under the standard heuristics. We check the accounting against a survival recursion that every
+reported optimum satisfies, prove that the filters cannot bias the survival of the planted solution, and test the
+remaining independence assumptions by simulation.
+\end{abstract}
+
+\section{Introduction}
+An instance of Subset Sum consists of integers $a_1,\dots,a_n$ and a target $t$, and asks for $x\in\{0,1\}^n$ with
+$\langle a,x\rangle=t$. In the \emph{random} setting the $a_i$ are uniform in $[0,2^n)$ and $t=\langle a,x_0\rangle$
+for a planted $x_0$ of weight $n/2$ (density one). We measure the exponent $\log_2(\text{time})/n$.
+
+Meet-in-the-middle~\cite{HS74,SS81} gives $2^{n/2}$. Howgrave-Graham and Joux~\cite{HGJ10} introduced
+\emph{representations}: the solution is written in many ways as a sum of two vectors, so a random modular constraint
+can be imposed on the summands while some representation survives. Becker, Coron and Joux~\cite{BCJ11} allowed
+digits $-1$, and Bonnetain, Bricout, Schrottenloher and Shen~\cite{BBSS20} added the digit $2$ and an accounting in
+which intermediate lists may be random subsets of their constrained sets. Table~\ref{tab:history} summarises.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllll}
+\toprule
+exponent & work & digit set & depth & merges \\
+\midrule
+$0.337$ & HGJ~\cite{HGJ10} (as corrected in~\cite{BCJ11}) & $\{0,1\}$ & 3 & plain \\
+$0.329$ & May--Ozerov~\cite{Oze16} & $\{0,1\}$ & 2 & consistency filtered \\
+$0.291$ & BCJ~\cite{BCJ11} & $\{-1,0,1\}$ & 3 & plain \\
+$0.287$ & May--Ozerov~\cite{Oze16} & $\{-1,0,1\}$ & 3 & consistency filtered \\
+$0.2830$ & BBSS~\cite{BBSS20} & $\{-1,0,1,2\}$ & 3 & plain \\
+\midrule
+$\TBBSSFthree$ & this work & $\{-1,0,1,2\}$ & 3 & type-class filtered \\
+$\TBBSSFfour$ & this work & $\{-1,0,1,2\}$ & 4 & type-class filtered \\
+$\TBBSSFfive$ & this work & $\{-1,0,1,2\}$ & 5 & type-class filtered \\
+$\TBBSSFsix$ & this work & $\{-1,0,1,2\}$ & 6 & type-class filtered \\
+$\TFiveFfive$ & this work & $\{-2,\dots,2\}$ & 5 & type-class filtered$^*$ \\
+\bottomrule
+\end{tabular}
+\caption{Heuristic time exponents for random density-one Subset Sum. Depth is the number of levels of
+representation lists below the root ($d$ in Section~\ref{sec:prelim}); BBSS's ``five levels, numbered 4 down to
+0''~\cite[\S2.5]{BBSS20} is $d=3$ with meet-in-the-middle leaves. $^*$\todo{final value; run in progress}}
+\label{tab:history}
+\end{table}
+
+\paragraph{The story.} At each merge of a representation tree, two lists are joined on a modular constraint, and
+only a small fraction of the matching pairs have the right coordinate pattern. Filtering the pairs by their joint
+coordinate type, so that inconsistent pairs are never generated, is the consistency technique of May and
+Ozerov~\cite{Oze16}, which goes back to Dubiner's bucketing codes~\cite{Dub10}. On the BBSS tree at its own depth it
+gains only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
+of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
+levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.
+Filters change exactly this. They make the upper merges cheap, so additional levels, which shrink the lists, start to
+pay, and at the optimum the costs of all merges tie. This gives the improvement
+$0.2830\to\Tbest$ (Section~\ref{sec:results}): about $\GainFiltersPct\%$ of it comes from the filters at fixed depth,
+and $\GainDepthPct\%$ from the depth they make affordable. In decoding the analogous effect is known: with
+near-neighbour search at every level, BJMM-type trees improve up to depth~$4$~\cite{BM17b,BM18}.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item Type-class filtered $\tau$-merges on representation trees with general digit sets, with cost terms in closed
+form and the observation that the filter law only matters through its label type (Section~\ref{sec:filter}).
+\item An optimisation of the BBSS tree with filters at every merge, for depths $d\le6$: $\TBBSSFfour$, $\TBBSSFfive$,
+$\TBBSSFsix$ (Section~\ref{sec:results}).
+\item Soundness of the accounting: a survival recursion that is satisfied with equality by every reported optimum,
+and a symmetry lemma showing that the planted solution survives each filtered merge with exactly the average
+probability (Section~\ref{sec:sound}).
+\item Experiments testing survival, filter bias and sibling independence (Section~\ref{sec:exp}).
+\end{enumerate}
+All results are heuristic, in the same sense as~\cite{HGJ10,BCJ11,BBSS20}.
+
+\paragraph{Related work.} Consistency filtering for HGJ and BCJ trees is in Ozerov's thesis~\cite[Ch.~2,
+\S4.2]{Oze16}, reporting joint work with May, which leaves digits $\pm2$ as an open question~\cite[after
+Cor.~65]{Oze16}; BBSS list it as ``not studied''~\cite[Table~1]{BBSS20}. Böhme~\cite{Boh11} reportedly reached $0.2871$
+with $\{-2,\dots,2\}$ (unpublished; see~\cite[fn.~5]{BBSS20}). Filtering by joint type is also the mechanism of
+May--Ozerov near-neighbour search in decoding~\cite{MO15} and of the locality-sensitive filters of Becker, Ducas, Gama
+and Laarhoven~\cite{BDGL16}; Christiani~\cite{Chr17} gives the asymmetric framework. In the decoding trees of Both and
+May~\cite{BM17b,BM18} and the ternary-LWE trees of Kirshanova and May~\cite{KM21}, near-neighbour search replaces exact
+matching of values by approximate matching, and the representation coordinates are checked after each merge; our
+filters act on the representation coordinates and keep exact modular matching. An earlier claim of
+$2^{0.255n}$~\cite{EM19} has been withdrawn (``issue with counting duplicate representations''); unlike~\cite{EM19} we
+never sample or modify list contents, and all representation counts are those of~\cite{BBSS20}.
+\ifincludeLi \input{li_paragraph}\fi
+We came to these filters through the asymmetric filtering of frequency pairs in the recent worst-case algorithm
+of~\cite{OAI26}.
+
+\section{Preliminaries}\label{sec:prelim}
+Logarithms are to base $2$ and $H$ is Shannon entropy. For a finite set $\Sigma$ and $v\in\Sigma^n$ the \emph{type} of
+$v$ is its empirical distribution; there are $2^{nH(P)+O(\log n)}$ strings of type $P$~\cite{CK11}. Exponents are
+stated up to $O(\log n)/n$.
+
+\paragraph{Digit sets, sets and merges.} A \emph{digit set} is a finite $\cD\subset\Z$ containing $0$ and $1$; we use
+$\{-1,0,1,2\}$ unless stated otherwise. For a modulus $m$, residue $\tau\in\Z_m$ and type $w$ on $\cD$, the
+\emph{$(m,\tau,w)$-set} is $\{x\in\cD^n:\ \mathrm{type}(x)=w,\ \langle a,x\rangle\equiv\tau\pmod m\}$.
+\todo{check against Nick's definition of $(m,\tau,w)$-set}
+A \emph{$\tau$-merge} of lists $L_A\subseteq$ an $(m',\tau_A,w')$-set and $L_B\subseteq$ an $(m',\tau-\tau_A,w')$-set, with
+$m'\mid m$, outputs the $x+y$ ($x\in L_A$, $y\in L_B$) with $\langle a,x+y\rangle\equiv\tau\pmod m$ and
+$\mathrm{type}(x+y)=w$, i.e.\ elements of the $(m,\tau,w)$-set. Outputs are kept as a set (no duplicates).
+
+\paragraph{The $k$-tree.} Level $0$ is the solution $x_0$, of type $\delta_0=(\tfrac12,\tfrac12)$ on $\{0,1\}$.
+Levels $j=1,\dots,d$ carry $2^j$ lists of type-$\delta_j$ vectors, constrained modulo $M_j=2^{c_jn}$ with
+$1=c_0\ge c_1\ge\dots\ge c_d\ge0$, $M_j\mid M_{j-1}$, and residues chosen at random consistently down the tree (the
+$\tau$'s). Each level-$(j-1)$ list is the $\tau$-merge of two level-$j$ lists; the level-$d$ lists are built by
+meet-in-the-middle from half-vectors, in time $2^{H(\delta_d)n/2}$. Counting this last merge, the tree has $k=d+1$
+merge levels. \todo{align $d$ vs $k$ with Nick's $k$-tree convention}
+
+\paragraph{Splits.} A level-$(j-1)$ digit $z$ is written $z=x+y$ with $x,y\in\cD$; the \emph{split law} $\sigma_j$ is
+the joint type of $(x,y)$ over all coordinates. It is symmetric, has both marginals $\delta_j$, and is determined by
+$\delta_{j-1}$ and, for each parent digit, a distribution over its unordered splits (for $\{-1,0,1,2\}$: three free
+fractions, $0\to(\pm1,\mp1)$, $1\to(2,-1)$, $2\to(1,1)$). Write $H_j=H(\delta_j)$. A fixed level-$(j-1)$ vector has
+$2^{\rho_jn}$ representations of split type $\sigma_j$, and a random pair of type-$\delta_j$ vectors is such a split
+with probability $2^{p_jn}$, where
+\[
+\rho_j=H(\sigma_j)-H_{j-1},\qquad p_j=H(\sigma_j)-2H_j .
+\]
+
+\begin{heuristic}[BBSS~\cite{BBSS20}]\label{heur:lists}
+Every list behaves like a uniformly random subset, of its stated size, of its $(M_j,\tau,\delta_j)$-set. The merge of
+two level-$j$ lists of size $2^{\ell_jn}$ examines $2^{P_jn}$ pairs, $P_j=2\ell_j-(c_{j-1}-c_j)$, and outputs
+$2^{(P_j+p_j)n}$ vectors; the expected number of solutions found at the root is at least $1$.
+\end{heuristic}
+
+\section{Filtered $\tau$-merges}\label{sec:filter}
+Fix a merge of two level-$j$ lists and drop the index. Let $(X,Y)\sim\sigma$, and let $\Lambda$ take values in a
+finite \emph{label set} with conditional law $\kappa(\cdot\mid x,y)$ (one law per ordered pair type). Write $Q$ for the
+law of $(X,Y,\Lambda)$ and $Q_\Lambda$ for its label marginal.
+
+\begin{definition}
+A \emph{filter} is a string $u$ in the label set, of type $Q_\Lambda$. A left vector $x$ \emph{enters} $u$ if the joint
+type of $(x,u)$ is the $(X,\Lambda)$-marginal of $Q$, and a right vector $y$ enters $u$ if the joint type of $(y,u)$
+is the $(Y,\Lambda)$-marginal. The filtered $\tau$-merge draws $F=2^{I(XY;\Lambda)n}$ random filters and, within
+each, matches the entering left and right vectors on the new constraint bits.
+\end{definition}
+These are Dubiner's random bucketing codes~\cite{Dub10}, specialised to a representation merge; with a two-symbol
+label set and recursive block structure they are Ozerov's consistency algorithm~\cite[\S2.2]{Oze16}.
+
+\begin{lemma}\label{lem:filter}
+Up to $2^{O(\log n)}$: a pair of joint type $\sigma$ enters a common random filter with probability
+$2^{-I(XY;\Lambda)n}$; a left (right) vector enters with probability $2^{-I(X;\Lambda)n}$ ($2^{-I(Y;\Lambda)n}$); a
+pair of independent type-$\delta$ vectors enters a common filter with probability $2^{-(I(X;\Lambda)+I(Y;\Lambda))n}$.
+\end{lemma}
+\begin{proof}
+Method of types, as in~\cite{Dub10}: for fixed $(x,y)$ of type $\sigma$, $2^{nH(\Lambda\mid XY)}$ of the
+$2^{nH(\Lambda)}$ strings of type $Q_\Lambda$ have joint type $Q$ with it; similarly for single vectors; for
+independent $x,y$ the two events are independent given $u$.
+\end{proof}
+
+\begin{heuristic}\label{heur:filter}
+The pairs that agree on the constraint bits behave, with respect to filters, like independent uniform pairs of
+type-$\delta$ vectors.
+\end{heuristic}
+
+\begin{proposition}\label{prop:cost}
+Under Heuristics~\ref{heur:lists} and~\ref{heur:filter}, the filtered $\tau$-merge outputs $2^{(P+p)n}$ vectors up to a
+constant factor, at cost dominated by
+\[
+\underbrace{\ell+I(XY;\Lambda)-I(X;\Lambda)}_{\text{entries (left)}},\quad
+\underbrace{\ell+I(XY;\Lambda)-I(Y;\Lambda)}_{\text{entries (right)}},\quad
+\underbrace{P+I(XY;\Lambda)-I(X;\Lambda)-I(Y;\Lambda)}_{\text{pairs passing}},
+\]
+plus the cost of decoding, for each vector, the filters it enters.
+\end{proposition}
+A filter pays when $I(X;\Lambda)+I(Y;\Lambda)>I(XY;\Lambda)$; we call $I(X;\Lambda)+I(Y;\Lambda)-I(XY;\Lambda)$ the
+\emph{saving} of the merge.
+
+\begin{remark}[Only the label type matters]\label{rem:piQ}
+One may draw filters i.i.d.\ from any law $\pi$ on the label set; the number of filters and the entry probabilities
+then change by factors $2^{\pm D(Q_\Lambda\|\pi)n}$ that cancel in all three cost terms, since only filters of type
+$Q_\Lambda$ ever contain a valid pair. We therefore normalise $\pi=Q_\Lambda$. (In our numerical model $\pi$ is a free
+parameter; at one optimum it had drifted to $\pi_N\approx0$, giving formal code rates $34n$ and $128n$ at two levels,
+while all costs were unchanged by resetting $\pi=Q_\Lambda$; the true rates are those in Table~\ref{tab:params4}.)
+\end{remark}
+
+\paragraph{Decoding the filters.} Each vector must find the $2^{(I(XY;\Lambda)-I(X;\Lambda))n}$ filters it enters,
+among $2^{I(XY;\Lambda)n}$, in time close to that number. This needs list-decodable structured codes (Dubiner's
+product construction~\cite{Dub10}, or the tensored filters of~\cite{BDGL16,Chr17}); at the reported optima
+$I(XY;\Lambda)\le0.17$ (Table~\ref{tab:params4}), so the codes are small. \todo{write out the block/pattern argument
+(cf.\ the parked note, open item~1)}
+
+\section{Accounting and soundness}\label{sec:sound}
+\paragraph{The program.} For fixed split laws and filter laws, the exponents $(c_j,\ell_j,T)$ are the variables of a
+linear program: minimise $T$ subject to Heuristic~\ref{heur:lists} ($\ell_{j-1}=P_j+p_j$, $\ell_j+c_j\le H_j$, root
+yield $\ge1$), nesting $c_j\le c_{j-1}$, and $T$ at least the leaf build $H_d/2$, every list size, and, at every merge,
+the three terms of Proposition~\ref{prop:cost} (or $P_j$ if unfiltered). The split and filter laws are optimised by
+repeated Powell and Nelder--Mead searches, warm-started from shallower optima.
+
+\paragraph{Survival recursion.} Heuristic~\ref{heur:lists} allows $c_j>\rho_j$ at a level (fewer representations
+than the constraint removes), which is not obviously sound: a level-$(j-1)$ element then survives only with
+probability $2^{-(c_j-\rho_j)n}$. Let $s_j\le0$ be the log-survival exponent of a level-$j$ element, with $s_d=0$
+(complete leaves). Saturating the Poisson survival law $\sigma=1-e^{-c\sigma_A\sigma_B}$ gives
+\[
+s_j=\min\bigl(0,\ \rho_{j+1}-c_{j+1}+2s_{j+1}\bigr)\quad(j=d-1,\dots,1),\qquad
+\rho_1-c_1+2s_1\ge0\ \text{(root)},
+\]
+with list sizes $\ell_j=H_j-c_j+s_j$. Excess representations at a split compensate deficits deeper in the tree
+(closer to the leaves); since survival is capped at $1$, they cannot be carried upward to pay for a deficit closer to
+the root. So the accounting of Heuristic~\ref{heur:lists} is sound exactly when every deficit lies below a
+sufficient excess. We solve the program with these constraints in place of
+Heuristic~\ref{heur:lists} (exactly, by enumerating which levels saturate). \textbf{Every reported optimum gives the same
+value under both accountings.} At depth~$4$, only the split into level~$2$ has a deficit ($s_1=\Sonefour$), paid exactly by the root
+excess $\rho_1-c_1=\RootExcessfour=-2s_1$ (Table~\ref{tab:params4}).
+
+\paragraph{Symmetry.} Filtered lists are not uniform random subsets in any obvious sense, but the planted solution is
+not disadvantaged.
+
+\begin{lemma}\label{lem:sym}
+Fix a node, its exact type, and the randomness: the instance $a$ with i.i.d.\ uniform coordinates, the node residues
+(independent of $a$), and i.i.d.\ filters (independent of both). Let $O$ be the output list and $V_\tau$ the parents
+of the exact type in the node's residue class. Then for every parent $P$ of that type,
+\[
+\Pr[P\in O\mid P\in V_\tau]=\mathbb{E}|O|\,/\,\mathbb{E}|V_\tau| ,
+\]
+and the same holds at every level.
+\end{lemma}
+\begin{proof}
+Every step (complete coset leaves, modular joins, validity checks, the exact-type output restriction, and filter
+entry, which depends only on joint (digit, label) counts) is equivariant under coordinate permutations $g$:
+$O(g a,\tau,g u)=g\,O(a,\tau,u)$. The law of $(a,\tau,u)$ is $g$-invariant and $g$ maps $V_\tau$ to itself, so
+$\Pr[P\in O\wedge P\in V_\tau]$ is the same for all $P$ of the type, on which the permutations act transitively.
+Summing over $P$ and dividing by $\Pr[P\in V_\tau]=1/M$ gives the claim; child lists are outputs of equivariant steps,
+so induction over levels applies.
+\end{proof}
+The lemma concerns the ratio of expectations, which is the quantity the accounting uses; it says nothing about joint
+survival of two nodes, which we test in Section~\ref{sec:exp}.
+
+\section{Results}\label{sec:results}
+\begin{table}[ht]
+\centering
+\input{depth_table}
+\caption{Time exponents by depth $d$, BBSS accounting, plain and filtered merges (each entry is the best found; a
+deeper tree can copy a shallower one, so entries are monotone). $\{0,1\}$ and $\{-1,0,1\}$ under BBSS accounting give
+$0.3371$ and $0.2891$; the strict accounting of~\cite{HGJ10,BCJ11} gives $0.3371$ and $0.2909$.}
+\label{tab:depth}
+\end{table}
+
+\begin{theorem}[heuristic]\label{thm:main}
+Under Heuristics~\ref{heur:lists} and~\ref{heur:filter} and modulo filter decoding (Section~\ref{sec:filter}), random
+density-one Subset Sum can be solved in time $\Ot(2^{\Tbest n})$, with a filtered $\{-1,0,1,2\}$ tree of depth
+$\Tbestdepth$.
+\end{theorem}
+
+\paragraph{Structure of the optimum.} Table~\ref{tab:params4} gives the depth-4 point. The filtered passing costs of
+all four merges tie at $T$. Filtering is active only at the dense levels $1$--$2$, with savings
+$0.076$ and $0.048$; at levels $3$--$4$ the optimal filter is essentially trivial ($I(XY;\Lambda)\le0.022$). The
+deficit at level $2$ is paid by the root excess, and the survival recursion is tight. The gain over BBSS,
+$\GainTotal$, splits into $\GainFilters$ from filters at depth $3$ and $\GainDepth$ from the extra depth.
+
+\begin{table}[ht]
+\centering\small
+\resizebox{\textwidth}{!}{\input{params_d4}}
+\caption{The depth-4 optimum. $\delta_j$: digit type; $\rho_j$: representation exponent; $c_j$: constraint bits;
+$s_j$: survival exponent; $\ell_j$: list size; ``pairs'': $P_j$ (unfiltered pairs); $I(T;\Lambda)$: code rate at
+$\pi=Q_\Lambda$; ``entries gap'' $I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$; ``saving'': as in
+Section~\ref{sec:filter}, negative is a reduction; ``passing'' = pairs + saving.}
+\label{tab:params4}
+\end{table}
+
+\paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$,
+$\TBBSSFsix$ for $d=3,\dots,6$. \todo{d=6 polish still running; d=7?}
+
+\paragraph{Wider digit sets.} Warm-started from the $\{-1,0,1,2\}$ optima, $\{-2,\dots,2\}$ gives $\TFiveFfour$ and
+$\TFiveFfive$ at depths $4$ and $5$, and $\{-1,\dots,3\}$ gives $\TThreeFfour$ at depth 4. \todo{final values;
+$\{-4,\dots,4\}$ pending}. At the depth-4 optimum the digit $3$ has zero marginal value (it can arise only from
+splitting a $2$, whose mass is below $0.006$), while switching on $0\to(2,-2)$ costs $0.0005$--$0.004$ per $10^{-3}$ of
+mass. \todo{does re-optimisation keep $-2$ mass positive?}
+
+\paragraph{Label sets.} Re-optimising the filters with $4$- and $5$-symbol label sets, warm-started from the
+$3$-symbol optima, gives \todo{K = 4, 5 results}.
+
+\section{Experimental validation}\label{sec:exp}
+\paragraph{Survival.} In a depth-3 HGJ tree with complete leaves and internal constraint ratio $c\in\{1,2,3,4\}$
+($n=48$, $40$ draws; $n=64$, $10$ draws), the level-$1$ survival is $0.59/0.82/0.91/0.96$ at $n=48$, against
+Poisson predictions $0.62/0.86/0.94/0.98$, and the work per success is flat in $c$ to within about one bit
+(conservation). The Poisson model is slightly optimistic but $c=3$ does not decay with depth.
+\todo{table; floor/runs/survival\_*.log}
+
+\paragraph{Filter bias.} A filtered merge at $n=32$ shaped like the level-2 merge of the optimum (complete coset
+lists of about $1900$ elements, a $3$-symbol label set from the optimum's conditionals, $300$ draws): the planted
+parent survives with probability $\BiasOffPlanted$ against mean $\sigma=\BiasOffSigma$ without filters, and
+$\BiasOnPlanted\pm\BiasOnSE$ against $\BiasOnSigma$ with filters, as Lemma~\ref{lem:sym} predicts.
+
+\paragraph{Sibling independence.} Two planted siblings (disjoint supports, shared instance, independent residues),
+each built by its own filtered merge, $4000$ draws per $n$: $\Delta=\log_2\Pr[\text{both}]-\log_2\Pr[A]-\log_2\Pr[B]$
+is $\SibsharedTwentyFour$, $\SibsharedThirtyTwo$, $\SibsharedForty$, $\SibsharedFortyEight$ at $n=24,32,40,48$ with
+one shared code (similar with independent codes and without filters), all within $\pm0.02$ and with no trend in $n$.
+So the exactly tight root condition needs no extra excess.
+
+\section{Remarks}\label{sec:remarks}
+\paragraph{(a) Lattices with guessing.} Guessing $(1-\beta)n$ coordinates of the solution leaves a density-$\beta$
+instance on the remaining $\beta n$, whose lattice $\{y\in\Z^{\beta n}:\langle a_B,y\rangle\equiv0\bmod 2^n\}$ is
+the same for all $2^{(1-\beta)n}$ guesses. The centred solution lies at $2.066\cdot2^{-1/\beta}$ times the Gaussian
+heuristic radius. By Ducas, Laarhoven and van Woerden~\cite[Heuristic claim~4]{DLvW20}, a batch of $2^{0.058m}$ CVP
+instances in dimension $m$ costs $2^{0.292m}$ time and $2^{0.208m}$ memory in total. Matching batch and guesses,
+$(1-\beta)=0.058\beta$, gives $\beta=1/1.058\approx0.945$ and time $2^{0.276n}$, memory $2^{0.197n}$. This is the
+hybrid shape of Bernstein's LWE attack \todo{check ref}, made practical with batch-CVP by Karenin, Kirshanova, May and
+Nowakowski~\cite{KKMN25}, and of~\cite{DLdW20} for SVP; we found no statement of it for density-one Subset Sum. It
+beats~\cite{BCJ11,BBSS20} but not the filtered trees. Caveats: Gaussian heuristic for the block lattice, the slicer's
+rerandomisation heuristic, the target at $0.99$ times the Gaussian radius (exact CVP, not BDD), and the $o(m)$ terms,
+which decide the batch condition.
+
+\ifincludefloor
+\input{floor_section}
+\fi
+
+\section{Conclusion and open problems}
+Filters and depth attack the same waste from two sides, and together they give $\Tbest$. The exponent appears to
+saturate near $0.272$. Open: filter decoding in full (Section~\ref{sec:filter}); non-binary roots and non-enumerative
+top levels; whether wider digit sets add more than $\approx0.0005$ \todo{update}; and transferring the
+observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern.
+
+\appendix
+\section{Parameters and reproduction}
+Tables~\ref{tab:params5} and~\ref{tab:params6} give the depth-5 and depth-6 points (columns as in
+Table~\ref{tab:params4}). Points: \texttt{\Srcfive}, \texttt{\Srcsix}. All numbers in this draft are generated by
+\texttt{floor/make\_numbers.py}; the model is \texttt{gen\_lsf.py}, the optimiser \texttt{gen\_opt.py}, and the
+survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2). Commit: \todo{hash}.
+\begin{table}[ht]
+\centering\small
+\resizebox{\textwidth}{!}{\input{params_d5}}
+\caption{The depth-5 point.}\label{tab:params5}
+\end{table}
+\begin{table}[ht]
+\centering\small
+\resizebox{\textwidth}{!}{\input{params_d6}}
+\caption{The depth-6 point.}\label{tab:params6}
+\end{table}
+
+\begin{thebibliography}{99}
+\bibitem{Boh11} E.~B\"ohme, \emph{Verbesserte Subset-Sum Algorithmen}, Master's thesis, Ruhr-Universit\"at Bochum,
+2011.
+\bibitem{BDGL16} A.~Becker, L.~Ducas, N.~Gama and T.~Laarhoven, New directions in nearest neighbor searching with
+applications to lattice sieving, in \emph{Proc.\ SODA 2016}, SIAM, pp.~10--24.
+\bibitem{BM17b} L.~Both and A.~May, Optimizing BJMM with nearest neighbors: full decoding in $2^{2n/21}$ and McEliece
+security, \emph{International Workshop on Coding and Cryptography (WCC 2017)}, 2017.
+\bibitem{BM18} L.~Both and A.~May, Decoding linear codes with high error rate and its impact for LPN security, in
+\emph{PQCrypto 2018}, LNCS, Springer, pp.~25--46. IACR ePrint 2017/1139.
+\bibitem{BCJ11} A.~Becker, J.-S.~Coron and A.~Joux, Improved generic algorithms for hard knapsacks, in
+\emph{EUROCRYPT 2011}, LNCS 6632, Springer, pp.~364--385.
+\bibitem{BBSS20} X.~Bonnetain, R.~Bricout, A.~Schrottenloher and Y.~Shen, Improved classical and quantum algorithms
+for subset-sum, in \emph{ASIACRYPT 2020}, LNCS, Springer. IACR ePrint 2020/168, arXiv:2002.05276.
+\bibitem{Chr17} T.~Christiani, A framework for similarity search with space-time tradeoffs using locality-sensitive
+filtering, in \emph{Proc.\ SODA 2017}, SIAM, pp.~31--46.
+\bibitem{CK11} I.~Csisz\'ar and J.~K\"orner, \emph{Information Theory: Coding Theorems for Discrete Memoryless
+Systems}, 2nd ed., Cambridge University Press, 2011.
+\bibitem{DLdW20} E.~Doulgerakis, T.~Laarhoven and B.~de~Weger, Sieve, enumerate, slice, and lift: hybrid lattice
+algorithms for SVP via CVPP, IACR ePrint 2020/487. \todo{check venue}
+\bibitem{DLvW20} L.~Ducas, T.~Laarhoven and W.~P.~J.~van~Woerden, The randomized slicer for CVPP: sharper, faster,
+smaller, batchier, in \emph{PKC 2020}, LNCS, Springer. IACR ePrint 2020/120.
+\bibitem{Dub10} M.~Dubiner, Bucketing coding and information theory for the statistical high-dimensional
+nearest-neighbor problem, \emph{IEEE Trans.\ Inf.\ Theory} \textbf{56} (2010), no.~8, 4166--4179.
+\bibitem{EM19} A.~Esser and A.~May, Better sample -- random subset sum in $2^{0.255n}$ and its impact on decoding
+random linear codes, arXiv:1907.04295 (withdrawn).
+\bibitem{HS74} E.~Horowitz and S.~Sahni, Computing partitions with applications to the knapsack problem,
+\emph{J.\ ACM} \textbf{21} (1974), 277--292.
+\bibitem{HGJ10} N.~Howgrave-Graham and A.~Joux, New generic algorithms for hard knapsacks, in \emph{EUROCRYPT 2010},
+LNCS 6110, Springer, pp.~235--256.
+\bibitem{KKMN25} \todo{check authors' initials} Karenin, E.~Kirshanova, A.~May and Nowakowski, Fast slicer for
+batch-CVP: making lattice hybrid attacks practical, in \emph{ASIACRYPT 2025}. IACR ePrint 2025/1910.
+\bibitem{KM21} E.~Kirshanova and A.~May, How to find ternary LWE keys using locality sensitive hashing, in
+\emph{IMACC 2021}, LNCS, Springer. IACR ePrint 2021/1255.
+\bibitem{Li25} Y.~Li, From subset-sum to decoding: improved classical and quantum algorithms via ternary
+representation technique, \emph{Information} \textbf{16} (2025), no.~10, 887.
+\bibitem{MO15} A.~May and I.~Ozerov, On computing nearest neighbors with applications to decoding of binary linear
+codes, in \emph{EUROCRYPT 2015}, LNCS 9056, Springer, pp.~203--228.
+\bibitem{OAI26} OpenAI, Subset Sum in time $O(2^{0.49n})$, preprint, 4 October 2026.
+\bibitem{Oze16} I.~Ozerov, \emph{Combinatorial Algorithms for Subset Sum Problems}, PhD thesis, Ruhr-Universit\"at
+Bochum, 2016.
+\bibitem{SS81} R.~Schroeppel and A.~Shamir, A $T=O(2^{n/2})$, $S=O(2^{n/4})$ algorithm for certain NP-complete
+problems, \emph{SIAM J.\ Comput.} \textbf{10} (1981), 456--464.
+\end{thebibliography}
+\end{document}
