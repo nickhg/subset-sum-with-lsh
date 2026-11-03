@@ -32,3 +32,21 @@ print("\nEvery option-(b) cost is >= 0.292 > 0.2793 (BBSS + filters) and > 0.290
 print("A gain would need a lattice step in dimension beta*n < n (a block hybrid): sieve cost 0.292*beta.")
 for beta in (0.5, 0.75, 0.9, 0.95):
     print(f"  beta = {beta}: sieve cost {0.292 * beta:.4f} n")
+
+# ---- Block hybrid (wc handoff2 C): guess (1-beta)n coordinates, batch-CVPP on the beta*n block -------------------
+# Block lattice {y in Z^m : <a_B,y> = 0 mod 2^n}, m = beta n, det 2^n.  Centred target distance sqrt(m)/2, so
+#   target / GH = sqrt(2 pi e)/2 * 2^{-1/beta} = 2.066 * 2^{-1/beta}      (1.033 at beta = 1; < 1 for beta < 0.954)
+# Ducas-Laarhoven-van Woerden, randomized slicer (PKC 2020, ePrint 2020/120), Heuristic claim 4:
+#   a batch of >= 2^{0.058 m} CVP instances on one lattice costs 2^{0.292 m} time, 2^{0.208 m} memory in total
+#   (amortised 2^{0.234 m} each; preprocessing = one sieve, 2^{0.292 m}).
+# Guesses: all 2^{(1-beta) n} completions of the guessed block (no constraint to exploit) -> one CVP each.
+#   T(beta) = max(0.292 beta, (1 - beta) + 0.234 beta); for (1-beta) < 0.058 beta the batch is too small for the
+#   0.234 amortisation but the whole batch still fits in the one 2^{0.292 m} run, so T = 0.292 beta there.
+print("\nBlock hybrid (guess (1-beta)n coords, batch-CVPP on beta*n block; DLvW 2020 slicer):")
+for beta in (0.90, 0.93, 0.9452, 0.95, 0.97, 1.0):
+    T = max(0.292 * beta, (1 - beta) + 0.234 * beta); ratio = np.sqrt(2 * np.pi * np.e) / 2 * 2 ** (-1 / beta)
+    print(f"  beta {beta:.4f}: T {T:.4f}  memory {0.208 * beta:.4f}  target/GH {ratio:.3f}  "
+          f"batch ok {(1 - beta) >= 0.058 * beta - 1e-4}")
+b = 1 / 1.058
+print(f"  optimum beta = 1/1.058 = {b:.4f}: T = 0.292/1.058 = {0.292 * b:.4f}, memory {0.208 * b:.4f}"
+      "  (beats BBSS 0.2829, not BBSS + deep filters 0.2734)")

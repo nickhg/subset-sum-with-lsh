@@ -1,0 +1,7 @@
+n=32 R=5544 M=2772 E|V_parent|/M=232728  p_pair=4.807e-04 -> K=2080 codewords
+  20 draws: unfiltered sigma 0.867 planted 0.950 | filtered sigma 0.718 planted 0.750
+  40 draws: unfiltered sigma 0.867 planted 0.850 | filtered sigma 0.718 planted 0.675
+  60 draws: unfiltered sigma 0.867 planted 0.883 | filtered sigma 0.718 planted 0.700
+  80 draws: unfiltered sigma 0.866 planted 0.875 | filtered sigma 0.717 planted 0.688
+  100 draws: unfiltered sigma 0.865 planted 0.850 | filtered sigma 0.716 planted 0.700
+  120 draws: unfiltered sigma 0.865 planted 0.850 | filtered sigma 0.716 planted 0.717

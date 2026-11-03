@@ -11,3 +11,12 @@ A gain would need a lattice step in dimension beta*n < n (a block hybrid): sieve
   beta = 0.75: sieve cost 0.2190 n
   beta = 0.9: sieve cost 0.2628 n
   beta = 0.95: sieve cost 0.2774 n
+
+Block hybrid (guess (1-beta)n coords, batch-CVPP on beta*n block; DLvW 2020 slicer):
+  beta 0.9000: T 0.3106  memory 0.1872  target/GH 0.957  batch ok True
+  beta 0.9300: T 0.2876  memory 0.1934  target/GH 0.981  batch ok True
+  beta 0.9452: T 0.2760  memory 0.1966  target/GH 0.992  batch ok True
+  beta 0.9500: T 0.2774  memory 0.1976  target/GH 0.996  batch ok False
+  beta 0.9700: T 0.2832  memory 0.2018  target/GH 1.011  batch ok False
+  beta 1.0000: T 0.2920  memory 0.2080  target/GH 1.033  batch ok False
+  optimum beta = 1/1.058 = 0.9452: T = 0.292/1.058 = 0.2760, memory 0.1966  (beats BBSS 0.2829, not BBSS + deep filters 0.2734)

@@ -15,7 +15,9 @@ Variants (T = max of the listed terms):
            examined 2H_j - c_j - c_{j-1} + I_XY - I_X - I_Y   (filter laws optimised too)
 BBSS accounting (lists may be random subsets; gen_lsf.Model.lp):
     B1     merges, no filters        B2   with filters
-usage: recursive_floor.py DIGITS d VARIANT [restarts] [seed]      e.g.  -1,0,1,2 3 F1 6 0
+Survival-recursion accounting (wc handoff2 A; survival_lp): c_j <= rho_j replaced by the saturating recursion,
+    lists sigma-scaled.   S1  costs as F1        S2  costs as F2
+usage: recursive_floor.py DIGITS d VARIANT [restarts] [seed] [init.npy]    e.g.  -1,0,1,2 3 F1 6 0
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
@@ -57,28 +59,85 @@ def strict_lp(M, lev, d, variant, F=None):
     return (res.fun, res.x) if res.status == 0 else (9.0, None)
 
 
+def survival_lp(M, lev, d, variant, F=None):
+    """S1/S2 (wc handoff2 A): per-level c_j <= rho_j replaced by the saturating survival recursion
+        s_d = 0,  s_j = min(0, rho_{j+1} - c_{j+1} + 2 s_{j+1})  (j = d-1..1),  root: rho_1 - c_1 + 2 s_1 >= 0,
+    lists L_j = H_j - c_j + s_j (sigma-scaled).  Costs as F1 (S1) / F2 (S2).  The min() is handled exactly by
+    enumerating which levels saturate (s_j = 0) and solving one LP per pattern.
+    Variables: c_1..c_d, s_1..s_{d-1}, T."""
+    nc, ns_ = d, d - 1; T = nc + ns_; nv = T + 1
+    C = lambda j: j - 1; S = lambda j: nc + j - 1            # s_j for j = 1..d-1
+    ex = [0.0] * (d + 1); ent = [None] * (d + 1)
+    if variant == "S2":
+        for j in range(1, d + 1):
+            r12, r1, r2, ex[j] = M.filter_terms(lev[j], F[j - 1]); ent[j] = max(r12 - r1, r12 - r2)
+    best = (9.0, None)
+    for pat in range(2 ** ns_):
+        Aub, bub, Aeq, beq = [], [], [], []
+        def row(ub, pairs, rhs):
+            v = np.zeros(nv)
+            for i, x in pairs: v[i] += x
+            (Aub if ub else Aeq).append(v); (bub if ub else beq).append(rhs)
+        def sv(j):                                            # s_j as (pairs) ; s_d = 0
+            return [(S(j), 1)] if j < d else []
+        for j in range(1, d):
+            # e_j = rho_{j+1} - c_{j+1} + 2 s_{j+1}
+            e = [(C(j + 1), -1)] + [(i, 2 * x) for i, x in sv(j + 1)]
+            if pat >> (j - 1) & 1:    # saturated: s_j = e_j (<= 0 by bounds)
+                row(False, [(S(j), 1)] + [(i, -x) for i, x in e], lev[j + 1]["rho"])
+            else:                     # s_j = 0, e_j >= 0
+                row(False, [(S(j), 1)], 0.0)
+                row(True, [(i, -x) for i, x in e], lev[j + 1]["rho"])
+        row(True, [(C(1), 1)] + [(i, -2 * x) for i, x in sv(1)], lev[1]["rho"])          # root
+        for j in range(2, d + 1):
+            row(True, [(C(j), 1), (C(j - 1), -1)], 0.0)                                     # nesting
+        for j in range(1, d + 1):
+            Lj = [(C(j), -1)] + sv(j)                         # L_j - H_j
+            row(True, Lj + [(T, -1)], -lev[j]["H"])                                         # list
+            if ent[j] is not None:
+                row(True, Lj + [(T, -1)], -(lev[j]["H"] + ent[j]))                          # entries
+            pr = [(i, 2 * x) for i, x in Lj] + [(C(j), 1), (T, -1)]; rhs = -(2 * lev[j]["H"] + ex[j])
+            if j == 1: rhs += 1.0
+            else: pr.append((C(j - 1), -1))
+            row(True, pr, rhs)                                                              # merge
+        row(True, [(T, -1)], -0.5 * lev[d]["H"])                                            # leaf
+        if not (np.all(np.isfinite(bub)) and np.all(np.isfinite(beq))):
+            return 9.0, None
+        res = linprog(np.eye(nv)[T], A_ub=np.array(Aub), b_ub=np.array(bub),
+                      A_eq=np.array(Aeq) if Aeq else None, b_eq=np.array(beq) if beq else None,
+                      bounds=[(0, 1)] * nc + [(-1, 0)] * ns_ + [(0, 2)], method="highs")
+        if res.status == 0 and res.fun < best[0]:
+            best = (res.fun, res.x)
+    return best
+
+
 def evaluate(M, z, d, variant):
     ns, nf = M.nsplit, M.nfilt
     P = z[:d * ns].reshape(d, ns) if ns else np.zeros((d, 0))
-    F = [z[d * ns + nf * j: d * ns + nf * (j + 1)] for j in range(d)] if variant in ("F2", "B2") else None
+    F = [z[d * ns + nf * j: d * ns + nf * (j + 1)] for j in range(d)] if variant in ("F2", "B2", "S2") else None
     if variant in ("B1", "B2"):
         T, x, lev = M.lp(P, F)
         return T, x, lev, P, F
     lev = M.tree(P)
-    T, x = strict_lp(M, lev, d, variant, F)
+    T, x = (survival_lp if variant in ("S1", "S2") else strict_lp)(M, lev, d, variant, F)
     return T, x, lev, P, F
 
 
-def optimise(D, d, variant, restarts=6, seed=0):
+def optimise(D, d, variant, restarts=6, seed=0, init=None):
     M = Model(D); rng = np.random.default_rng(seed)
     ns, nf = M.nsplit, M.nfilt
-    nz = d * ns + (d * nf if variant in ("F2", "B2") else 0)
+    nz = d * ns + (d * nf if variant in ("F2", "B2", "S2") else 0)
     f = lambda z: evaluate(M, z, d, variant)[0]
     if nz == 0:
         return f(np.zeros(0)), np.zeros(0), M
     best = (9.0, None)
+    if init is not None:                      # warm start (B2 optimum for S2; drop filter params for S1)
+        init = init[:nz]; best = (f(init), init)
     for r in range(restarts):
-        z = np.concatenate([rng.normal(-2 + r * 0.5, 1.0, d * ns), rng.normal(0, 0.5, nz - d * ns)])
+        if init is not None:
+            z = init + (rng.normal(0, 0.1 * r, nz) if r else 0)
+        else:
+            z = np.concatenate([rng.normal(-2 + r * 0.5, 1.0, d * ns), rng.normal(0, 0.5, nz - d * ns)])
         for _ in range(2):
             res = minimize(f, z, method="Powell", options=dict(maxiter=20000, xtol=1e-7, ftol=1e-11))
             res = minimize(f, res.x, method="Nelder-Mead", options=dict(maxiter=8000, xatol=1e-8, fatol=1e-12))
@@ -95,6 +154,10 @@ def describe(M, z, d, variant):
         return "\n".join(out)
     if variant in ("B1", "B2"):
         c = [1.0] + list(x[:d]); Ls = list(x[d:2 * d])
+    elif variant in ("S1", "S2"):
+        c = [1.0] + list(x[:d]); sv = list(x[d:2 * d - 1]) + [0.0]
+        Ls = [lev[j]["H"] - c[j] + sv[j - 1] for j in range(1, d + 1)]
+        out.append("  survival s_j: " + " ".join(f"{v:.4f}" for v in sv))
     else:
         c = [1.0] + list(x[:d]); Ls = [lev[j]["H"] - c[j] for j in range(1, d + 1)]
     for j in range(1, d + 1):
@@ -110,7 +173,8 @@ def describe(M, z, d, variant):
 if __name__ == "__main__":
     D = [int(t) for t in sys.argv[1].split(",")]; d = int(sys.argv[2]); variant = sys.argv[3]
     restarts = int(sys.argv[4]) if len(sys.argv) > 4 else 6; seed = int(sys.argv[5]) if len(sys.argv) > 5 else 0
-    T, z, M = optimise(D, d, variant, restarts, seed)
+    init = np.load(sys.argv[6]) if len(sys.argv) > 6 else None
+    T, z, M = optimise(D, d, variant, restarts, seed, init)
     tag = f"D={sys.argv[1]} d={d} {variant}"
     print(f"{tag}: best T = {T:.5f}", flush=True)
     print(describe(M, z, d, variant), flush=True)
