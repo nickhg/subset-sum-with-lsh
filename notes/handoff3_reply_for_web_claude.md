@@ -49,9 +49,16 @@ So for a permutation g, O(g·a, u, g·code) = g·O(a, u, code). The joint law of
 
 Δ = log2 P(both) − log2 P(A*) − log2 P(B*), 4000 draws per n:
 
-SIBLING_TABLE
+| n (k) | filter off: P(A*) / P(both) / Δ | independent codes: P(A*) / P(both) / Δ | shared code: P(A*) / P(both) / Δ |
+|---|---|---|---|
+| 24 (4) | .858 / .737 / −0.006 ± .014 | .735 / .545 / +0.004 ± .021 | .735 / .549 / +0.001 ± .021 |
+| 32 (5) | .854 / .736 / +0.001 ± .014 | .678 / .464 / −0.014 ± .025 | .678 / .474 / +0.009 ± .024 |
+| 40 (6) | .863 / .747 / −0.005 ± .013 | .739 / .551 / −0.004 ± .021 | .739 / .548 / −0.005 ± .021 |
+| 48 (7) | .870 / .752 / −0.002 ± .013 | .715 / .507 / −0.001 ± .023 | .715 / .506 / +0.008 ± .023 |
 
-SIBLING_VERDICT
+**Verdict: there is no sibling correlation to resolution ±0.02 bits at any n, and no trend from n = 24 to 48.** That holds even with one shared code for both siblings.
+
+This is what one expects. For disjoint-support siblings, ⟨a,X⟩ and ⟨a,X'⟩ for a rep X of A* and a rep X' of B* are independent mod M, because X − X' ≠ 0. The residues u_A, u_B are independent as well. So the only coupling is the shared code, and a codeword's labels on A*'s support are independent of its labels on B*'s support. Δ is therefore O(1) at worst, and here it is 0 within noise. The root's exact tightness (+0.128 = 2 × 0.064) needs no extra excess.
 
 The earlier `survival.py` deficit at c = 2 (P(found) 0.50–0.65 against Poisson 0.77) is not sibling correlation. At n = 48 the level-1 σ was 0.823, so σ² = 0.68. The Poisson figure 1 − e^{−c·σ²} also assumes the root's consistent representations are independent. With c = 2 only two or three exist, so the Poisson form is the optimistic part, not a correlation between siblings. That is a constant factor that the exponent doesn't see.
 

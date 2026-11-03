@@ -1,1 +1,5 @@
 n=48 k=7 R=116688 M=58344 targets A[4, 3, 0] B[4, 0, 3] p_pair=8.438e-05 K=11852
+RESULT n=48 k=7 draws=4000
+  off   : P(A*) 0.8698 P(B*) 0.8660 P(both) 0.7520  log2 P(both) - log2 P(A) - log2 P(B) = -0.0023 (+- 0.0131)
+  indep : P(A*) 0.7147 P(B*) 0.7093 P(both) 0.5068  log2 P(both) - log2 P(A) - log2 P(B) = -0.0005 (+- 0.0225)
+  shared: P(A*) 0.7147 P(B*) 0.7035 P(both) 0.5055  log2 P(both) - log2 P(A) - log2 P(B) = +0.0077 (+- 0.0226)
