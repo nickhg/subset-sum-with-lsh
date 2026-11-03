@@ -1,6 +1,6 @@
 % Draft, 2 Nov 2026.  Build: pdflatex main.tex (twice).  Numbers: python3 ../floor/make_numbers.py regenerates
 % numbers.tex, depth_table.tex and params_d*.tex from the saved optimiser points.
-% Optional sections (Nick to decide): set \includefloortrue / \includeLitrue below.
+% Optional section (Nick to decide): set \includefloortrue below.
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,booktabs,hyperref,array,xcolor,graphicx}
@@ -17,7 +17,6 @@
 \newcommand{\Ot}{\widetilde{O}}
 \newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
 \newif\ifincludefloor \includefloorfalse     % Remark (b): list-size floor   -- Nick to decide
-\newif\ifincludeLi    \includeLifalse        % Remark (c): Li's 0.24 claim  -- Nick to decide
 \input{numbers}
 
 \title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
@@ -119,7 +118,9 @@ matching of values by approximate matching, and the representation coordinates a
 filters act on the representation coordinates and keep exact modular matching. An earlier claim of
 $2^{0.255n}$~\cite{EM19} has been withdrawn (``issue with counting duplicate representations''); unlike~\cite{EM19} we
 never sample or modify list contents, and all representation counts are those of~\cite{BBSS20}.
-\ifincludeLi \input{li_paragraph}\fi
+Li~\cite{Li25} claims $2^{0.24n}$ using a ternary-tree representation structure; we were not able to reproduce this
+exponent within the heuristics used here. Charging each three-list merge for the pairs it enumerates from two of its
+lists, rather than for its output size, we obtain $0.39$.
 
 \section{Preliminaries}\label{sec:prelim}
 Logarithms are to base $2$ and $H$ is Shannon entropy. For a finite set $\Sigma$ and $v\in\Sigma^n$ the \emph{type} of
