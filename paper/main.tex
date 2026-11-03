@@ -385,7 +385,11 @@ the modulus is capped at $2^{56}$ (density $1.14$).}
 \paragraph{Filter bias.} A filtered merge at $n=32$ shaped like the level-2 merge of the optimum (complete coset
 lists of about $1900$ elements, a $3$-symbol label set from the optimum's conditionals, $300$ draws): the planted
 parent survives with probability $\BiasOffPlanted$ against mean $\sigma=\BiasOffSigma$ without filters, and
-$\BiasOnPlanted\pm\BiasOnSE$ against $\BiasOnSigma$ with filters, as Lemma~\ref{lem:sym} predicts.
+$\BiasOnPlanted\pm\BiasOnSE$ against $\BiasOnSigma$ with filters, as Lemma~\ref{lem:sym} predicts. A second merge at $n=20$ is shaped like
+the sparse bottom merge of the depth-6 optimum: the parent has four $1$s and two $-1$s, and the children have two
+$2$s and three $-1$s, joined by $1\to(2,-1)$ and $-1\to(-1,0)$ (\texttt{floor/bias\_sim\_sparse.py}, $400$ draws).
+The planted parent survives with probability $0.598\pm0.025$ against $\sigma=0.611$ without filters, and
+$0.438\pm0.025$ against $0.445$ with filters.
 
 \paragraph{Sibling independence.} Two planted siblings (disjoint supports, shared instance, independent residues),
 each built by its own filtered merge, $4000$ draws per $n$: $\Delta=\log_2\Pr[\text{both}]-\log_2\Pr[A]-\log_2\Pr[B]$
