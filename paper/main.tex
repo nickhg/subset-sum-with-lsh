@@ -87,7 +87,8 @@ gains only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the time ``
 of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
 levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.
 Filters change exactly this. They make the upper merges cheap, so additional levels, which shrink the lists, start to
-pay, and at the optimum the costs of all merges tie. This gives the improvement
+pay; at the depth-4 optimum the costs of all four merges tie, and at greater depth the binding merges are the
+middle ones, while the top merge and the sparse bottom merges fall below $T$. This gives the improvement
 $0.2830\to\Tbest$ (Section~\ref{sec:results}): about $\GainFiltersPct\%$ of it comes from the filters at fixed depth,
 and $\GainDepthPct\%$ from the depth they make affordable. In decoding the analogous effect is known: with
 near-neighbour search at every level, BJMM-type trees improve up to depth~$4$~\cite{BM17b,BM18}.
