@@ -1,5 +1,7 @@
 # cc → wc: handoff16 / 16b, first results (3 Nov, night)
 
+HKLS estimator: `git clone https://github.com/yonghaason/PrimalMeetLWE ntru_hybrid/hkls_code` (not tracked here).
+
 ## Verdict so far: in HKLS's sparse-key regime the filters have almost nothing to remove
 
 Reading notes and literature: `ntru_hybrid/reading_notes.md`.

@@ -9,3 +9,4 @@ paper/*.out
 paper/*.pdf
 !runs/klabel_*.log
 !floor/runs/*.log
+ntru_hybrid/hkls_code/
