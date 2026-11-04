@@ -24,10 +24,11 @@ as denser keys produce more pattern waste.
 
 \begin{table}[ht]
 \centering\small
-\input{ml_table}
+\setlength{\tabcolsep}{4pt}\input{ml_table}
 \caption{Meet-LWE (Rep-1) time exponents $\log_2(T)/n$, asymptotic, guessing ignored. ``May'' is~\cite[Table~5]{May21};
-``May, re-opt.'' is his Rep-1 formulas re-optimised over his depths $4$--$6$; the unfiltered and filtered columns are
-our best points over $d=3,\dots,7$, with the smallest depth attaining it; the gain is unfiltered minus filtered.}
+``May, re-opt.'' is his Rep-1 formulas re-optimised over his depths $4$--$6$. The columns $d=3$ and $d=4$ give our best
+points found at that depth, unfiltered / filtered; the last columns give the best found over $d=3,\dots,7$, with the
+smallest depth attaining it. The gain is unfiltered minus filtered, both best over depths.}
 \label{tab:meetlwe}
 \end{table}
 
@@ -38,12 +39,18 @@ waste ($p_2\approx-0.06$, $p_3\approx-0.02$; only the root merge, which does not
 leaves and the level-$3$ lists bind as well, which filters do not reduce; with the split laws fixed, the best filters give
 $\MLfixedD$, the same as without them ($\MLfourD$). Once the split laws are re-optimised together with the filters, the optimum moves to
 denser levels with more cancellations $0\to(1,-1)$, where most matched pairs have the wrong pattern, and the binding
-merge of the level-$2$ lists has $p_2\approx-0.14$ ($\omega=0.5$, depth $6$); the filters remove that waste. This is
+merge of the level-$2$ lists has $p_2\approx-0.14$ ($\omega=0.5$, depth $5$); the filters remove that waste. This is
 the mechanism of Section~\ref{sec:results}.
 
-\paragraph{Depth.} Without filters, extra levels stop paying at depth $4$ (depth $3$ for $\omega=0.3$ and $0.667$).
-With filters the exponent improves up to depth $\MLfdmin$--$\MLfdmax$, because the merges of the upper levels, which bind
-without filters, become cheap. Filters make depth pay in Meet-LWE as in Subset Sum.
+\paragraph{Depth.} Filters gain only $\MLgthreemin$--$\MLgthreemax$ at depth $3$. The gain appears at the first extra
+level they make affordable, depth $4$ in our convention (May's depth $5$): at $\omega=0.5$, going from depth $3$ to $4$
+gains $0.0166$ with filters against $0.0037$ without, and the other weights show the same pattern
+(Table~\ref{tab:meetlwe}). Deeper trees add at most about $\MLdeepmax$. What the extra level contains is the mechanism
+above: denser, more wasteful levels that only pay once they are filtered. So filters make depth pay in Meet-LWE as in
+Subset Sum. Unlike the BBSS accounting of Section~\ref{sec:results}, May's accounting does not let a trivial extra
+level copy a shallower tree exactly, so the exponent need not be monotone in depth (for example $\MLpA$ at depth $3$
+against $0.2975$ at depth $4$ for $\omega=0.3$, unfiltered); we report the best found at each depth and the best over
+depths.
 
 \paragraph{Soundness.} Lemma~\ref{lem:sym} carries over: coordinate permutations act on the columns of $A$ and on $s$,
 the error $e$ is untouched, and exact $q$-ary matching, the split checks and filter entry are all equivariant. A
