@@ -18,6 +18,7 @@ while :; do
     echo "$(date -u +%FT%TZ) best:$(for b in $best; do printf ' %s' "$(basename $b .npy)"; done)" >> cloud/poll.log
     for f in cloud/INSTANCE_*; do
         n=${f#cloud/INSTANCE_}; read -r id ip _ < "$f"
+        case $n in ml*) continue ;; esac                  # the Meet-LWE machine shares nothing with subset sum
         for b in $best; do
             [ -e "cloud/results/$n/res/$(basename $b)" ] || timeout 60 scp -q $SSHOPT "$b" ubuntu@$ip:ss/res/ 2>/dev/null
         done
