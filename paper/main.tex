@@ -117,11 +117,13 @@ the labels are only correlated with the digits, save $0.010$ and $0.006$ at an a
 $0.3371\to0.3269$ (Table~\ref{tab:depth}; \texttt{floor/hgj\_example.py}). So filters can pay only where
 $2^{p_jn}\ll1$, and do pay where such a merge binds; when they make the upper merges cheap, extra levels pay too.
 
-\paragraph{The story.} At each merge of a representation tree, two lists are joined on a modular constraint, and
-only a fraction $2^{p_jn}$ of the matching pairs have the right split pattern. Filtering the pairs by their joint
-coordinate type, so that pairs with the wrong pattern are never generated, saves at most this waste, so filters can
-pay only where $2^{p_jn}\ll1$, and do pay where such merges bind; we find this both where they pay and where they do
-not (Section~\ref{sec:results}\ifincludemeetlwe{} and Section~\ref{sec:meetlwe}\fi). On the BBSS tree at its own depth
+\paragraph{Our approach.} We look at where the work of a representation tree goes. At each merge, two lists are
+joined on a modular constraint, and most of the matching pairs are then discarded because their split pattern is
+wrong; only a fraction $2^{p_jn}$ survive. We ask what happens if these pairs are never generated, by filtering on the
+joint coordinate type as in the example above. Such filters can save at most this waste, so they can pay only where
+$2^{p_jn}\ll1$, and they do pay where such a merge binds. We find both cases: where filters pay
+(\ifincludemeetlwe Sections~\ref{sec:results} and~\ref{sec:meetlwe}\else Section~\ref{sec:results}\fi) and where they do not.
+On the BBSS tree at its own depth
 the filters gain only about $0.004$ ($0.2830\to\TBBSSFthree$). BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
 of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
 levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.

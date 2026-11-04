@@ -12,7 +12,7 @@ A valid pair shares u iff u is L on A's own parent coordinates, R on B's and N o
 p = pL^(2a) pN^2,  K = round(1/p).
 Measured per draw: sigma = |output| / E[#parents with residue t], and whether S survives; filter off is the control.
 usage: bias_sim_meetlwe2.py [draws] [seed] [a] [q] [r]
-env ARMS=off|on|both (default both); UNPLANTED=1 also measures, without filters, E|O| / E|V_t| for a uniform target t
+env UNPLANTED_ON=1: only the unplanted control with filters.  ARMS=off|on|both (default both); UNPLANTED=1 also measures, without filters, E|O| / E|V_t| for a uniform target t
 (no planted parent), the right-hand side of Lemma sym without the planted conditioning.
 """
 import sys, itertools
@@ -43,9 +43,10 @@ def residues(A, V, k):
     return s
 
 
-def run(filt):
+def run(filt, planted=True):
     A = rng.integers(0, q, (r, n)); res = residues(A, vecs, h); key = W @ res
-    S = vectors_par[rng.integers(len(vectors_par))]; t = residues(A, S[None, :], a)[:, 0]
+    S = vectors_par[rng.integers(len(vectors_par))]
+    t = residues(A, S[None, :], a)[:, 0] if planted else rng.integers(0, q, r)
     u = rng.integers(0, q, r); tu = (t - u) % q
     LA, LB = vecs[key == W @ u], vecs[key == W @ tu]
     pa, ma = bit(LA[:, :h]).sum(1), bit(LA[:, h:]).sum(1); pb, mb = bit(LB[:, :h]).sum(1), bit(LB[:, h:]).sum(1)
@@ -67,6 +68,8 @@ def run(filt):
         ia, ib = ia[hit], ib[hit]
     nn = canc1[ia, ib] | canc2[ia, ib]
     O = np.unique(((pa[ia] | pb[ib]) & ~nn) * (np.int64(1) << 32) + ((ma[ia] | mb[ib]) & ~nn))
+    if not planted:                                 # E|O| / E|V_t| with no planted parent
+        return len(O) / (Npar / q ** r), False
     Sk = bit(S[:a]).sum() * (np.int64(1) << 32) + bit(S[a:]).sum()
     return len(O) / E_par, bool(np.isin(Sk, O))
 
@@ -88,6 +91,10 @@ if os.environ.get("UNPLANTED"):
         sizes.append(len(np.unique(((pa[ia] | pb[ib]) & ~nn) * (np.int64(1) << 32) + ((ma[ia] | mb[ib]) & ~nn))))
     print(f"unplanted, filter off: E|O| / E|V_t| = {np.mean(sizes) / (Npar / q ** r):.4f} +- {np.std(sizes) / np.sqrt(draws) / (Npar / q ** r):.4f}"
           f"  ({draws} draws)", flush=True)
+if os.environ.get("UNPLANTED_ON"):                  # wc handoff30: the same control with filters
+    v = [run(True, planted=False)[0] for _ in range(draws)]
+    print(f"unplanted, filter on (K={K}): E|O| / E|V_t| = {np.mean(v):.4f} +- {np.std(v) / np.sqrt(draws):.4f}  ({draws} draws)", flush=True)
+    sys.exit(0)
 for filt in ARMS:
     sig, hit = zip(*[run(filt) for _ in range(draws)])
     p = np.mean(hit); se = np.sqrt(p * (1 - p) / draws)
