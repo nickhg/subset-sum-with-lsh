@@ -41,18 +41,15 @@
 \maketitle
 
 \begin{abstract}
-We revisit the bucketing codes of Dubiner, in the form of type-class filters on the representation coordinates, and
-show where they pay in representation trees: at the merges where most matched pairs have the wrong split pattern.
-Their main effect is that they make depth pay. In an unfiltered tree the upper merges stay the most expensive
-whatever the depth; filtered upper merges are cheap enough for extra levels to pay. For random Subset Sum at density
-one, the best published heuristic exponent is $0.2830$, due to Bonnetain, Bricout, Schrottenloher and Shen (BBSS),
-with digit set $\{-1,0,1,2\}$. Filters at the BBSS depth gain little ($0.2830\to\TBBSSFthree$), but depth $4$ already
-gives $\TBBSSFfour$ and depth $\Tbestdepth$ gives $\Tbest$, under the standard heuristics. Searches at depths up to $9$
-found nothing better, so the exponent appears to converge to about $0.269$.\ifincludemeetlwe{} The same filters improve May's
-Meet-LWE attack on ternary keys by $\MLgainmin$--$\MLgainmax$ in the exponent for key weights $\omega\ge0.375$
-(asymptotically), again with deeper trees.\fi{} We check the accounting against a survival recursion that every
-reported optimum satisfies, prove that the filters cannot bias the survival of the planted solution, and test the
-remaining independence assumptions by simulation.
+Dubiner's bucketing codes, used as type-class filters on representation coordinates, let a merge avoid generating
+matched pairs with the wrong split pattern. We show that in representation trees their main effect is to make depth
+pay. For random density-one Subset Sum they improve the exponent of Bonnetain, Bricout, Schrottenloher and Shen from
+$\TBBSSUthree$ (our recomputation) to $\Tbest$, at depth $\Tbestdepth$; no better point was found up to depth $9$.
+\ifincludemeetlwe For May's Meet-LWE on ternary keys they improve the asymptotic exponent by $\MLgainmin$--$\MLgainmax$
+for key weights $\omega\ge0.375$. \fi Filters can pay only at merges where most matched pairs have the wrong split
+pattern, and do pay where such merges bind; we show both where this holds and where it fails. A survival recursion
+justifies the accounting, a symmetry lemma shows that the filters cannot bias the planted solution, and simulations
+support the remaining heuristics.
 \end{abstract}
 
 \section{Introduction}
@@ -102,12 +99,30 @@ May and Ozerov's consistency filtering~\cite{Oze16} and the locality-sensitive f
 Laarhoven~\cite{BDGL16} and Christiani~\cite{Chr17} are in the same line. Our filters are Dubiner's codes specialised
 to a representation merge, an idea whose reach in representation algorithms has not been fully exploited.
 
+\paragraph{A worked example.} Take the top merge of the HGJ tree~\cite{HGJ10}. The solution $x_0\in\{0,1\}^n$ of
+weight $n/2$ is written as $x+y$ with $x,y$ of weight $n/4$ and disjoint supports, and two lists of such vectors are
+joined on $\langle a,\cdot\rangle$ modulo $M$. \emph{Why there is waste:} a random pair of weight-$n/4$ vectors is
+disjoint with probability $\binom{3n/4}{n/4}/\binom{n}{n/4}=2^{pn+o(n)}$, where
+$p=\tfrac34h(\tfrac13)-h(\tfrac14)=H(\sigma)-2H(\delta)\approx-0.1226$, so almost every modular match overlaps and is
+discarded. \emph{How a filter removes it:} take a random $u\in\{L,R\}^n$ with $n/2$ labels $L$, let $x$ enter $u$ if
+its support lies in the $L$-coordinates and $y$ if its support lies in the $R$-coordinates, and match only vectors
+that entered the same $u$. A disjoint pair enters a common $u$ with probability $2^{-I(XY;\Lambda)n}=2^{-n/2}$, a single
+vector with probability $\binom{n/2}{n/4}/\binom{n}{n/4}=2^{-I(X;\Lambda)n}$, $I(X;\Lambda)=I(Y;\Lambda)\approx0.3113$, and an
+overlapping pair never. The saving $I(X;\Lambda)+I(Y;\Lambda)-I(XY;\Lambda)\approx0.1226$ is the whole waste: every pair
+generated is valid. The price is that each vector lies in $2^{(I(XY;\Lambda)-I(X;\Lambda))n}=2^{0.1887n}$ filters,
+which here costs more than the whole algorithm ($0.3113+0.1887=0.5$). \emph{Where it pays:} not at this merge, which
+does not bind; in the HGJ tree of depth $3$ it examines $2^{0.1226n}$ pairs against $T=0.3371$. The binding merges are
+the two below it, with smaller waste, $p_2\approx-0.026$ and $p_3\approx-0.006$, and there softer labellings, in which
+the labels are only correlated with the digits, save $0.010$ and $0.006$ at an acceptable entry cost, giving
+$0.3371\to0.3269$ (Table~\ref{tab:depth}; \texttt{floor/hgj\_example.py}). So filters can pay only where
+$2^{p_jn}\ll1$, and do pay where such a merge binds; when they make the upper merges cheap, extra levels pay too.
+
 \paragraph{The story.} At each merge of a representation tree, two lists are joined on a modular constraint, and
 only a fraction $2^{p_jn}$ of the matching pairs have the right split pattern. Filtering the pairs by their joint
-coordinate type, so that pairs with the wrong pattern are never generated, saves at most this waste, so filters pay
-exactly where $2^{p_jn}\ll1$; we find this both where they pay and where they do not
-(Section~\ref{sec:results}\ifincludemeetlwe{} and Section~\ref{sec:meetlwe}\fi). On the BBSS tree at its own depth the
-filters gain only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
+coordinate type, so that pairs with the wrong pattern are never generated, saves at most this waste, so filters can
+pay only where $2^{p_jn}\ll1$, and do pay where such merges bind; we find this both where they pay and where they do
+not (Section~\ref{sec:results}\ifincludemeetlwe{} and Section~\ref{sec:meetlwe}\fi). On the BBSS tree at its own depth
+the filters gain only about $0.004$ ($0.2830\to\TBBSSFthree$). BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
 of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
 levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.
 Filters change exactly this. They make the upper merges cheap, so additional levels, which shrink the lists, start to
@@ -124,7 +139,9 @@ weights $\omega\ge0.375$; the gain appears at the first extra level that the fil
 
 \paragraph{What is new.} Filtering of representation trees is due to May and Ozerov~\cite{Oze16}, for the HGJ and BCJ
 digit sets at depth at most $3$. Filters combined with depth are known in decoding, from Both and May~\cite{BM17b,BM18}.
-New here are filters on the BBSS digit set $\{-1,0,1,2\}$, trees of depth $d\ge4$, and the soundness analysis.
+New here are filters on the BBSS digit set $\{-1,0,1,2\}$, trees of depth $d\ge4$, and the soundness
+analysis\ifincludemeetlwe, and the first use of such filters in Meet-LWE, where they improve May's exponents once the
+split laws are re-optimised\fi.
 
 \paragraph{Contributions.}
 \begin{enumerate}
@@ -531,12 +548,12 @@ as a non-binary root with a fast join, non-modular information, or a top level t
 more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\cite{BBSS20}; non-binary roots and non-enumerative
 top levels; wider digit sets, which add at most about $0.0003$ at fixed depth; and transferring the
 observation to decoding trees and to other ternary-LWE trees, where merges also generate pairs with the wrong split
-pattern\ifincludemeetlwe{} (for Meet-LWE, Section~\ref{sec:meetlwe}; at May's published parameters the filters gain
-nothing, because the binding merges there have little pattern waste)\fi.
+pattern\ifincludemeetlwe{} (for Meet-LWE, see Section~\ref{sec:meetlwe})\fi.
 
 For designers of representation algorithms the takeaway is a simple test: at each merge, compute
-$p_j=H(\sigma_j)-2H_j$. Where $2^{p_jn}\ll1$, Dubiner filters pay, and they free the depth that waste otherwise
-prevents; where $p_j\approx0$ they cannot help.
+$p_j=H(\sigma_j)-2H_j$. Dubiner filters can pay only where $2^{p_jn}\ll1$, and do pay where such a merge binds,
+and then they free the depth that the waste otherwise prevents; where $p_j\approx0$ they cannot help, and where the
+wasteful merge does not bind (the HGJ top merge, the sparse-key HKLS top merge) they do not.
 Lattice-based hybrids, such as guessing combined with batch-CVP, may be competitive at density one; whether they can be combined with filtered representation trees is open.
 
 \appendix
