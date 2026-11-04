@@ -65,13 +65,17 @@ for om, L in zip(OMS, LET):
     rows.append(f"${om}$ & ${MAY_PUB[om]:.3f}$ & ${may_re[om]:.4f}$ & ${Pd[3]:.4f}$ / ${Fd[3]:.4f}$ & ${Pd[4]:.4f}$ / ${Fd[4]:.4f}$"
                 f" & ${Tp:.4f}$ ({dp}) & ${Tf:.4f}$ ({df}) & ${g:.4f}$ \\\\")
 hi = [gains[o] for o in OMS if float(o) >= 0.375]
-B = os.path.join(HERE, "runs", "bias_sim_meetlwe2.log")         # filter bias simulation (check 4)
-for line in (open(B) if os.path.exists(B) else []):
-    m = re.match(r"filter (on|off).*mean sigma ([\d.]+)\s+planted survival ([\d.]+) \+- ([\d.]+)", line)
-    if m:
-        t = "On" if m.group(1) == "on" else "Off"
-        mac += [f"\\newcommand{{\\MLbias{t}}}{{{float(m.group(3)):.3f}\\pm{float(m.group(4)):.3f}}}",
-                f"\\newcommand{{\\MLbias{t}Sig}}{{{float(m.group(2)):.3f}}}"]
+pool = {}                                                     # filter bias simulation (check 4), pooled over runs
+for B in glob.glob(os.path.join(HERE, "runs", "bias_sim_meetlwe2*.log")):
+    for line in open(B):
+        m = re.match(r"filter (on|off).*mean sigma ([\d.]+)\s+planted survival ([\d.]+) \+- [\d.]+\s+\((\d+) draws", line)
+        if m:
+            k = pool.setdefault(m.group(1), [0, 0.0, 0.0]); N = int(m.group(4))
+            k[0] += N; k[1] += N * float(m.group(2)); k[2] += N * float(m.group(3))
+for arm, (N, S, Sv) in pool.items():
+    t = "On" if arm == "on" else "Off"; pv = Sv / N; se = (pv * (1 - pv) / N) ** 0.5
+    mac += [f"\\newcommand{{\\MLbias{t}}}{{{pv:.3f}\\pm{se:.3f}}}", f"\\newcommand{{\\MLbias{t}Sig}}{{{S / N:.3f}}}",
+            f"\\newcommand{{\\MLbias{t}N}}{{{N}}}"]
 for fx in glob.glob(os.path.join(HERE, "runs", "ml_fixed_law_w*_d*.log")):     # filters at fixed split laws
     for line in open(fx):
         m = re.match(r"omega ([\d.]+) d (\d+): .*fixed split laws ([\d.]+)", line)
