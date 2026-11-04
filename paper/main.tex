@@ -21,7 +21,8 @@
 \newif\ifincludefloor \includefloorfalse     % Section: list-size floor   -- Nick to decide
 \newif\ifincludemeetlwe \includemeetlwetrue  % Section: Meet-LWE (wc handoff26); on by Nick's decision, 4 Nov (off = subset-sum-only build)
 % repository and archive (Nick fills in when the release is made; hidden in the anonymous build)
-\newcommand{\repourl}{https://github.com/nickhg/subset-sum-with-lsh}
+\newcommand{\repourl}{https://github.com/nickhg/REPO}   % the public repository, once it exists
+\newif\ifpublicrepo \publicrepofalse   % \publicrepotrue once \repourl is a public repository
 \newif\ifrelease \releasefalse   % \releasetrue once \reporelease and \repodoi are set
 \newcommand{\reporelease}{v1.0}
 \newcommand{\repodoi}{10.5281/zenodo.XXXXXXX}
@@ -590,9 +591,10 @@ survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2
 \end{table}
 
 \section*{Data and code availability}
-\begin{itemize}
-\item \emph{Code:} \ifanonymous an anonymised repository is available to the reviewers\else
-  \url{\repourl}\ifrelease; release \reporelease{} matches this version of the paper and is archived on Zenodo,
+\begin{itemize}\sloppy
+\item \emph{Code:} \ifanonymous an anonymised repository is available to the reviewers\else\ifpublicrepo
+  \url{\repourl}\else available from the author on request, and to be released in a public repository with the
+  final version\fi\ifrelease; release \reporelease{} matches this version of the paper and is archived on Zenodo,
   \href{https://doi.org/\repodoi}{doi:\repodoi}\fi\fi. It contains the tree model and optimiser
   (\texttt{gen\_lsf.py}, \texttt{gen\_opt.py}, \texttt{cloud/polish\_worker.py}), the independent evaluators
   (\texttt{floor/recost.py}\ifincludemeetlwe, \texttt{ntru\_hybrid/ml\_recost.py}, \texttt{ntru\_hybrid/may\_rep1.py}\fi),
