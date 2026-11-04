@@ -418,7 +418,7 @@ merges split without cancellations (each child carries half of the parent's weig
 then almost always valid (two random weight-$10$ vectors in dimension about $2000$ have disjoint supports with
 probability about $2^{-0.04}$); the filters save about $3.7$ bits only at the top merge, which has cancellations but
 does not bind, and gain nothing.\ifincludemeetlwe{} In Meet-LWE at May's own parameters the binding merges have $p_j\ge-0.06$, and the
-filters gain little until the split laws are re-optimised (Section~\ref{sec:meetlwe}).\fi
+filters gain nothing until the split laws are re-optimised (Section~\ref{sec:meetlwe}).\fi
 
 \paragraph{Memory.} The memory exponent, the largest of the leaf lists, the stored lists and the filter entries
 $\ell_j+I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, is $\Memfour$ at depth~$4$ and $\Memseven$ at depth~$7$
@@ -522,7 +522,7 @@ more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\c
 top levels; wider digit sets, which add at most about $0.0003$ at fixed depth; and transferring the
 observation to decoding trees and to other ternary-LWE trees, where merges also generate pairs with the wrong split
 pattern\ifincludemeetlwe{} (for Meet-LWE, Section~\ref{sec:meetlwe}; at May's published parameters the filters gain
-little, because the binding merges there have little pattern waste)\fi.
+nothing, because the binding merges there have little pattern waste)\fi.
 
 For designers of representation algorithms the takeaway is a simple test: at each merge, compute
 $p_j=H(\sigma_j)-2H_j$. Where $2^{p_jn}\ll1$, Dubiner filters pay, and they free the depth that waste otherwise

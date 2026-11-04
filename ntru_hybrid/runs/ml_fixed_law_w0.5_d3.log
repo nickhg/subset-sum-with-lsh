@@ -1,0 +1,9 @@
+restart 0: 0.354824 best 0.354823
+restart 1: 0.354824 best 0.354823
+restart 2: 0.354824 best 0.354823
+restart 3: 0.368852 best 0.354823
+restart 4: 0.354824 best 0.354823
+restart 5: 0.365046 best 0.354823
+restart 6: 0.354835 best 0.354823
+restart 7: 0.365108 best 0.354823
+omega 0.5 d 3: unfiltered 0.354823  filters at fixed split laws 0.354823  (recost 0.354823)
