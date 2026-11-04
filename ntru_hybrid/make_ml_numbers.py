@@ -72,10 +72,15 @@ for B in glob.glob(os.path.join(HERE, "runs", "bias_sim_meetlwe2*.log")):
         if m:
             k = pool.setdefault(m.group(1), [0, 0.0, 0.0]); N = int(m.group(4))
             k[0] += N; k[1] += N * float(m.group(2)); k[2] += N * float(m.group(3))
+ctl = os.path.join(HERE, "runs", "bias_sim_meetlwe2_ctrl_on.log")      # no planted parent, filters on (handoff30)
+for line in (open(ctl) if os.path.exists(ctl) else []):
+    m = re.match(r"unplanted, filter on .*= ([\d.]+) \+- ([\d.]+)\s+\((\d+) draws", line)
+    if m:
+        mac += [f"\\newcommand{{\\MLctlOn}}{{{float(m.group(1)):.3f}\\pm{float(m.group(2)):.3f}}}", f"\\newcommand{{\\MLctlOnN}}{{{m.group(3)}}}"]
 for arm, (N, S, Sv) in pool.items():
     t = "On" if arm == "on" else "Off"; pv = Sv / N; se = (pv * (1 - pv) / N) ** 0.5
     mac += [f"\\newcommand{{\\MLbias{t}}}{{{pv:.3f}\\pm{se:.3f}}}", f"\\newcommand{{\\MLbias{t}Sig}}{{{S / N:.3f}}}",
-            f"\\newcommand{{\\MLbias{t}N}}{{{N}}}"]
+            f"\\newcommand{{\\MLbias{t}N}}{{{N}}}", f"\\newcommand{{\\MLbias{t}Z}}{{{(pv - S / N) / se:+.1f}}}"]
 for fx in glob.glob(os.path.join(HERE, "runs", "ml_fixed_law_w*_d*.log")):     # filters at fixed split laws
     for line in open(fx):
         m = re.match(r"omega ([\d.]+) d (\d+): .*fixed split laws ([\d.]+)", line)
