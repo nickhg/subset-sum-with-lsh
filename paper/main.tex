@@ -47,8 +47,8 @@ Their main effect is that they make depth pay. In an unfiltered tree the upper m
 whatever the depth; filtered upper merges are cheap enough for extra levels to pay. For random Subset Sum at density
 one, the best published heuristic exponent is $0.2830$, due to Bonnetain, Bricout, Schrottenloher and Shen (BBSS),
 with digit set $\{-1,0,1,2\}$. Filters at the BBSS depth gain little ($0.2830\to\TBBSSFthree$), but depth $4$ already
-gives $\TBBSSFfour$; the best point we computed is $\Tbest$, at depth $\Tbestdepth$, and the exponent converges to
-about $0.272$ as the depth grows, under the standard heuristics.\ifincludemeetlwe{} The same filters improve May's
+gives $\TBBSSFfour$ and depth $\Tbestdepth$ gives $\Tbest$, under the standard heuristics. Searches at depths up to $9$
+found nothing better, so the exponent appears to converge to about $0.269$.\ifincludemeetlwe{} The same filters improve May's
 Meet-LWE attack on ternary keys by $\MLgainmin$--$\MLgainmax$ in the exponent for key weights $\omega\ge0.375$
 (asymptotically), again with deeper trees.\fi{} We check the accounting against a survival recursion that every
 reported optimum satisfies, prove that the filters cannot bias the survival of the planted solution, and test the
@@ -111,8 +111,8 @@ filters gain only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the 
 of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
 levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.
 Filters change exactly this. They make the upper merges cheap, so additional levels, which shrink the lists, start to
-pay; at the depth-4 optimum the costs of all four merges tie, and at greater depth the binding merges are the
-middle ones, while the top merge and the sparse bottom merges fall below $T$. This gives the improvement
+pay; at the depth-4 optimum the costs of all four merges tie, and at the depth-5 optimum the top four tie while
+the sparse bottom merge falls below $T$. This gives the improvement
 $0.2830\to\Tbest$ (Section~\ref{sec:results}): about $\GainFiltersPct\%$ of it comes from the filters at fixed depth,
 and $\GainDepthPct\%$ from the depth they make affordable. In decoding the analogous effect is known: with
 near-neighbour search at every level, BJMM-type trees improve up to depth~$4$~\cite{BM17b,BM18}.
@@ -130,8 +130,8 @@ New here are filters on the BBSS digit set $\{-1,0,1,2\}$, trees of depth $d\ge4
 \begin{enumerate}
 \item Type-class filtered $\tau$-merges on representation trees with general digit sets, with cost terms in closed
 form and the observation that the filter law only matters through its label type (Section~\ref{sec:filter}).
-\item An optimisation of the BBSS tree with filters at every merge, for depths $d\le8$: $\TBBSSFfour$ at depth $4$
-and $\Tbest$ at depth $\Tbestdepth$, with the exponent converging to about $0.272$ (Section~\ref{sec:results}).
+\item An optimisation of the BBSS tree with filters at every merge, for depths $d\le9$: $\TBBSSFfour$ at depth $4$
+and $\Tbest$ at depth $\Tbestdepth$, with nothing better found at greater depth (Section~\ref{sec:results}).
 \item Soundness of the accounting: a survival recursion that is satisfied with equality by every reported optimum,
 and a symmetry lemma showing that the planted solution survives each filtered merge with exactly the average
 probability (Section~\ref{sec:sound}).
@@ -146,7 +146,7 @@ Lemma~\ref{lem:filter}, Proposition~\ref{prop:cost} (given the heuristics), Rema
 Proposition~\ref{prop:decode}, the survival recursion together with the check that every reported optimum satisfies
 it, and Lemma~\ref{lem:sym}. Assumed are Heuristics~\ref{heur:lists} and~\ref{heur:filter}, which the experiments of
 Section~\ref{sec:exp} support. Numerical are the exponents: each is the best point the optimiser found, not a proven
-optimum of the model, and the depth limit of about $0.272$ is a fit.
+optimum of the model, and the limit of about $0.269$ is the observation that depths $6$--$9$ gave nothing better.
 
 \paragraph{Related work.} Consistency filtering for HGJ and BCJ trees is in Ozerov's thesis~\cite[Ch.~2,
 \S4.2]{Oze16}, reporting joint work with May, which leaves digits $\pm2$ as an open question~\cite[after
@@ -396,23 +396,26 @@ $2^{(\TBBSSFfour+o(1))n}$ with depth $4$. The $o(1)$ comes from filter decoding 
 \end{theorem}
 
 \paragraph{Structure of the optimum.} Table~\ref{tab:params4} gives the depth-4 point. The filtered passing costs of
-all four merges tie at $T$. At this point the filters save $0.066$ and $0.049$ at the dense levels $1$--$2$, only $0.009$ at
+all four merges tie at $T$. At this point the filters save $0.089$ and $0.044$ at the dense levels $1$--$2$, only $0.011$ at
 level~$3$, and nothing at the last merge. The deficit at level $2$ is paid by the root excess, and the survival
-recursion is tight. The deeper optima (Tables~\ref{tab:params5}--\ref{tab:params8}) filter at the dense top levels \emph{and} at the sparse level near the
-bottom where $1\to(2,-1)$ splits dominate ($I(XY;\Lambda)=0.21$, $0.27$, $0.28$ at $d=5,6,7$). There the lists are
-mostly zeros: at $d=6$ the bottom level has $\delta_6(1)=0.0049$ against $\delta_6(2)=0.0112$ and
-$\delta_6(-1)=0.0194$, so it consists mainly of $2$s and $-1$s split from the level-$5$ ones. Lemma~\ref{lem:sym} holds at every level, sparse ones included,
-so these merges need no separate bias argument (see also Section~\ref{sec:exp}).
+recursion is tight. The depth-5 optimum (Table~\ref{tab:params5}) keeps this shape one level further down: the
+filters save $0.088$, $0.071$ and $0.068$ at the top three merges, $0.009$ at the fourth and nothing at the last, and
+the bottom level is sparse ($\delta_5(0)=0.92$) with almost no $2$s. The extra level pays because it lets the third
+merge, where pattern waste is still large, be filtered at smaller lists. From depth $6$ on the best points are copies
+of the depth-$5$ point (Table~\ref{tab:depth}); independent searches at depths $6$--$9$ came within $0.0001$ of it but
+not below. Lemma~\ref{lem:sym} holds at every level, sparse ones included, so these merges need no separate bias
+argument (see also Section~\ref{sec:exp}).
 
 \paragraph{Where filters pay.} The column $p_j=H(\sigma_j)-2H_j$ of the parameter tables is the log-probability that a
-random matched pair is a valid split, and a filter can only save what this pattern waste costs. At the depth-$7$
-point $p_j$ is $-0.33$ and $-0.09$ at the two top merges, $-0.05$ and $-0.005$ in the middle, and $-0.18$ at the sparse
-level~$6$, and the savings follow the same profile. At the dense top levels a random pair has overlapping supports. At
-the sparse bottom levels the dominant split $1\to(2,-1)$ needs a $2$ and a $-1$ on the same coordinate, which random
-pairs rarely have. In the middle levels supports are sparse and the splits are mostly $1\to(1,0)$, so a random matched
-pair is almost always valid and there is nothing to filter.
+random matched pair is a valid split, and a filter can only save what this pattern waste costs. At the depth-$5$
+point $p_j$ is $-0.36$, $-0.11$ and $-0.13$ at the top three merges, and $-0.05$ and $-0.006$ at the two bottom ones,
+and the savings follow the same profile. At the dense top levels a random pair has overlapping supports, and the
+cancellations $0\to(1,-1)$ and $1\to(2,-1)$ need matching digits on the same coordinate, which random pairs rarely
+have. At the sparse bottom levels supports rarely meet and the splits are mostly $1\to(1,0)$, so a random matched
+pair is almost always valid and there is nothing to filter. (At earlier, slightly worse depth-$6$ and $7$ optima, a
+sparse level dominated by $1\to(2,-1)$ splits carried waste $p_j\approx-0.18$ and was filtered as well.)
 
-\paragraph{Where filters do not pay.} The same test predicts the failures. In the middle levels above, $p_j\approx0$
+\paragraph{Where filters do not pay.} The same test predicts the failures. At the bottom levels above, $p_j\approx0$
 and the filters are nearly inactive. In the sparse-key trees of Hhan, Kim, Lee and Son~\cite{HKLS26} the binding
 merges split without cancellations (each child carries half of the parent's weight), and a random matched pair is
 then almost always valid (two random weight-$10$ vectors in dimension about $2000$ have disjoint supports with
@@ -421,7 +424,7 @@ does not bind, and gain nothing.\ifincludemeetlwe{} In Meet-LWE at May's own par
 filters gain nothing until the split laws are re-optimised (Section~\ref{sec:meetlwe}).\fi
 
 \paragraph{Memory.} The memory exponent, the largest of the leaf lists, the stored lists and the filter entries
-$\ell_j+I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, is $\Memfour$ at depth~$4$ and $\Memseven$ at depth~$7$
+$\ell_j+I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, is $\Memfour$ at depth~$4$ and $\Memfive$ at depth~$5$
 (last line of each parameter table). At every reported point it equals or nearly equals the time, because the entry
 terms tie with the passing terms at the optimum. The gain over BBSS,
 $\GainTotal$ (from our recomputed $0.2831$), splits into $\GainFilters$ from filters at depth $3$ and $\GainDepth$ from the extra depth.
@@ -446,21 +449,28 @@ All exponents are per $n$.}
 \label{tab:params4}
 \end{table}
 
-\paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$,
-$\TBBSSFsix$, $\TBBSSFseven$, $\TBBSSFeight$ for $d=3,\dots,8$ (Table~\ref{tab:depth}). Each is a computed point, the
-best found over all starts, not a proven optimum of the model, so $\Tbest$ is not a lower bound for it. The gains
-shrink roughly geometrically. Fits of $T_d=T_\infty+Ar^d$ to subsets of these values give $T_\infty$ between $0.2716$
-and $0.2724$ and $r$ between $0.22$ and $0.60$; the fit is sensitive to the last digits, which depend on the starting
-point of the search, so we only claim that the exponent converges to about $0.272$. Deeper trees alone therefore do not lead to subexponential time within this accounting.
+\paragraph{Saturation.} The exponent saturates with depth: $\TBBSSFthree$, $\TBBSSFfour$, $\TBBSSFfive$ for
+$d=3,4,5$, and $\TBBSSFfive$ again for $d=6,\dots,9$ (Table~\ref{tab:depth}). Each is a computed point, the best found
+over all starts, not a proven optimum of the model, so $\Tbest$ is not a lower bound for it. At depths $6$--$9$ we
+searched from the depth-$5$ point extended by one level (trivially, by grafting a copy of a level, and with a new
+sparse bottom level), from the earlier deeper optima and from random perturbations, for several hundred CPU hours;
+the best independent points reached $0.26896$--$0.26906$, and none went below the depth-$5$ value. This is what the
+structure of the point leads one to expect. At depth $4$ the bottom merge and the leaves bind ($0.2727$ and $0.2725$),
+so a fifth level pays; at depth $5$ they are slack ($0.2670$ and $0.2372$ against $T=\Tbest$), and $T$ is set by
+the top four merges, whose costs depend only on levels $1$--$4$. A further level can only make the slack bottom
+cheaper, which is the saturation of~\cite[Remark~4]{BBSS20}, moved from depth $3$ to depth $5$ by the filters. A
+deeper tree with different upper levels is not excluded by this argument, but our searches found none. We therefore claim
+only that the exponent converges to about $0.269$. Deeper trees alone do not lead to subexponential time within this
+accounting.
 
 \paragraph{Wider digit sets.} Once both digit sets are optimised from the same starting points, adding the digit
-$-2$ gains little: at depth $4$ the best $\{-1,0,1,2\}$ point, $\TBBSSFfour$, already beats $\{-2,\dots,2\}$'s
-$0.2740$, at depth $6$ the gain is $0.0001$, and at depth $5$ it is $0.0003$ ($\TBBSSFfive$ against $0.2727$). The digit $3$ has zero marginal value, since it can only arise from
+$-2$ gains little: in such matched comparisons at earlier optima the gain was nothing at depth $4$, $0.0003$ at depth
+$5$ and $0.0001$ at depth $6$ (we did not repeat them at the final points). The digit $3$ has zero marginal value, since it can only arise from
 splitting a $2$, and an optimisation over $\{-4,\dots,4\}$ did not converge and was stopped. We therefore keep the BBSS
 digit set $\{-1,0,1,2\}$ throughout.
 
-\paragraph{Label sets.} Re-optimising the filters at depth $5$ with a $4$-symbol label set, warm-started from the
-$3$-symbol optimum, gives $0.273224$ against $0.273335$: a gain of $0.0001$, so $3$-symbol filters appear essentially
+\paragraph{Label sets.} Re-optimising the filters at an earlier depth-$5$ point with a $4$-symbol label set,
+warm-started from the $3$-symbol optimum, gives $0.273224$ against $0.273335$: a gain of $0.0001$, so $3$-symbol filters appear essentially
 optimal.
 
 \section{Experimental validation}\label{sec:exp}
@@ -490,11 +500,11 @@ the modulus is capped at $2^{56}$ (density $1.14$).}
 \label{tab:survival}
 \end{table}
 
-\paragraph{Filter bias.} A filtered merge at $n=32$ shaped like the level-2 merge of the optimum (complete coset
+\paragraph{Filter bias.} A filtered merge at $n=32$ shaped like the level-2 merge of an earlier depth-4 optimum (complete coset
 lists of about $1900$ elements, a $3$-symbol label set from the optimum's conditionals, $300$ draws): the planted
 parent survives with probability $\BiasOffPlanted$ against mean $\sigma=\BiasOffSigma$ without filters, and
 $\BiasOnPlanted\pm\BiasOnSE$ against $\BiasOnSigma$ with filters, as Lemma~\ref{lem:sym} predicts. A second merge at $n=20$ is shaped like
-the sparse bottom merge of the depth-6 optimum: the parent has four $1$s and two $-1$s, and the children have two
+the sparse bottom merge of an earlier depth-6 optimum: the parent has four $1$s and two $-1$s, and the children have two
 $2$s and three $-1$s, joined by $1\to(2,-1)$ and $-1\to(-1,0)$ (\texttt{floor/bias\_sim\_sparse.py}, $400$ draws).
 The planted parent survives with probability $0.598\pm0.025$ against $\sigma=0.611$ without filters, and
 $0.438\pm0.025$ against $0.445$ with filters.
@@ -516,7 +526,7 @@ So the exactly tight root condition needs no extra excess.
 
 \section{Conclusion and open problems}
 Filters and depth attack the same waste from two sides, and together they give $\Tbest$; with depth the exponent
-converges to about $0.272$. What remains is merge cost, so going substantially lower needs a structural change, such
+converges to about $0.269$. What remains is merge cost, so going substantially lower needs a structural change, such
 as a non-binary root with a fast join, non-modular information, or a top level that is not enumerated, rather than
 more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\cite{BBSS20}; non-binary roots and non-enumerative
 top levels; wider digit sets, which add at most about $0.0003$ at fixed depth; and transferring the
@@ -535,32 +545,20 @@ In the numerical model the filter law $\pi$ is a free parameter; at one optimum 
 formal code rates of $34n$ and $128n$ at two levels, while all costs were unchanged on resetting $\pi=Q_\Lambda$
 (Remark~\ref{rem:piQ}). The rates in the tables are at $\pi=Q_\Lambda$.
 
-Tables~\ref{tab:params5}--\ref{tab:params8} give the depth-5 to depth-8 points (columns as in
-Table~\ref{tab:params4}). The points are stored as
-\begin{center}\small\texttt{\Srcfour}\quad(depth 4)\\ \texttt{\Srcfive}\quad(depth 5)\\ \texttt{\Srcsix}\quad(depth 6)\\
-\texttt{\Srcseven}\quad(depth 7)\\ \texttt{\Srceight}\quad(depth 8)\end{center}
+Table~\ref{tab:params5} gives the depth-5 point (columns as in Table~\ref{tab:params4}); the best points at depths
+$6$--$8$ are its trivial extensions. The points are stored as
+\begin{center}\small\texttt{\Srcfour}\quad(depth 4)\\ \texttt{\Srcfive}\quad(depth 5)\\
+\texttt{\Srcsix}, \dots, \texttt{\_8\_f\_cloud.npy}\quad(depths 6--8)\end{center}
+and were checked by an independent re-costing (\texttt{floor/recost.py}) and against the survival recursion S2
+(\texttt{floor/finalize\_cloud.py}). The Meet-LWE points are in \texttt{ntru\_hybrid/points/}, generated into the paper
+by \texttt{ntru\_hybrid/make\_ml\_numbers.py}.
 All numbers in this paper are generated by
 \texttt{floor/make\_numbers.py}; the model is \texttt{gen\_lsf.py}, the optimiser \texttt{gen\_opt.py}, and the
 survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2).
 \begin{table}[ht]
 \centering\small
 \input{params_d5}
-\caption{The depth-5 point.}\label{tab:params5}
-\end{table}
-\begin{table}[ht]
-\centering\small
-\input{params_d6}
-\caption{The depth-6 point.}\label{tab:params6}
-\end{table}
-\begin{table}[ht]
-\centering\small
-\input{params_d7}
-\caption{The depth-7 point.}\label{tab:params7}
-\end{table}
-\begin{table}[ht]
-\centering\small
-\input{params_d8}
-\caption{The depth-8 point.}\label{tab:params8}
+\caption{The depth-5 point, the best computed.}\label{tab:params5}
 \end{table}
 
 \begin{thebibliography}{99}

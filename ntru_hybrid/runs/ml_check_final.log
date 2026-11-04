@@ -1,0 +1,60 @@
+w0.3 d3 p: model 0.297187 recost 0.297187 may 0.297187  OK?  bind merge2,list3,merge3  p -0.140 -0.058 -0.011
+w0.3 d3 f: model 0.293614 recost 0.293614  OK?  bind entry2,merge2,list3,entry3,merge3  flags I3~0  p -0.140 -0.065 -0.014
+w0.3 d4 p: model 0.297503 recost 0.297503 may 0.297503  OK?  bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002
+w0.3 d4 f: model 0.292229 recost 0.292229  OK?  bind entry1,entry2,entry3,merge3  p -0.164 -0.092 -0.031 -0.004
+w0.3 d5 p: model 0.297503 recost 0.297503 may 0.297503  OK?  bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002 -0.002
+w0.3 d5 f: model 0.291717 recost 0.291717  OK?  bind entry2,merge2,merge3,entry4,merge4  p -0.180 -0.115 -0.043 -0.005 -0.002
+w0.3 d6 p: model 0.297503 recost 0.297503 may 0.297503  OK?  bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002 -0.002 -0.000
+w0.3 d6 f: model 0.291534 recost 0.291534  OK?  bind entry2,merge2,entry3,merge3  p -0.180 -0.114 -0.044 -0.005 -0.002 -0.000
+w0.3 d7 p: model 0.297503 recost 0.297503 may 0.297503  OK?  bind merge2,merge3,merge4  p -0.137 -0.056 -0.010 -0.002 -0.001 -0.000 -0.000
+w0.3 d7 f: model 0.291534 recost 0.291534  OK?  bind entry2,merge2,entry3,merge3  p -0.180 -0.114 -0.044 -0.005 -0.002 -0.000 -0.000
+w0.375 d3 p: model 0.320834 recost 0.320834 may 0.320834  OK?  bind merge2,list3,merge3,leaves  p -0.130 -0.059 -0.013
+w0.375 d3 f: model 0.317699 recost 0.317699  OK?  bind entry2,merge2,leaves  p -0.122 -0.060 -0.013
+w0.375 d4 p: model 0.320626 recost 0.320626 may 0.320626  OK?  bind merge2,merge3,merge4  p -0.149 -0.071 -0.022 -0.004
+w0.375 d4 f: model 0.309230 recost 0.309230  OK?  bind entry1,merge2,entry3,merge3  p -0.165 -0.112 -0.047 -0.007
+w0.375 d5 p: model 0.320626 recost 0.320626 may 0.320626  OK?  bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002
+w0.375 d5 f: model 0.308242 recost 0.308242  OK?  bind entry1,entry2,merge2,merge3,merge5  p -0.174 -0.139 -0.067 -0.017 -0.005
+w0.375 d6 p: model 0.320626 recost 0.320626 may 0.320626  OK?  bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002 -0.000
+w0.375 d6 f: model 0.307568 recost 0.307568  OK?  bind entry1,entry2,merge3,merge4  p -0.179 -0.137 -0.072 -0.022 -0.005 -0.001
+w0.375 d7 p: model 0.320626 recost 0.320626 may 0.320626  OK?  bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002 -0.000 -0.000
+w0.375 d7 f: model 0.307568 recost 0.307568  OK?  bind entry1,entry2,merge3,merge4  p -0.179 -0.137 -0.072 -0.022 -0.005 -0.001 -0.000
+w0.441 d3 p: model 0.339319 recost 0.339319 may 0.339319  OK?  bind merge2,list3,merge3,leaves  p -0.124 -0.057 -0.014
+w0.441 d3 f: model 0.336367 recost 0.336367  OK?  bind entry2,merge2,entry3,leaves  p -0.118 -0.057 -0.014
+w0.441 d4 p: model 0.336892 recost 0.336892 may 0.336892  OK?  bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005
+w0.441 d4 f: model 0.321913 recost 0.321913  OK?  bind entry2,merge2,entry3,merge3,entry4  p -0.172 -0.120 -0.059 -0.013
+w0.441 d5 p: model 0.336892 recost 0.336892 may 0.336892  OK?  bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.003
+w0.441 d5 f: model 0.319842 recost 0.319842  OK?  bind entry1,entry2,merge2,entry4,entry5  p -0.186 -0.148 -0.088 -0.041 -0.006
+w0.441 d6 p: model 0.336892 recost 0.336892 may 0.336892  OK?  bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.003 -0.001
+w0.441 d6 f: model 0.319669 recost 0.319669  OK?  bind entry2,merge2,entry3,merge4  p -0.188 -0.151 -0.091 -0.036 -0.005 -0.003
+w0.441 d7 p: model 0.336892 recost 0.336892 may 0.336892  OK?  bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.003 -0.001 -0.000
+w0.441 d7 f: model 0.319669 recost 0.319669  OK?  bind entry2,merge2,entry3,merge4  p -0.188 -0.151 -0.091 -0.036 -0.005 -0.003 -0.001
+w0.5 d3 p: model 0.354823 recost 0.354823 may 0.354824  OK?  bind merge2,list3,merge3,leaves  p -0.130 -0.057 -0.015
+w0.5 d3 f: model 0.351799 recost 0.351799  OK?  bind entry2,merge2,entry3,leaves  p -0.124 -0.057 -0.015
+w0.5 d4 p: model 0.351081 recost 0.351081 may 0.351081  OK?  bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006
+w0.5 d4 f: model 0.335151 recost 0.335151  OK?  bind entry2,merge2,merge3  p -0.185 -0.117 -0.057 -0.014
+w0.5 d5 p: model 0.351081 recost 0.351081 may 0.351081  OK?  bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002
+w0.5 d5 f: model 0.334280 recost 0.334280  OK?  bind entry1,entry2,merge2,entry4,merge4  p -0.193 -0.139 -0.072 -0.024 -0.006
+w0.5 d6 p: model 0.351081 recost 0.351081 may 0.351081  OK?  bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002 -0.001
+w0.5 d6 f: model 0.334277 recost 0.334277  OK?  bind entry2,merge2  p -0.196 -0.137 -0.073 -0.024 -0.005 -0.002
+w0.5 d7 p: model 0.351081 recost 0.351081 may 0.351081  OK?  bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002 -0.001 -0.000
+w0.5 d7 f: model 0.334277 recost 0.334277  OK?  bind entry2,merge2  p -0.196 -0.137 -0.073 -0.024 -0.005 -0.002 -0.001
+w0.62 d3 p: model 0.387829 recost 0.387829 may 0.387829  OK?  bind merge2,list3,merge3,leaves  p -0.189 -0.067 -0.019
+w0.62 d3 f: model 0.382960 recost 0.382960  OK?  bind entry2,merge2,leaves  p -0.179 -0.065 -0.018
+w0.62 d4 p: model 0.387710 recost 0.387710 may 0.387710  OK?  bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005
+w0.62 d4 f: model 0.370813 recost 0.370813  OK?  bind entry1,entry2,merge2  p -0.200 -0.143 -0.056 -0.018
+w0.62 d5 p: model 0.387710 recost 0.387710 may 0.387710  OK?  bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003
+w0.62 d5 f: model 0.370149 recost 0.370149  OK?  bind entry2,merge2  p -0.202 -0.158 -0.073 -0.020 -0.009
+w0.62 d6 p: model 0.387710 recost 0.387710 may 0.387710  OK?  bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003 -0.001
+w0.62 d6 f: model 0.369873 recost 0.369873  OK?  bind entry1,entry2,merge2  p -0.202 -0.166 -0.069 -0.024 -0.010 -0.002
+w0.62 d7 p: model 0.387710 recost 0.387710 may 0.387710  OK?  bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003 -0.001 -0.000
+w0.62 d7 f: model 0.369775 recost 0.369775  OK?  bind entry1,entry2,merge2  p -0.199 -0.167 -0.062 -0.018 -0.008 -0.006 -0.001
+w0.667 d3 p: model 0.406810 recost 0.406810 may 0.406810  OK?  bind merge2,merge3  p -0.219 -0.067 -0.019
+w0.667 d3 f: model 0.396989 recost 0.396989  OK?  bind entry2,merge2,entry3,leaves  p -0.211 -0.074 -0.020
+w0.667 d4 p: model 0.406810 recost 0.406810 may 0.406810  OK?  bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009
+w0.667 d4 f: model 0.384319 recost 0.384319  OK?  bind entry1,entry2,merge2  p -0.224 -0.176 -0.060 -0.017
+w0.667 d5 p: model 0.406810 recost 0.406810 may 0.406810  OK?  bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002
+w0.667 d5 f: model 0.384319 recost 0.384319  OK?  bind entry1,entry2,merge2  p -0.224 -0.176 -0.060 -0.017 -0.008
+w0.667 d6 p: model 0.406810 recost 0.406810 may 0.406810  OK?  bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002 -0.001
+w0.667 d6 f: model 0.384253 recost 0.384253  OK?  bind entry2,merge2,entry5  p -0.225 -0.177 -0.067 -0.025 -0.010 -0.002
+w0.667 d7 p: model 0.406810 recost 0.406810 may 0.406810  OK?  bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002 -0.001 -0.000
+w0.667 d7 f: model 0.384253 recost 0.384253  OK?  bind entry2,merge2,entry5  p -0.225 -0.177 -0.067 -0.025 -0.010 -0.002 -0.001
