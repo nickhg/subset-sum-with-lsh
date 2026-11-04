@@ -12,6 +12,8 @@ A valid pair shares u iff u is L on A's own parent coordinates, R on B's and N o
 p = pL^(2a) pN^2,  K = round(1/p).
 Measured per draw: sigma = |output| / E[#parents with residue t], and whether S survives; filter off is the control.
 usage: bias_sim_meetlwe2.py [draws] [seed] [a] [q] [r]
+env ARMS=off|on|both (default both); UNPLANTED=1 also measures, without filters, E|O| / E|V_t| for a uniform target t
+(no planted parent), the right-hand side of Lemma sym without the planted conditioning.
 """
 import sys, itertools
 from math import comb
@@ -72,7 +74,21 @@ def run(filt):
 vectors_par = vectors(a)
 print(f"n={n} parent ({a},{a}) children ({h},{h}) q^r={q ** r} reps/parent {comb(a, a // 2) ** 2 * (n - 2 * a) * (n - 2 * a - 1)}"
       f"  list ~{len(vecs) / q ** r:.0f}  E_par {E_par:.1f}  pi {np.round(PI, 3)} K {K}", flush=True)
-for filt in (False, True):
+import os
+ARMS = {"off": (False,), "on": (True,), "both": (False, True)}[os.environ.get("ARMS", "both")]
+if os.environ.get("UNPLANTED"):
+    sizes = []
+    for _ in range(draws):
+        A = rng.integers(0, q, (r, n)); key = W @ residues(A, vecs, h); t = rng.integers(0, q, r); u = rng.integers(0, q, r)
+        LA, LB = vecs[key == W @ u], vecs[key == W @ ((t - u) % q)]
+        pa, ma = bit(LA[:, :h]).sum(1), bit(LA[:, h:]).sum(1); pb, mb = bit(LB[:, :h]).sum(1), bit(LB[:, h:]).sum(1)
+        PA, MA, PB, MB = pa[:, None], ma[:, None], pb[None, :], mb[None, :]; c1, c2 = PA & MB, MA & PB
+        pc = np.vectorize(lambda v: bin(int(v)).count("1"))
+        ia, ib = np.nonzero(((PA & PB) == 0) & ((MA & MB) == 0) & (pc(c1) == 1) & (pc(c2) == 1)); nn = c1[ia, ib] | c2[ia, ib]
+        sizes.append(len(np.unique(((pa[ia] | pb[ib]) & ~nn) * (np.int64(1) << 32) + ((ma[ia] | mb[ib]) & ~nn))))
+    print(f"unplanted, filter off: E|O| / E|V_t| = {np.mean(sizes) / (Npar / q ** r):.4f} +- {np.std(sizes) / np.sqrt(draws) / (Npar / q ** r):.4f}"
+          f"  ({draws} draws)", flush=True)
+for filt in ARMS:
     sig, hit = zip(*[run(filt) for _ in range(draws)])
     p = np.mean(hit); se = np.sqrt(p * (1 - p) / draws)
     print(f"filter {'on ' if filt else 'off'} (K={K if filt else 0}): mean sigma {np.mean(sig):.4f}   "
