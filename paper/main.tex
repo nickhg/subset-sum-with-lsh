@@ -19,9 +19,21 @@
 \newcommand{\todo}[1]{\textcolor{red}{[\textsc{todo}: #1]}}
 \newif\ifanonymous \anonymousfalse    % double-blind submission build: \anonymoustrue (also anonymise any repository link)
 \newif\ifincludefloor \includefloorfalse     % Section: list-size floor   -- Nick to decide
+\newif\ifincludemeetlwe \includemeetlwefalse % Section: Meet-LWE (wc handoff26) -- Nick switches on after the checks
+\newif\ifdubinertitle \dubinertitlefalse     % title "Dubiner filters ..." (wc handoff27) -- Nick to decide
 \input{numbers}
+\input{ml_numbers}
+\providecommand{\MLbiasOn}{??}\providecommand{\MLbiasOnSig}{??}\providecommand{\MLfixedD}{??}
 
-\title{Filtered merges make deeper representation trees pay:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
+\newcommand{\titlehead}{\ifdubinertitle Dubiner filters\else Filtered merges\fi{} make deeper representation trees pay}
+\newcommand{\pdfhead}{\ifdubinertitle Dubiner filters\else Filtered merges\fi\space make deeper representation trees pay}
+\ifincludemeetlwe
+\title{\titlehead:\\ Subset Sum and Meet-LWE}
+\edef\x{\noexpand\hypersetup{pdftitle={\pdfhead: Subset Sum and Meet-LWE}}}\x
+\else
+\title{\titlehead:\\ random Subset Sum in \texorpdfstring{$2^{\Tbest n}$}{2\^{}(\Tbest n)}}
+\edef\x{\noexpand\hypersetup{pdftitle={\pdfhead: random Subset Sum in 2\string^(\Tbest n)}}}\x
+\fi
 \ifanonymous\author{Anonymous submission}\else\author{Nick Howgrave-Graham}\fi
 \date{November 2026}
 \setlength{\emergencystretch}{2em}
@@ -29,16 +41,18 @@
 \maketitle
 
 \begin{abstract}
-For random Subset Sum at density one, the best published heuristic exponent is $0.2830$, due to Bonnetain, Bricout,
-Schrottenloher and Shen (BBSS), using representations with digit set $\{-1,0,1,2\}$. We add type-class
-(consistency) filters, in the line of Dubiner and of May and Ozerov, to the merges of the BBSS tree. At the BBSS depth
-the gain is small ($0.2830\to\TBBSSFthree$). However, the filters remove the reason why deeper trees did not help: in
-the unfiltered tree the upper merges stay the most expensive whatever the depth, whereas filtered upper merges are
-cheap enough for extra levels to pay. Depth $4$ already gives $\TBBSSFfour$; the best point we computed is $\Tbest$, at depth
-$\Tbestdepth$, and the exponent converges to about $0.272$ as the depth grows, under the standard heuristics. We check the accounting against a survival recursion that every
+We revisit the bucketing codes of Dubiner, in the form of type-class filters on the representation coordinates, and
+show where they pay in representation trees: at the merges where most matched pairs have the wrong split pattern.
+Their main effect is that they make depth pay. In an unfiltered tree the upper merges stay the most expensive
+whatever the depth; filtered upper merges are cheap enough for extra levels to pay. For random Subset Sum at density
+one, the best published heuristic exponent is $0.2830$, due to Bonnetain, Bricout, Schrottenloher and Shen (BBSS),
+with digit set $\{-1,0,1,2\}$. Filters at the BBSS depth gain little ($0.2830\to\TBBSSFthree$), but depth $4$ already
+gives $\TBBSSFfour$; the best point we computed is $\Tbest$, at depth $\Tbestdepth$, and the exponent converges to
+about $0.272$ as the depth grows, under the standard heuristics.\ifincludemeetlwe{} The same filters improve May's
+Meet-LWE attack on ternary keys by $\MLgainmin$--$\MLgainmax$ in the exponent for key weights $\omega\ge0.375$
+(asymptotically), again with deeper trees.\fi{} We check the accounting against a survival recursion that every
 reported optimum satisfies, prove that the filters cannot bias the survival of the planted solution, and test the
-remaining independence assumptions by simulation. The filters pay exactly at the merges where most matched pairs
-have the wrong split pattern.
+remaining independence assumptions by simulation.
 \end{abstract}
 
 \section{Introduction}
@@ -80,11 +94,20 @@ Ozerov's accounting gives HGJ $0.340$ rather than $0.337$, so the rows are not d
 \label{tab:history}
 \end{table}
 
+\paragraph{Dubiner's bucketing codes.} Dubiner~\cite{Dub10} introduced bucketing codes for the statistical
+nearest-neighbour problem: random codewords of a fixed type, into which each point is placed according to its joint
+type with the codeword, so that correlated pairs share a bucket far more often than independent ones. He gave the
+information-theoretic tradeoff that governs them, and our cost terms (Proposition~\ref{prop:cost}) instantiate it.
+May and Ozerov's consistency filtering~\cite{Oze16} and the locality-sensitive filters of Becker, Ducas, Gama and
+Laarhoven~\cite{BDGL16} and Christiani~\cite{Chr17} are in the same line. Our filters are Dubiner's codes specialised
+to a representation merge, an idea whose reach in representation algorithms has not been fully exploited.
+
 \paragraph{The story.} At each merge of a representation tree, two lists are joined on a modular constraint, and
-only a small fraction of the matching pairs have the right coordinate pattern. Filtering the pairs by their joint
-coordinate type, so that inconsistent pairs are never generated, is the consistency technique of May and
-Ozerov~\cite{Oze16}, which goes back to Dubiner's bucketing codes~\cite{Dub10}. On the BBSS tree at its own depth it
-gains only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
+only a fraction $2^{p_jn}$ of the matching pairs have the right split pattern. Filtering the pairs by their joint
+coordinate type, so that pairs with the wrong pattern are never generated, saves at most this waste, so filters pay
+exactly where $2^{p_jn}\ll1$; we find this both where they pay and where they do not
+(Section~\ref{sec:results}\ifincludemeetlwe{} and Section~\ref{sec:meetlwe}\fi). On the BBSS tree at its own depth the
+filters gain only about $0.004$. BBSS observed~\cite[Remark~4]{BBSS20} that the time ``is a decreasing function of the number
 of levels, which quickly reaches a minimum'', because ``adding one more level does not change the cost of the upper
 levels, which will remain the most expensive''; Ozerov makes the same observation for ternary trees~\cite[\S4.1]{Oze16}.
 Filters change exactly this. They make the upper merges cheap, so additional levels, which shrink the lists, start to
@@ -93,6 +116,11 @@ middle ones, while the top merge and the sparse bottom merges fall below $T$. Th
 $0.2830\to\Tbest$ (Section~\ref{sec:results}): about $\GainFiltersPct\%$ of it comes from the filters at fixed depth,
 and $\GainDepthPct\%$ from the depth they make affordable. In decoding the analogous effect is known: with
 near-neighbour search at every level, BJMM-type trees improve up to depth~$4$~\cite{BM17b,BM18}.
+\ifincludemeetlwe
+The same happens in May's Meet-LWE~\cite{May21}: once the split laws are re-optimised with filters, the denser
+levels carry pattern waste that the filters remove, and the exponent improves by $\MLgainmin$--$\MLgainmax$ for key
+weights $\omega\ge0.375$, with depth paying up to $\MLfdmin$--$\MLfdmax$ levels instead of at most $4$ (Section~\ref{sec:meetlwe}).
+\fi
 
 \paragraph{What is new.} Filtering of representation trees is due to May and Ozerov~\cite{Oze16}, for the HGJ and BCJ
 digit sets at depth at most $3$. Filters combined with depth are known in decoding, from Both and May~\cite{BM17b,BM18}.
@@ -108,6 +136,10 @@ and $\Tbest$ at depth $\Tbestdepth$, with the exponent converging to about $0.27
 and a symmetry lemma showing that the planted solution survives each filtered merge with exactly the average
 probability (Section~\ref{sec:sound}).
 \item Experiments testing survival, filter bias and sibling independence (Section~\ref{sec:exp}).
+\ifincludemeetlwe
+\item A second application: filtered Meet-LWE trees for ternary LWE keys, improving May's Rep-1 exponents by
+$\MLgainmin$--$\MLgainmax$ for $\omega\ge0.375$ (Section~\ref{sec:meetlwe}).
+\fi
 \end{enumerate}
 \paragraph{What is proved.} All results are heuristic, in the same sense as~\cite{HGJ10,BCJ11,BBSS20}. Proved are
 Lemma~\ref{lem:filter}, Proposition~\ref{prop:cost} (given the heuristics), Remark~\ref{rem:piQ},
@@ -120,8 +152,8 @@ optimum of the model, and the depth limit of about $0.272$ is a fit.
 \S4.2]{Oze16}, reporting joint work with May, which leaves digits $\pm2$ as an open question~\cite[after
 Cor.~65]{Oze16}; BBSS list it as ``not studied''~\cite[Table~1]{BBSS20}. Böhme~\cite{Boh11} reportedly reached $0.2871$
 with $\{-2,\dots,2\}$ (unpublished; see~\cite[fn.~5]{BBSS20}). Filtering by joint type is also the mechanism of
-May--Ozerov near-neighbour search in decoding~\cite{MO15} and of the locality-sensitive filters of Becker, Ducas, Gama
-and Laarhoven~\cite{BDGL16}; Christiani~\cite{Chr17} gives the asymmetric framework. In the decoding trees of Both and
+May--Ozerov near-neighbour search in decoding~\cite{MO15}; Christiani~\cite{Chr17} gives the asymmetric framework for
+locality-sensitive filters. In the decoding trees of Both and
 May~\cite{BM17b,BM18} and the ternary-LWE trees of Kirshanova and May~\cite{KM21} (see~\cite[App.~A]{HKLS26} for a correction to its
 analysis), near-neighbour search replaces exact
 matching of values by approximate matching, and the representation coordinates are checked after each merge; our
@@ -215,7 +247,7 @@ $2^{-I(XY;\Lambda)n}$; a left (right) vector enters with probability $2^{-I(X;\L
 pair of independent type-$\delta$ vectors enters a common filter with probability $2^{-(I(X;\Lambda)+I(Y;\Lambda))n}$.
 \end{lemma}
 \begin{proof}
-Method of types, as in~\cite{Dub10}: for fixed $(x,y)$ of type $\sigma$, $2^{nH(\Lambda\mid XY)}$ of the
+This is Dubiner's method-of-types argument~\cite{Dub10}: for fixed $(x,y)$ of type $\sigma$, $2^{nH(\Lambda\mid XY)}$ of the
 $2^{nH(\Lambda)}$ strings of type $Q_\Lambda$ have joint type $Q$ with it; similarly for single vectors; for
 independent $x,y$ the two events are independent given $u$.
 \end{proof}
@@ -380,6 +412,14 @@ the sparse bottom levels the dominant split $1\to(2,-1)$ needs a $2$ and a $-1$ 
 pairs rarely have. In the middle levels supports are sparse and the splits are mostly $1\to(1,0)$, so a random matched
 pair is almost always valid and there is nothing to filter.
 
+\paragraph{Where filters do not pay.} The same test predicts the failures. In the middle levels above, $p_j\approx0$
+and the filters are nearly inactive. In the sparse-key trees of Hhan, Kim, Lee and Son~\cite{HKLS26} the binding
+merges split without cancellations (each child carries half of the parent's weight), and a random matched pair is
+then almost always valid (two random weight-$10$ vectors in dimension about $2000$ have disjoint supports with
+probability about $2^{-0.04}$); the filters save about $3.7$ bits only at the top merge, which has cancellations but
+does not bind, and gain nothing.\ifincludemeetlwe{} In Meet-LWE at May's own parameters the binding merges have $p_j\ge-0.06$, and the
+filters gain little until the split laws are re-optimised (Section~\ref{sec:meetlwe}).\fi
+
 \paragraph{Memory.} The memory exponent, the largest of the leaf lists, the stored lists and the filter entries
 $\ell_j+I(XY;\Lambda)-\min(I(X;\Lambda),I(Y;\Lambda))$, is $\Memfour$ at depth~$4$ and $\Memseven$ at depth~$7$
 (last line of each parameter table). At every reported point it equals or nearly equals the time, because the entry
@@ -470,14 +510,23 @@ So the exactly tight root condition needs no extra excess.
 \input{floor_section}
 \fi
 
+\ifincludemeetlwe
+\input{meetlwe_section}
+\fi
+
 \section{Conclusion and open problems}
 Filters and depth attack the same waste from two sides, and together they give $\Tbest$; with depth the exponent
 converges to about $0.272$. What remains is merge cost, so going substantially lower needs a structural change, such
 as a non-binary root with a fast join, non-modular information, or a top level that is not enumerated, rather than
 more depth. Open: quantum (walk or Grover) versions of filtered merges, as in~\cite{BBSS20}; non-binary roots and non-enumerative
 top levels; wider digit sets, which add at most about $0.0003$ at fixed depth; and transferring the
-observation to decoding and ternary-LWE trees, where merges also generate pairs with the wrong split pattern; for
-Meet-LWE we found no gain at the published optima, where the binding merges have little split-pattern waste.
+observation to decoding trees and to other ternary-LWE trees, where merges also generate pairs with the wrong split
+pattern\ifincludemeetlwe{} (for Meet-LWE, Section~\ref{sec:meetlwe}; at May's published parameters the filters gain
+little, because the binding merges there have little pattern waste)\fi.
+
+For designers of representation algorithms the takeaway is a simple test: at each merge, compute
+$p_j=H(\sigma_j)-2H_j$. Where $2^{p_jn}\ll1$, Dubiner filters pay, and they free the depth that waste otherwise
+prevents; where $p_j\approx0$ they cannot help.
 Lattice-based hybrids, such as guessing combined with batch-CVP, may be competitive at density one; whether they can be combined with filtered representation trees is open.
 
 \appendix
@@ -547,6 +596,8 @@ Babai's plane, \emph{Des.\ Codes Cryptogr.} \textbf{94} (2026), no.~4, art.~83. 
 \emph{IMACC 2021}, LNCS, Springer. IACR ePrint 2021/1255.
 \bibitem{Li25} Y.~Li, From subset-sum to decoding: improved classical and quantum algorithms via ternary
 representation technique, \emph{Information} \textbf{16} (2025), no.~10, 887.
+\bibitem{May21} A.~May, How to meet ternary LWE keys, in \emph{CRYPTO 2021}, LNCS 12826, Springer, pp.~701--731.
+IACR ePrint 2021/216.
 \bibitem{MO15} A.~May and I.~Ozerov, On computing nearest neighbors with applications to decoding of binary linear
 codes, in \emph{EUROCRYPT 2015}, LNCS 9056, Springer, pp.~203--228.
 \bibitem{Oze16} I.~Ozerov, \emph{Combinatorial Algorithms for Subset Sum Problems}, PhD thesis, Ruhr-Universit\"at

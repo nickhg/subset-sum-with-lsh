@@ -1,0 +1,60 @@
+w0.3 d3 p: name 0.297187 model 0.297187 recost 0.297187 may 0.297187  OK   bind merge2,list3,merge3  p -0.140 -0.058 -0.011
+w0.3 d3 f: name 0.293659 model 0.293659 recost 0.293659  OK   bind entry2,merge2,entry3,merge3  p -0.140 -0.065 -0.014
+w0.3 d4 p: name 0.297503 model 0.297503 recost 0.297503 may 0.297503  OK   bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002
+w0.3 d4 f: name 0.292844 model 0.292844 recost 0.292844  OK   bind entry2,merge2,entry3,merge3  p -0.151 -0.075 -0.019 -0.005
+w0.3 d5 p: name 0.297503 model 0.297503 recost 0.297503 may 0.297503  OK   bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002 -0.002
+w0.3 d5 f: name 0.292844 model 0.292844 recost 0.292844  OK   bind entry2,merge2,entry3,merge3  p -0.151 -0.075 -0.019 -0.005 -0.001
+w0.3 d6 p: name 0.297503 model 0.297503 recost 0.297503 may 0.297503  OK   bind merge2,merge3,merge4  p -0.137 -0.057 -0.010 -0.002 -0.002 -0.000
+w0.3 d6 f: name 0.292844 model 0.292844 recost 0.292844  OK   bind entry2,merge2,entry3,merge3  p -0.151 -0.075 -0.019 -0.005 -0.001 -0.000
+w0.3 d7 p: name 0.297503 model 0.297503 recost 0.297503 may 0.297503  OK   bind merge2,merge3,merge4  p -0.137 -0.056 -0.010 -0.002 -0.001 -0.000 -0.000
+w0.3 d7 f: name 0.292741 model 0.292741 recost 0.292741  OK   bind entry2,merge2,merge3,merge4  p -0.151 -0.076 -0.020 -0.005 -0.001 -0.000 -0.000
+w0.375 d3 p: name 0.320834 model 0.320834 recost 0.320834 may 0.320834  OK   bind merge2,list3,merge3,leaves  p -0.130 -0.059 -0.013
+w0.375 d3 f: name 0.317765 model 0.317765 recost 0.317765  OK   bind entry2,merge2,entry3,merge3,leaves  p -0.122 -0.059 -0.014
+w0.375 d4 p: name 0.320626 model 0.320626 recost 0.320626 may 0.320626  OK   bind merge2,merge3,merge4  p -0.149 -0.071 -0.022 -0.004
+w0.375 d4 f: name 0.309877 model 0.309877 recost 0.309877  OK   bind merge2,entry3,merge3  p -0.160 -0.107 -0.045 -0.007
+w0.375 d5 p: name 0.320626 model 0.320626 recost 0.320626 may 0.320626  OK   bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002
+w0.375 d5 f: name 0.309703 model 0.309703 recost 0.309703  OK   bind entry1,entry2,merge2,entry3,merge4  p -0.161 -0.109 -0.045 -0.009 -0.003
+w0.375 d6 p: name 0.320626 model 0.320626 recost 0.320626 may 0.320626  OK   bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002 -0.000
+w0.375 d6 f: name 0.307702 model 0.307702 recost 0.307702  OK   bind merge2,merge3,merge5  p -0.179 -0.138 -0.072 -0.021 -0.003 -0.002
+w0.375 d7 p: name 0.320626 model 0.320626 recost 0.320626 may 0.320626  OK   bind merge2,merge3,merge4  p -0.148 -0.071 -0.022 -0.004 -0.002 -0.000 -0.000
+w0.375 d7 f: name 0.307702 model 0.307702 recost 0.307702  OK   bind merge2,merge3,merge5  p -0.179 -0.138 -0.072 -0.021 -0.003 -0.002 -0.000
+w0.441 d3 p: name 0.339319 model 0.339319 recost 0.339319 may 0.339319  OK   bind merge2,list3,merge3,leaves  p -0.124 -0.057 -0.014
+w0.441 d3 f: name 0.336367 model 0.336367 recost 0.336367  OK   bind entry2,merge2,entry3,leaves  p -0.118 -0.057 -0.014
+w0.441 d4 p: name 0.336892 model 0.336892 recost 0.336892 may 0.336892  OK   bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005
+w0.441 d4 f: name 0.322061 model 0.322061 recost 0.322061  OK   bind merge2,entry4,leaves  p -0.172 -0.121 -0.059 -0.014
+w0.441 d5 p: name 0.336892 model 0.336892 recost 0.336892 may 0.336892  OK   bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.002
+w0.441 d5 f: name 0.320601 model 0.320601 recost 0.320601  OK   bind entry2,merge4  p -0.184 -0.158 -0.090 -0.037 -0.006
+w0.441 d6 p: name 0.336892 model 0.336892 recost 0.336892 may 0.336892  OK   bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.003 -0.037
+w0.441 d6 f: name 0.320601 model 0.320601 recost 0.320601  OK   bind entry2,merge4  p -0.184 -0.158 -0.090 -0.037 -0.006 -0.003
+w0.441 d7 p: name 0.336892 model 0.336892 recost 0.336892 may 0.336892  OK   bind merge2,merge3,merge4  p -0.160 -0.080 -0.029 -0.005 -0.003 -0.001 -0.000
+w0.441 d7 f: name 0.320847 model 0.320847 recost 0.320847  OK   bind entry2,merge2,merge3,merge4  p -0.182 -0.134 -0.074 -0.026 -0.005 -0.002 -0.000
+w0.5 d3 p: name 0.354823 model 0.354823 recost 0.354823 may 0.354824  OK   bind merge2,list3,merge3,leaves  p -0.130 -0.057 -0.015
+w0.5 d3 f: name 0.351799 model 0.351799 recost 0.351799  OK   bind entry2,merge2,entry3,leaves  p -0.124 -0.057 -0.015
+w0.5 d4 p: name 0.351081 model 0.351081 recost 0.351081 may 0.351081  OK   bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006
+w0.5 d4 f: name 0.335831 model 0.335831 recost 0.335831  OK   bind entry2,merge2,leaves  p -0.178 -0.114 -0.059 -0.015
+w0.5 d5 p: name 0.351081 model 0.351081 recost 0.351081 may 0.351081  OK   bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002
+w0.5 d5 f: name 0.334419 model 0.334419 recost 0.334419  OK   bind entry2,merge2,merge4  p -0.193 -0.132 -0.072 -0.025 -0.009
+w0.5 d6 p: name 0.351081 model 0.351081 recost 0.351081 may 0.351081  OK   bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002 -0.001
+w0.5 d6 f: name 0.334334 model 0.334334 recost 0.334334  OK   bind entry2,merge2,entry3,merge3  p -0.193 -0.136 -0.070 -0.024 -0.008 -0.002
+w0.5 d7 p: name 0.351081 model 0.351081 recost 0.351081 may 0.351081  OK   bind merge2,merge3,merge4  p -0.166 -0.080 -0.029 -0.006 -0.002 -0.001 -0.000
+w0.5 d7 f: name 0.334334 model 0.334334 recost 0.334334  OK   bind entry2,merge2,entry3,merge3  p -0.193 -0.136 -0.070 -0.024 -0.008 -0.002 -0.000
+w0.62 d3 p: name 0.387829 model 0.387829 recost 0.387829 may 0.387829  OK   bind merge2,list3,merge3,leaves  p -0.189 -0.067 -0.019
+w0.62 d3 f: name 0.383020 model 0.383020 recost 0.383020  OK   bind entry1,entry2,merge2,entry3,merge3  p -0.180 -0.065 -0.018
+w0.62 d4 p: name 0.387710 model 0.387710 recost 0.387710 may 0.387710  OK   bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005
+w0.62 d4 f: name 0.370994 model 0.370994 recost 0.370994  OK   bind entry2,merge2,entry4  p -0.201 -0.139 -0.072 -0.017
+w0.62 d5 p: name 0.387710 model 0.387710 recost 0.387710 may 0.387710  OK   bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003
+w0.62 d5 f: name 0.370246 model 0.370246 recost 0.370246  OK   bind entry2,merge2  p -0.200 -0.155 -0.084 -0.021 -0.010
+w0.62 d6 p: name 0.387710 model 0.387710 recost 0.387710 may 0.387710  OK   bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003 -0.001
+w0.62 d6 f: name 0.370246 model 0.370246 recost 0.370246  OK   bind entry2,merge2,entry4  p -0.200 -0.155 -0.074 -0.020 -0.009 -0.002
+w0.62 d7 p: name 0.387710 model 0.387710 recost 0.387710 may 0.387710  OK   bind merge2,merge3,merge4  p -0.195 -0.070 -0.020 -0.005 -0.003 -0.001 -0.000
+w0.62 d7 f: name 0.370246 model 0.370246 recost 0.370246  OK   bind entry2,merge2,entry4  p -0.200 -0.155 -0.074 -0.020 -0.009 -0.002 -0.001
+w0.667 d3 p: name 0.406810 model 0.406810 recost 0.406810 may 0.406810  OK   bind merge2,merge3  p -0.219 -0.067 -0.019
+w0.667 d3 f: name 0.397123 model 0.397123 recost 0.397123  OK   bind entry2,merge2,entry3,leaves  p -0.208 -0.074 -0.020
+w0.667 d4 p: name 0.406810 model 0.406810 recost 0.406810 may 0.406810  OK   bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009
+w0.667 d4 f: name 0.385049 model 0.385049 recost 0.385049  OK   bind entry2,merge2,entry3,entry4  p -0.217 -0.164 -0.055 -0.025
+w0.667 d5 p: name 0.406810 model 0.406810 recost 0.406810 may 0.406810  OK   bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002
+w0.667 d5 f: name 0.384833 model 0.384833 recost 0.384833  OK   bind merge2,merge4  p -0.220 -0.174 -0.053 -0.014 -0.004
+w0.667 d6 p: name 0.406810 model 0.406810 recost 0.406810 may 0.406810  OK   bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002 -0.001
+w0.667 d6 f: name 0.384833 model 0.384833 recost 0.384833  OK   bind merge2,merge4  p -0.220 -0.174 -0.053 -0.014 -0.004 -0.002
+w0.667 d7 p: name 0.406810 model 0.406810 recost 0.406810 may 0.406810  OK   bind merge2,merge3  p -0.219 -0.067 -0.019 -0.009 -0.002 -0.001 -0.000
+w0.667 d7 f: name 0.384833 model 0.384833 recost 0.384833  OK   bind merge2,merge4  p -0.220 -0.174 -0.053 -0.014 -0.004 -0.002 -0.000

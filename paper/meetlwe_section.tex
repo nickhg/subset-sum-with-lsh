@@ -1,0 +1,56 @@
+% Meet-LWE section (wc handoff26); numbers from ntru_hybrid/make_ml_numbers.py (ml_numbers.tex, ml_table.tex)
+\section{A second application: Meet-LWE}\label{sec:meetlwe}
+\paragraph{Setting.} In Meet-LWE~\cite{May21} the secret $s\in\{-1,0,1\}^n$ of an LWE instance $As+e=b\bmod q$ has
+relative weight $\omega$ ($\omega n/2$ entries of each sign). May writes $s$ as a sum of two ternary vectors in many
+ways, as in a representation tree with digit set $\{-1,0,1\}$, and joins lists on exact $q$-ary coordinates of $As$,
+except at the root, where Odlyzko's locality-sensitive hashing matches $As_1$ and $b-As_2$ up to the error $e$ (one
+bit per coordinate). We use the Rep-1 tree of~\cite[\S7]{May21}, in which a $\pm1$ splits as $(\pm1,0)$ or
+$(0,\pm1)$ and a $0$ as $(0,0)$, $(1,-1)$ or $(-1,1)$, with May's accounting: the $q$-ary coordinates fixed at level
+$j$ give $c_j\le\rho_j$ bits, with $\rho_j$ the representation count, so the expected number of surviving
+representations is at least one at every node and no survival recursion is needed. Lists have size $\ell_j=H_j-c_j$,
+the root costs $2\ell_1-1$, the merge of two level-$j$ lists costs $2\ell_j-(c_{j-1}-c_j)$, and the leaves $H_d/2$. As
+in May's Table~5 the exponents are asymptotic in $q$, with the guessing cost ignored. We add the filters of
+Section~\ref{sec:filter} to every merge, with the cost terms of Proposition~\ref{prop:cost}, and optimise the split
+laws of all levels and the filters together, as in Section~\ref{sec:results}; our depth $d$ is May's depth minus one.
+
+\paragraph{Results.} Table~\ref{tab:meetlwe} gives the exponents for May's key weights. Every point was re-costed by an
+evaluator written independently of the optimiser, and the unfiltered points also by May's own formulas.
+Re-optimising those formulas gives the column ``May, re-opt.''; it equals our best unfiltered value at every
+$\omega$.\footnote{At $\omega\approx0.44$--$0.5$ this is a small gain from one more level (for example
+$\MLfourD\to\MLreD$ at $\omega=0.5$, from May's depth $4$ to $5$); \cite[\S7]{May21} reports none, presumably for the
+concrete instances or the optimiser used there. We quote filter gains against our own best unfiltered values.} The
+filters gain $\MLgainmin$--$\MLgainmax$ for $\omega\ge0.375$ and $\MLgA$ at $\omega=0.3$. The gain grows with $\omega$,
+as denser keys produce more pattern waste.
+
+\begin{table}[ht]
+\centering\small
+\input{ml_table}
+\caption{Meet-LWE (Rep-1) time exponents $\log_2(T)/n$, asymptotic, guessing ignored. ``May'' is~\cite[Table~5]{May21};
+``May, re-opt.'' is his Rep-1 formulas re-optimised over his depths $4$--$6$; the unfiltered and filtered columns are
+our best points over $d=3,\dots,7$, with the smallest depth attaining it; the gain is unfiltered minus filtered.}
+\label{tab:meetlwe}
+\end{table}
+
+\paragraph{Where the waste is.} May's ``Match-and-Filter'' checks the ternary split pattern after matching, so every
+matched pair with the wrong pattern is generated and discarded. At May's own parameters the filters gain little: at
+$\omega=0.5$ and depth~$3$ the binding merges are those of the level-$2$ and level-$3$ lists, with little pattern
+waste ($p_2\approx-0.06$, $p_3\approx-0.02$; only the root merge, which does not bind, has $p_1\approx-0.13$), and the
+leaves and the level-$3$ lists bind as well, which filters do not reduce; at fixed split laws the filters give only
+$\MLfixedD$ against $\MLfourD$. Once the split laws are re-optimised together with the filters, the optimum moves to
+denser levels with more cancellations $0\to(1,-1)$, where most matched pairs have the wrong pattern, and the binding
+merge of the level-$2$ lists has $p_2\approx-0.14$ ($\omega=0.5$, depth $6$); the filters remove that waste. This is
+the mechanism of Section~\ref{sec:results}.
+
+\paragraph{Depth.} Without filters, extra levels stop paying at depth $4$ (depth $3$ for $\omega=0.3$ and $0.667$).
+With filters the exponent improves up to depth $\MLfdmin$--$\MLfdmax$, because the merges of the upper levels, which bind
+without filters, become cheap. Filters make depth pay in Meet-LWE as in Subset Sum.
+
+\paragraph{Soundness.} Lemma~\ref{lem:sym} carries over: coordinate permutations act on the columns of $A$ and on $s$,
+the error $e$ is untouched, and exact $q$-ary matching, the split checks and filter entry are all equivariant. A
+small-$n$ simulation of a filtered merge shaped like the binding level-$2$ merge at $\omega=0.5$ (parents of type
+$(4,4)$, children of type $(3,3)$ with one cancellation of each sign, $n=20$, $q=67$, two coordinates, complete
+cosets, \texttt{ntru\_hybrid/bias\_sim\_meetlwe2.py}, $400$ draws) gives planted survival $\MLbiasOff$ without
+filters against $\sigma=\MLbiasOffSig$, and $\MLbiasOn$ with filters against $\sigma=\MLbiasOnSig$.
+
+\paragraph{Scope.} These are asymptotic exponents in May's model. Concrete instances, with integer numbers of
+$q$-ary coordinates per level and the guessing cost, are future work.
