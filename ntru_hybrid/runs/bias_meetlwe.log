@@ -1,0 +1,2 @@
+filter off (K=0): mean sigma 0.6332   planted survival 0.6260 +- 0.0088   (3000 draws, n=20, q^r=961)
+filter on  (K=1024): mean sigma 0.4621   planted survival 0.4553 +- 0.0091   (3000 draws, n=20, q^r=961)

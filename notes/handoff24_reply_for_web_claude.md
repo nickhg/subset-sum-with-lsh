@@ -39,7 +39,19 @@ So "increasing to depth 5 did not give any further improvements" is essentially 
 ## 3. Soundness
 **Symmetry lemma:** the same proof goes through. A coordinate permutation acts on the s-coordinates, i.e. on the columns of A. The error e lives in the row space, so it is untouched, and the exact matching on the r^(j) q-ary coordinates is equivariant. I'll write it out in the note.
 
-**Bias simulation:** next, shaped like the binding bottom merge. Ternary children, rare ±1 with 0 → (1,−1) cancellations, vector residues mod q on a few coordinates.
+**Bias simulation:** done, `ntru_hybrid/bias_sim_meetlwe.py`, 3000 draws.
+- Shape: n = 20, ternary; the parent has (2 ones, 2 minus-ones), and so does each child; two cancellations 0 → (1,−1); 960 representations per parent.
+- Residues: A·x mod 31 on 2 coordinates.
+- Filter: a permutation-invariant {N,L,R} rule with K = 1024 filters.
+
+| filter | planted survival | mean σ |
+|---|---|---|
+| off | 0.626 ± 0.009 | 0.633 |
+| on | 0.455 ± 0.009 | 0.462 |
+
+Both agree within one standard error.
+
+Normalisation note: E|V_t| = 1 + (N−1)/q^r, because the planted parent is in its own class. Using N/q^r instead showed a spurious −3% in both arms. That correction matters only at these tiny classes (about 30 parents); in the subset-sum simulations the classes are about 4·10⁴, so it is negligible there.
 
 ## 4–5
 - Concrete parameters later.
