@@ -2,6 +2,7 @@
 # One spot instance running cloud/polish_worker.py on every core (pattern of isodual/cloud_instances/aws/launch_phi65.sh).
 #   launch.sh create TYPES HOURS     request the instance (spends money: needs Nick's approval); writes cloud/INSTANCE
 #   launch.sh deploy HOURS           copy the committed code + cloud/seed, start the workers (worker split: SPLIT)
+#   launch.sh deploy_ml HOURS        Meet-LWE grid workers instead (ntru_hybrid/ml_worker.py)
 #   launch.sh pull                   rsync results and logs into cloud/results/ (run from poll.sh every 15 min)
 #   launch.sh stop                   terminate the instance
 # SPLIT depth:workers, JIT jitter scales (env), passed to the workers.
@@ -48,6 +49,25 @@ deploy)
     scp $SSHOPT "$RS" ubuntu@$ip:ss/run.sh; rm -f "$RS"
     ssh -n $SSHOPT ubuntu@$ip "bash ss/run.sh; sleep 2; pgrep -fc polish_worker"
     echo "started $w workers on $ip" ;;
+deploy_ml)
+    # Meet-LWE grid (wc handoff25): ntru_hybrid/ml_worker.py, one worker per (omega, d, p|f), extra on mid-omega d4-6
+    HOURS=$2; read -r id ip _ < "$INST"
+    (cd "$ROOT" && git diff --quiet HEAD -- gen_lsf.py ntru_hybrid/meetlwe_model.py ntru_hybrid/ml_hop.py ntru_hybrid/ml_worker.py ntru_hybrid/cloud_seed) || { echo "commit first"; exit 1; }
+    until ssh -n $SSHOPT ubuntu@$ip 'test -e /var/tmp/ready'; do sleep 20; done
+    ssh -n $SSHOPT ubuntu@$ip 'mkdir -p ss/ntru_hybrid ss/res ss/logs'
+    scp $SSHOPT "$ROOT/gen_lsf.py" ubuntu@$ip:ss/
+    scp $SSHOPT "$ROOT"/ntru_hybrid/{meetlwe_model.py,ml_hop.py,ml_worker.py} ubuntu@$ip:ss/ntru_hybrid/
+    scp $SSHOPT "$ROOT"/ntru_hybrid/cloud_seed/*.npy ubuntu@$ip:ss/res/
+    git -C "$ROOT" rev-parse HEAD | ssh $SSHOPT ubuntu@$ip 'cat > ss/VERSION'
+    RS=$(mktemp); w=0; echo "cd ~/ss; pkill -f ml_worker" > "$RS"
+    for om in 0.3 0.375 0.441 0.5 0.62 0.667; do for d in 3 4 5 6 7; do for f in p f; do
+        k=1; case "$om:$d" in 0.441:[456]|0.5:[456]) k=4 ;; esac
+        for i in $(seq 1 $k); do w=$((w+1))
+            echo "nohup python3 ntru_hybrid/ml_worker.py res $om $d $f $NAME$w $HOURS $((3000+w)) > logs/w$w.log 2>&1 &" >> "$RS"; done
+    done; done; done
+    scp $SSHOPT "$RS" ubuntu@$ip:ss/run.sh; rm -f "$RS"
+    ssh -n $SSHOPT ubuntu@$ip "bash ss/run.sh; sleep 2; pgrep -fc ml_worker"
+    echo "started $w Meet-LWE workers on $ip" ;;
 pull)
     read -r id ip _ < "$INST"; mkdir -p "$ROOT/cloud/results/$NAME"
     timeout 300 rsync -az -e "ssh $SSHOPT" ubuntu@$ip:ss/res/ "$ROOT/cloud/results/$NAME/res/" &&
