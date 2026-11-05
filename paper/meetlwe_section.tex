@@ -59,8 +59,7 @@ $(4,4)$, children of type $(3,3)$ with one cancellation of each sign, $n=20$, $q
 cosets, \texttt{ntru\_hybrid/bias\_sim\_meetlwe2.py}) gives planted survival $\MLbiasOff$ without filters against
 $\sigma=\MLbiasOffSig$ ($\MLbiasOffN$ draws), and $\MLbiasOn$ with filters against $\sigma=\MLbiasOnSig$
 ($\MLbiasOnN$ draws); the same filtered merge with no planted parent gives $\mathbb{E}|O|/\mathbb{E}|V_t|=\MLctlOn$
-($\MLctlOnN$ draws), so the filtered arm is within $2$ standard errors of the lemma ($\MLbiasOnZ$), in the favourable
-direction.
+($\MLctlOnN$ draws), so both arms agree with the lemma to within one standard error ($\MLbiasOffZ$ and $\MLbiasOnZ$).
 
 \paragraph{Scope.} These are asymptotic exponents in May's model. Concrete instances, with integer numbers of
 $q$-ary coordinates per level and the guessing cost, are future work.
