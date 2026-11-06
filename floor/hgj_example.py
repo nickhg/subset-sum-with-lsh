@@ -1,4 +1,4 @@
-"""Worked example for the introduction (wc handoff29 item 2): the top HGJ merge, x0 of weight 1/2 split into x + y of
+"""Worked example for the introduction: the top HGJ merge, x0 of weight 1/2 split into x + y of
 weight 1/4 with disjoint supports.
 (a) pattern waste p = H(sigma) - 2 H(delta);  the 'hard' two-label filter (1 of x -> L, 1 of y -> R, (0,0) -> L w.p. a),
     its information terms and saving, for a = 1/2 and the a minimising the entry cost;

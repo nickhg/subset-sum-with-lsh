@@ -1,4 +1,4 @@
-"""wc handoff3 item 2: joint survival of two planted siblings A*, B* (each built by its own filtered merge).
+"""Joint survival of two planted siblings A*, B* (each built by its own filtered merge).
 
 Same merge shape as bias_sim.py, scaled with n:
   children: one -1, k ones;  parent: one -1, 2k-1 ones (one (+1,-1) cancellation);  R = 2 (n-2k) C(2k-1, k-1)

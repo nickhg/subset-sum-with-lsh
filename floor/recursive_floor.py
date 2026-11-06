@@ -1,4 +1,4 @@
-"""Task 1 (notes/handoff_subset_sum_floor_and_hybrid.md): recursive depth-d floor for representation trees.
+"""Recursive depth-d floor for representation trees.
 
 Split laws per level come from gen_lsf.Model (symmetric, per-parent-digit splits, any digit set D).
 For fixed split laws the exponents are an LP in the constraint bits c_1..c_d (c_0 = 1 = the n bits of the instance).
@@ -15,7 +15,7 @@ Variants (T = max of the listed terms):
            examined 2H_j - c_j - c_{j-1} + I_XY - I_X - I_Y   (filter laws optimised too)
 BBSS accounting (lists may be random subsets; gen_lsf.Model.lp):
     B1     merges, no filters        B2   with filters
-Survival-recursion accounting (wc handoff2 A; survival_lp): c_j <= rho_j replaced by the saturating recursion,
+Survival-recursion accounting (survival_lp): c_j <= rho_j replaced by the saturating recursion,
     lists sigma-scaled.   S1  costs as F1        S2  costs as F2
 usage: recursive_floor.py DIGITS d VARIANT [restarts] [seed] [init.npy]    e.g.  -1,0,1,2 3 F1 6 0
 """
@@ -60,7 +60,7 @@ def strict_lp(M, lev, d, variant, F=None):
 
 
 def survival_lp(M, lev, d, variant, F=None):
-    """S1/S2 (wc handoff2 A): per-level c_j <= rho_j replaced by the saturating survival recursion
+    """S1/S2: per-level c_j <= rho_j replaced by the saturating survival recursion
         s_d = 0,  s_j = min(0, rho_{j+1} - c_{j+1} + 2 s_{j+1})  (j = d-1..1),  root: rho_1 - c_1 + 2 s_1 >= 0,
     lists L_j = H_j - c_j + s_j (sigma-scaled).  Costs as F1 (S1) / F2 (S2).  The min() is handled exactly by
     enumerating which levels saturate (s_j = 0) and solving one LP per pattern.

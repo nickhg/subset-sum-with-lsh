@@ -1,4 +1,4 @@
-"""Independent re-cost of a saved {-1,0,1,2} filtered point (wc handoff21).  Written separately from gen_lsf: only the
+"""Independent re-cost of a saved {-1,0,1,2} filtered point.  Written separately from gen_lsf: only the
 parameter layout (the order of logits) is shared; tree, information terms and LP are re-derived here.
 
 Layout of a point z (depth d): d rows of split logits, then d rows of filter logits.

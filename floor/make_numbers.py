@@ -1,4 +1,4 @@
-"""Generate paper/numbers.tex (macros) and paper/params_d*.tex (appendix tables) from the saved optimiser points.
+"""Generate numbers.tex (macros) and params_d*.tex (appendix tables) from the saved optimiser points.
 
 Every T is re-evaluated from the .npy points with gen_lsf.Model.lp (BBSS accounting), never copied from logs; the
 best point per (digit set, depth, variant) over all saved runs is used.  Simulation numbers are parsed from logs.
@@ -10,7 +10,8 @@ sys.path.insert(0, ROOT)
 import numpy as np, warnings
 from gen_lsf import Model
 warnings.filterwarnings("ignore")
-PAPER = os.path.join(ROOT, "paper"); RUNS = os.path.join(HERE, "runs")
+PAPER = os.environ.get("OUT", os.path.join(ROOT, "paper")); RUNS = os.path.join(HERE, "runs")
+os.makedirs(PAPER, exist_ok=True)
 DS = {"0_1": [0, 1], "-1_0_1": [-1, 0, 1], "-1_0_1_2": [-1, 0, 1, 2], "-2_-1_0_1_2": [-2, -1, 0, 1, 2],
       "-1_0_1_2_3": [-1, 0, 1, 2, 3], "-4_-3_-2_-1_0_1_2_3_4": list(range(-4, 5))}
 GEN_TAG = {"-1_0_1_2": "m4", "-1_0_1": "m3", "-2_-1_0_1_2": "mm5", "-1_0_1_2_3": "m5", "-4_-3_-2_-1_0_1_2_3_4": "mmmm9"}

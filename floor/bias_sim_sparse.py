@@ -1,4 +1,4 @@
-"""wc handoff9 item 2 (optional): filter bias at a sparse bottom merge, shaped like the d=6 optimum's level-6 merge
+"""Filter bias at a sparse bottom merge, shaped like the d=6 optimum's level-6 merge
 (level 5 mostly 0 with rare 1s and -1s; level 6 rare 2s and -1s, from 1 -> (2,-1) and -1 -> (-1,0) splits).
 
 Integer shape, n = 20:

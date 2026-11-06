@@ -1,4 +1,4 @@
-"""wc handoff2 B: does a type-class filter bias which parents survive?  Small-n filtered merge, n = 32.
+"""Does a type-class filter bias which parents survive?  Small-n filtered merge, n = 32.
 
 Shape of the d=4 optimum's level-2 merge (BBSS digits, one (+1,-1) cancellation), at integer sizes:
   children A, B: one -1 and five +1 (exact type)       parent: one -1 and nine +1 (exact type)

@@ -1,4 +1,4 @@
-"""handoff16c: May's Meet-LWE (ePrint 2021/216, Sections 7-8) as a representation-tree LP, with optional type-class
+"""May's Meet-LWE (ePrint 2021/216, Sections 7-8) as a representation-tree LP, with optional type-class
 filters (gen_lsf.filter_terms) and the survival-recursion accounting.  Exponents per n, asymptotic, guessing T_g ignored
 (as in May's Tables 5 and 7).
 

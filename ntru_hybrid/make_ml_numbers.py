@@ -16,8 +16,8 @@ from ml_recost import cost
 
 OMS = ["0.3", "0.375", "0.441", "0.5", "0.62", "0.667"]; LET = "ABCDEF"
 MAY_PUB = {"0.3": 0.298, "0.375": 0.323, "0.441": 0.340, "0.5": 0.356, "0.62": 0.389, "0.667": 0.407}
-DEPTHS = range(3, 8); PTS = os.path.join(HERE, "points"); PAPER = os.path.join(ROOT, "paper")
-os.makedirs(PTS, exist_ok=True)
+DEPTHS = range(3, 8); PTS = os.path.join(HERE, "points"); PAPER = os.environ.get("OUT", os.path.join(ROOT, "paper"))
+os.makedirs(PTS, exist_ok=True); os.makedirs(PAPER, exist_ok=True)
 
 
 def cands(k):
@@ -72,7 +72,7 @@ for B in glob.glob(os.path.join(HERE, "runs", "bias_sim_meetlwe2*.log")):
         if m:
             k = pool.setdefault(m.group(1), [0, 0.0, 0.0]); N = int(m.group(4))
             k[0] += N; k[1] += N * float(m.group(2)); k[2] += N * float(m.group(3))
-ctl = os.path.join(HERE, "runs", "bias_sim_meetlwe2_ctrl_on.log")      # no planted parent, filters on (handoff30)
+ctl = os.path.join(HERE, "runs", "bias_sim_meetlwe2_ctrl_on.log")      # no planted parent, filters on
 for line in (open(ctl) if os.path.exists(ctl) else []):
     m = re.match(r"unplanted, filter on .*= ([\d.]+) \+- ([\d.]+)\s+\((\d+) draws", line)
     if m:

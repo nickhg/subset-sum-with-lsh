@@ -1,8 +1,8 @@
-"""Post-run check of the cloud polish bests (wc handoff21/26): per depth 4..9 the best point over cloud/results/*/res
+"""Post-run check of the cloud polish bests: per depth 4..9 the best point over cloud/results/*/res
 and cloud/seed, made monotone by trivial extension (bottom level z -> (z,0), unfiltered; an exact copy), then
   gen_lsf B2 (polish_worker.T_of)  ==  floor/recost.py (independent)  ==  S2 (survival recursion), plus corner flags.
 Filters whose saving is <= 0 (they do not reduce the pairs examined) are replaced by trivial ones (zero logits: labels
-independent of the digits, I = 0) when T is unchanged (wc, 4 Nov).
+independent of the digits, I = 0) when T is unchanged.
 Passing points are copied to floor/runs/polish/gen_m4_{d}_f_cloud.npy for make_numbers.py.
 usage: python3 floor/finalize_cloud.py
 """
@@ -33,7 +33,8 @@ def tidy(z, d):
 prev = None; ok_all = True
 for d in range(4, 10):
     fs = glob.glob(os.path.join(ROOT, "cloud", "results", "*", "res", f"d{d}_T*.npy")) + \
-         glob.glob(os.path.join(ROOT, "cloud", "seed", f"d{d}_T*.npy"))
+         glob.glob(os.path.join(ROOT, "cloud", "seed", f"d{d}_T*.npy")) + \
+         glob.glob(os.path.join(HERE, "runs", "polish", f"gen_m4_{d}_f_cloud.npy"))   # stored best (so never worse)
     best = min(((T_of(np.load(f), d), np.load(f), os.path.relpath(f, ROOT)) for f in fs), key=lambda c: c[0])
     if prev is not None:
         zt = triv(prev[1], d - 1); Tt = T_of(zt, d)

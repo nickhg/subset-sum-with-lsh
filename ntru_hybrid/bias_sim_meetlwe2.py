@@ -1,4 +1,4 @@
-"""wc handoff26 check 4: filter bias at a merge shaped like the binding filtered merge of the omega = 0.5 Meet-LWE optimum
+"""Filter bias at a merge shaped like the binding filtered merge of the omega = 0.5 Meet-LWE optimum
 (merge 2: parents of +-1 density ~0.44, children ~0.36, cancellations ~0.3 per parent nonzero).  Generalises
 bias_sim_meetlwe.py (which is the case a = 2, pi = (1/2, 1/4, 1/4)).
 
@@ -91,7 +91,7 @@ if os.environ.get("UNPLANTED"):
         sizes.append(len(np.unique(((pa[ia] | pb[ib]) & ~nn) * (np.int64(1) << 32) + ((ma[ia] | mb[ib]) & ~nn))))
     print(f"unplanted, filter off: E|O| / E|V_t| = {np.mean(sizes) / (Npar / q ** r):.4f} +- {np.std(sizes) / np.sqrt(draws) / (Npar / q ** r):.4f}"
           f"  ({draws} draws)", flush=True)
-if os.environ.get("UNPLANTED_ON"):                  # wc handoff30: the same control with filters
+if os.environ.get("UNPLANTED_ON"):                  # the same control with filters
     v = [run(True, planted=False)[0] for _ in range(draws)]
     print(f"unplanted, filter on (K={K}): E|O| / E|V_t| = {np.mean(v):.4f} +- {np.std(v) / np.sqrt(draws):.4f}  ({draws} draws)", flush=True)
     sys.exit(0)

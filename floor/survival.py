@@ -1,4 +1,4 @@
-"""Task 2: survival by depth in a real HGJ tree ({0,1}, depth 3, weights n/2 -> n/4 -> n/8 -> n/16).
+"""Survival by depth in a real HGJ tree ({0,1}, depth 3, weights n/2 -> n/4 -> n/8 -> n/16).
 
 Instance: a_i uniform mod N, planted S of weight n/2, t = <a,S> mod N, with N = M_1 * q close to 2^n (density ~1).
 Node constraints are nested: M_3 | M_2 | M_1 | N.  c at a split = R / M, where R = C(w_parent, w_parent/2)

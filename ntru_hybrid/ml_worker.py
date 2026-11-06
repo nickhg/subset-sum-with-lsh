@@ -1,4 +1,4 @@
-"""Shared-directory basin-hopping worker for the Meet-LWE tree (wc handoff25); cf. cloud/polish_worker.py.
+"""Shared-directory basin-hopping worker for the Meet-LWE tree; cf. cloud/polish_worker.py.
 Rep-1-type ternary root of weight omega, digit set {-1,0,1}, May accounting (c_j <= rho_j), asymptotic, guessing ignored.
 
 Each worker owns one key (omega, d, p|f) and loops until its time limit.  Start points (best over all workers, read
