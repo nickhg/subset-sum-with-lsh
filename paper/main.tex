@@ -23,9 +23,9 @@
 % repository and archive (Nick fills in when the release is made; hidden in the anonymous build)
 \newcommand{\repourl}{https://github.com/nickhg/representations-and-dubiner}   % the public repository, once it exists
 \newif\ifpublicrepo \publicrepotrue    % \publicrepotrue once \repourl is a public repository
-\newif\ifrelease \releasefalse   % \releasetrue once \reporelease and \repodoi are set
+\newif\ifrelease \releasetrue    % \releasetrue once \reporelease and \repodoi are set
 \newcommand{\reporelease}{v1.0}
-\newcommand{\repodoi}{10.5281/zenodo.XXXXXXX}
+\newcommand{\repodoi}{10.5281/zenodo.24015365}  % version DOI of v1.0 (concept DOI 10.5281/zenodo.24015364)
 \newif\ifdubinertitle \dubinertitlefalse     % title "Dubiner filters ..." (wc handoff27) -- Nick to decide
 \input{numbers}
 \input{ml_numbers}
@@ -591,7 +591,7 @@ survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2
 \end{table}
 
 \section*{Data and code availability}
-\begin{itemize}\sloppy
+\begin{itemize}\sloppy\raggedright
 \item \emph{Code:} \ifanonymous an anonymised repository is available to the reviewers\else\ifpublicrepo
   \url{\repourl}\else available from the author on request, and to be released in a public repository with the
   final version\fi\ifrelease; release \reporelease{} matches this version of the paper and is archived on Zenodo,
@@ -602,7 +602,7 @@ survival-recursion accounting \texttt{floor/recursive\_floor.py} (variants S1/S2
   survival and sibling simulations, and the generators \texttt{floor/make\_numbers.py}\ifincludemeetlwe{} and
   \texttt{ntru\_hybrid/make\_ml\_numbers.py}\fi.
 \item \emph{Data:} all reported points (\texttt{floor/runs/polish/}\ifincludemeetlwe, \texttt{ntru\_hybrid/points/}\fi)
-  and the logs of the checks are in the repository\ifrelease, with the SHA-256 of every file in the release\fi; the
+  and the logs of the checks are in the repository; the
   full logs of the cloud optimisation runs (about $21$\,MB) are available on request.
 \end{itemize}
 \texttt{floor/make\_numbers.py}\ifincludemeetlwe{} and \texttt{ntru\_hybrid/make\_ml\_numbers.py}\fi{} regenerate
