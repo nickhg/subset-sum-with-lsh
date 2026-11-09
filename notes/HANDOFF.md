@@ -15,7 +15,8 @@ below is the current state; everything after it is the 31 Oct record, kept for h
 - **Code and data:** public repo github.com/nickhg/representations-and-dubiner (`~/git/representations-and-dubiner`),
   a curated copy of the cited scripts and points; keep its `.py` files in sync with this repo. Release v1.0 on Zenodo:
   doi:10.5281/zenodo.24015365 (all versions: 10.5281/zenodo.24015364). The Zenodo record links to the ePrint.
-- **Alexander May** was emailed on 3 Nov with an earlier PDF (headline about 0.272); a two-line heads-up about 0.2690 was planned.
+- **Alexander May** was emailed on 3 Nov. He replied on 9 Nov: May–Ozerov had unpublished small improvements (Ozerov thesis);
+  he is happy for Nick to "take over" and work out the final answers, notes depth tuning is subtle, and would like to meet.
 - **Open:** nothing pending. A revision needs a new Zenodo release only if the code or points change.
 
 ## 31 Oct record (historical)
