@@ -1,9 +1,26 @@
-# Handoff (written 31 Oct 2026, evening EDT)
+# Handoff (current state updated 9 Nov 2026)
 
-Start a new session in `~/git/subset-sum-with-lsh`. CLAUDE.md gives the conventions; this file
-is the working state.
+Start a new session in `~/git/subset-sum-with-lsh`. CLAUDE.md gives the conventions. The section
+below is the current state; everything after it is the 31 Oct record, kept for history and out of date.
 
-## Where things stand
+## Current state (9 Nov 2026)
+- **Published:** IACR ePrint 2026/2802, https://eprint.iacr.org/2026/2802 (online 9 Nov; submitted 6 Nov).
+  Title: *Filtered merges make deeper representation trees pay: Subset Sum and Meet-LWE*. Category "Attacks and
+  cryptanalysis". Revisions go through https://eprint.iacr.org/revise (Nick has the confirmation code).
+- **Paper source:** `paper/main.tex` (not `draft.tex`, which is the parked 31 Oct note). Posted build:
+  `paper/HowgraveGraham_filtered-representation-trees_subset-sum-meetlwe_2026-11-06_1137.pdf`, with
+  `\dubinertitlefalse`, `\publicrepotrue`, `\releasetrue`.
+- **Headline:** random density-one Subset Sum 0.2831 -> 0.2690 (BBSS digits {-1,0,1,2}, depth 5, Dubiner type-class
+  filters at the merges). May's Meet-LWE on ternary keys improves by 0.013-0.023.
+- **Code and data:** public repo github.com/nickhg/representations-and-dubiner (`~/git/representations-and-dubiner`),
+  a curated copy of the cited scripts and points; keep its `.py` files in sync with this repo. Release v1.0 on Zenodo:
+  doi:10.5281/zenodo.24015365 (all versions: 10.5281/zenodo.24015364). The Zenodo record links to the ePrint.
+- **Alexander May** was emailed on 3 Nov with an earlier PDF (headline about 0.272); a two-line heads-up about 0.2690 was planned.
+- **Open:** nothing pending. A revision needs a new Zenodo release only if the code or points change.
+
+## 31 Oct record (historical)
+
+### Where things stood
 - Web Claude and Nick built a model of BBSS + type-class LSF (`bbss_lsf.py`), which gives
   0.2792 under `lp2`.
 - CC reproduced it independently on 31 Oct:
@@ -13,14 +30,14 @@ is the working state.
   - Details: `notes/lsf_status_for_web_claude.md`.
 - That note is to be sent to Web Claude for review.
 
-## Paper draft
+### Paper draft
 - `paper/draft.tex` (6 pp) targets IACR ePrint, category "Attacks and cryptanalysis". TODOs in the source:
   why the Esser–May flaw doesn't apply, the wording of the acknowledgement, and bibliography details.
 - Finding while writing it: the LP is invariant under the filter label law π (π cancels in every row), so `r12`
   in the code is not the filter count. The real count is the mutual information I(XY;Λ): 0.068 / 0.044 / 0 at the
   best point. Cost terms: entries L + I(XY;Λ) − I(X;Λ), examined P + I(XY;Λ) − I(X;Λ) − I(Y;Λ).
 
-## Prior work checked (31 Oct, evening)
+### Prior work checked (31 Oct, evening)
 - **Both–May, PQCrypto 2018 (ePrint 2017/1139; PDF in Downloads as 2017-1139.pdf).** NN search at every level of a
   BJMM tree, but it replaces *exact* syndrome matching by *approximate* matching (the error vector absorbs the
   mismatch). The representation coordinates are still filtered only after each merge ("filter for weight p_i on the
@@ -34,7 +51,7 @@ is the working state.
   argument, save it as `notes/li_refutation_for_cc.md` and reconcile.
 - Web Claude is checking the digit set {−2,…,2}. Nick expects it to be very close to {−1,0,1,2} but not better.
 
-## Web Claude's handoff_for_cc.md (31 Oct, evening): applied
+### Web Claude's handoff_for_cc.md (31 Oct, evening): applied
 - Scripts copied from Downloads into the repo, plus `runs/gen_mm5_3_f_21.npy`. `draft_v2.tex` in Downloads was Web
   Claude's edit of the copy from before the Both–May/Li changes, so its changes were merged by hand, not copied over.
 - Merged into the draft:
@@ -56,7 +73,7 @@ is the working state.
 - HGJ 0.311 → 0.337: cite BCJ11, which simply states 0.337 for HGJ without comment (Nick, 31 Oct); keep the wording low-key.
 - Remaining new TODO: identify ref [36] of BBSS (0.287).
 
-## Nick's decisions on framing (31 Oct, ~20:05), from Web Claude's framing_for_cc.md
+### Nick's decisions on framing (31 Oct, ~20:05), from Web Claude's framing_for_cc.md
 - The paper is a short, modest "state of play" ePrint note. Title: *A note on filtered merges for random Subset Sum*.
 - **Li25: one neutral sentence** (Nick, ~20:15, superseding his earlier "say nothing"; it follows Web Claude's
   li_softening_for_cc.md): "We do not compare with [Li25] ... we were not able to reproduce an exponent below 0.39."
@@ -68,7 +85,7 @@ is the working state.
   against OAI26's bibliography), and an acknowledgement line saying that experiments and much of the drafting were
   done with Claude.
 
-## PRIOR ART FOUND (31 Oct, ~20:40): May–Ozerov consistency filtering
+### PRIOR ART FOUND (31 Oct, ~20:40): May–Ozerov consistency filtering
 - BBSS's "0.287 CF" row cites Ozerov's PhD thesis (RUB 2016; https://d-nb.info/1089007094/34). Its §2.2
   ConsistencySieve is a type-class filter at merges: random half-blocks J, prescribed weight distributions h1/h2 on J.
 - It gives HGJ → 0.329 and BCJ → 0.287 ([MO], unpublished). Ozerov explicitly asks whether the digits ±2 would help.
@@ -90,7 +107,7 @@ is the working state.
   on the unpublished MO work. Also Ozerov, if an address can be found.
 - Web Claude's review_note_for_cc_2.md small fixes (B1–B6, B8) are applied. B7 (date) waits for the posting date.
 
-## Status 31 Oct, ~21:15: Nick considers the paper a non-result (parked)
+### Status 31 Oct, ~21:15: Nick considers the paper a non-result (parked)
 - Nick: the only part of OAI26 we used is Dubiner's idea; BBSS surely know, and the community probably knows
   0.283 can be improved by ~0.004 but hasn't written it down. **The paper is parked, not to be posted** unless Nick
   changes his mind (e.g. after asking May).
@@ -105,13 +122,13 @@ is the working state.
 - **Before posting (if ever):** email Schrottenloher/Bonnetain and/or May to ask whether consistency filtering on the
   BBSS tree was already computed.
 
-## 31 Oct, late: Nick emailed Dan Roberts (OpenAI)
+### 31 Oct, late: Nick emailed Dan Roberts (OpenAI)
 - Asked for Dubiner [Dub10] to be cited in a new version of OAI26 as the origin of the §4 asymmetric filtering
   mechanism, noting the optimality theory, Christiani's credit for tensoring, and May–Ozerov's use of it.
 - CC checked the Christiani claim: arXiv 1605.02687 says "the tensoring technique, a variant of which was introduced
   by Dubiner [22]". Accurate.
 
-## Open issues (from the note)
+### Open issues (from the note)
 1. The cost of looking up which filters a vector passes (structured filters) isn't argued yet.
 2. Only pairs of exactly split type σ are found. The accounting is consistent with this, but
    it should be stated.
@@ -119,5 +136,5 @@ is the working state.
 4. Esser–May: no public reason for the withdrawal; the paper uses Web Claude's "we don't change list contents" sentence. Nick could ask Alexander May.
 5. Only k = 3 and local search have been tried.
 
-## Next
+### Next
 Wait for Web Claude's reply (`notes/*_for_cc.md`), then the small-n simulation.
