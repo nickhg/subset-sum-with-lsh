@@ -17,7 +17,9 @@ below is the current state; everything after it is the 31 Oct record, kept for h
   doi:10.5281/zenodo.24015365 (all versions: 10.5281/zenodo.24015364). The Zenodo record links to the ePrint.
 - **Alexander May** was emailed on 3 Nov. He replied on 9 Nov: May–Ozerov had unpublished small improvements (Ozerov thesis);
   he is happy for Nick to "take over" and work out the final answers, notes depth tuning is subtle, and would like to meet.
-- **Open:** nothing pending. A revision needs a new Zenodo release only if the code or points change.
+- **Journal target:** IACR Communications in Cryptology (CiC), decided by 11 Nov. Submitting means porting `main.tex` to the
+  `iacrcc` class. (Nick's separate ePrint 2026/2846 is going to Math Comp.)
+- **Open:** CiC submission not started. A revision needs a new Zenodo release only if the code or points change.
 
 ## 31 Oct record (historical)
 
